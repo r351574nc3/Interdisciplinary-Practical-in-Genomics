@@ -1,0 +1,12 @@
+package RecordHandler.class;
+
+sub new {
+    my $class = shift;
+
+    return bless {}, $class;
+}
+
+
+sub handleRecord {
+    my $this   = shift;
+}

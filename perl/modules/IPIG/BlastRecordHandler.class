@@ -1,0 +1,21 @@
+package BlastRecordHandler;
+@ISA = (RecordHandler);
+
+BEGIN {
+    require "BlastRecord.class";
+    import BlastRecord;
+}
+
+sub new {
+    my $class = shift;
+
+    return bless {}, $class;
+}
+
+sub handleRecord {
+    my $this = shift;
+    return new BlastRecord(@_);
+}
+
+
+return 1;
