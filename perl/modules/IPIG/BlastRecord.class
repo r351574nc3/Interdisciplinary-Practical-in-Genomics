@@ -28,12 +28,13 @@ sub new {
     $this->sstart(shift);
     $this->send(shift);
     $this->evalue(shift);
+
     return $this
 }
 
 sub isSelfHit {
     my $this = shift;
-    $this->query() == $this->subject() ? 1 : 0;
+    $this->query() eq $this->subject() ? 1 : 0;
 }
 
 sub query {

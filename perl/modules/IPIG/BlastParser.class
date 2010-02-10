@@ -52,7 +52,18 @@ sub parse {
     while(<BLASTIN>) {
         chop();
         if ($this->isRecord($_)) {
-            $this->recordHandler()->handleRecord($this->parseRecord($_));
+            my $alignment = 0;
+            $record = $this->recordHandler()->handleRecord($this->parseRecord($_));
+            
+            if ($record->isSelfHit()) {
+                $alignment = $record->alignment(); # Store alignment temporarily
+            }
+            else if ($this->recordHandler()->validateRecord($alignment, $record)) {
+                # This is an edge, so use the record to create an Edge instance
+                # Edges can be compared against each other to form a Cluster (Graph
+                # of genes)
+                my $edge = new Edge($record);
+            }
         }
         elsif ($this->isComment($_)) {
             #$this->commentHandler()->handleComment();

@@ -12,6 +12,15 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
+
+##
+# Allows for different types of record handling of Blast output. Used
+# as an adapter passed to the BlastParser for different handling of 
+# blast information.
+#
+#
+# Author: Leo Przybylski (przybyls@arizona.edu)
+##
 package BlastRecordHandler;
 
 BEGIN {
@@ -37,5 +46,18 @@ sub handleRecord {
     return new BlastRecord(@_);
 }
 
+##
+# Validates this record using the self hit alignment information. If this record is valid,
+# we can use that information to determine if it is an edge or not
+#
+# Parameters:
+#     alignment - The alignment requirements from the self-hit
+#     record    - The record to validate
+##
+sub validateRecord {
+    my $this      = shift;
+    my $alignment = shift;
+    my $record    = shift;
+}
 
 return 1;
