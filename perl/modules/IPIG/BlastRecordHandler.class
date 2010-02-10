@@ -1,4 +1,10 @@
 package BlastRecordHandler;
+
+BEGIN {
+    require "RecordHandler.class";
+    import RecordHandler;
+}
+
 @ISA = (RecordHandler);
 
 BEGIN {

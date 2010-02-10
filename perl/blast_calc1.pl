@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
-use lib 'modules/IPIG/';
+use lib 'modules/IPIG';
 
 BEGIN {
     require "BlastParser.class";

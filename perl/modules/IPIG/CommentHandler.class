@@ -1,4 +1,4 @@
-package RecordHandler.class;
+package CommentHandler;
 
 sub new {
     my $class = shift;

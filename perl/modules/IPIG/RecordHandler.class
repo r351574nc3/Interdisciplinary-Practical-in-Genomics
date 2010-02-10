@@ -1,4 +1,4 @@
-package RecordHandler.class;
+package RecordHandler;
 
 sub new {
     my $class = shift;
@@ -10,3 +10,5 @@ sub new {
 sub handleRecord {
     my $this   = shift;
 }
+
+return 1;

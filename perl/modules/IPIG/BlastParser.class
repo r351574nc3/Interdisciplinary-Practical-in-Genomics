@@ -1,27 +1,29 @@
 package BlastParser;
 
+use strict;
+use warnings;
+
+BEGIN {
+    require "CommentHandler.class";
+    import CommentHandler;
+}
 
 sub new {
     my $class = shift;
     my $rh = shift;
     my $ch = shift;
 
-#    unless ($ch) { # No comment handler
-#        $ch = eval {
-#            package CommentHandler;
-#            @ISA = (CommentHandler);
-#
-#            sub new {
-#                my $class = shift;
-#                return bless {},  $class;
-#            }
-            
-#            sub handleComment() {
-#                my $this = shift;
-#            }
-#            __PACKAGE__;
-#        }->new();
-#    }
+    unless ($ch) { # No comment handler
+        $ch = eval {
+            package AnonCommentHandler;
+            our @ISA = (qw/CommentHandler/);
+
+            sub handleComment {
+                my $this = shift;
+            }
+            __PACKAGE__;
+        }->new();
+    }
 
     return bless {_recordHandler => $rh, _commentHandler => $ch}, $class;
 }
@@ -32,7 +34,7 @@ sub parse {
     my $input = shift;
     print "Opening $input\n";
 
-    open(*BLASTIN, "<" . $input);
+    open(BLASTIN, "<" . $input);
     while(<BLASTIN>) {
         chop();
         if ($this->isRecord($_)) {
