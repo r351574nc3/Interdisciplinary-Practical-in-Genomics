@@ -1,9 +1,0 @@
-package BlastRecord;
-
-sub new {
-    return bless {}, shift;
-}
-
-        
-
-return 1;
