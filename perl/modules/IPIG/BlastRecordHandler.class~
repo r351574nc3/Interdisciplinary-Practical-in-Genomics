@@ -1,0 +1,66 @@
+package BlastRecordHandler;
+@ISA = (RecordHandler);
+
+sub new {
+    my $class = shift;
+
+    return bless {}, $class;
+}
+
+
+sub handleRecord {
+    my $this   = shift;
+    $this->query(shift);
+    $this->subject(shift);
+    $this->identity(shift);
+    $this->alignment(shift);
+    $this->mismatches(shift);
+    $this->qstart(shift);
+    $this->qend(shift);
+    $this->sstart(shift);
+    $this->send(shift);
+    $this->evalue(shift);
+}
+
+sub query {
+    my $this = shift;
+
+    @ ? $this->{_query} = shift : return $this->{_query};
+}
+
+sub query {
+    my $this = shift;
+
+    @ ? $this->{_query} = shift : return $this->{_query};
+}
+sub query {
+    my $this = shift;
+
+    @ ? $this->{_query} = shift : return $this->{_query};
+}
+
+sub query {
+    my $this = shift;
+
+    @ ? $this->{_query} = shift : return $this->{_query};
+}
+
+sub query {
+    my $this = shift;
+
+    @ ? $this->{_query} = shift : return $this->{_query};
+}
+
+sub send {
+    my $this = shift;
+
+    @ ? $this->{_send} = shift : return $this->{_send};
+}
+
+sub evalue {
+    my $this = shift;
+
+    @ ? $this->{_evalue} = shift : return $this->{_evalue};
+}
+
+return 1;
