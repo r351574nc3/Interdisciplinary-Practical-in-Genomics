@@ -46,6 +46,18 @@ sub new {
 
 sub graph {
     my $clusters = shift;
+
+    my $graph = new GD::Graph::bars3d(1024, 768);
+    $graph->set(
+        x_label           => 'Cluster Groups',
+        y_label           => 'Clusters/Group',
+        title             => 'Gene Cluster Cardinality',
+        );
+    my $gd = $graph->plot($clusters->clusters());
+    
+    open(IMG, '>file.png') or die $!;
+    binmode IMG;
+    print IMG $gd->png;
 }
 
 sub main {
@@ -55,21 +67,6 @@ sub main {
 
     graph($clusters);
 
-    my @data = (
-        ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        [ 1203,  3500,  3973,  2859,  3012,  3423,  1230]
-        );
-    my $graph = new GD::Graph::bars3d( 400, 300 );
-    $graph->set(
-        x_label           => 'Day of the week',
-        y_label           => 'Number of hits',
-        title             => 'Daily Summary of Web Site',
-        );
-    my $gd = $graph->plot( \@data );
-    
-    open(IMG, '>file.png') or die $!;
-    binmode IMG;
-    print IMG $gd->png;
 }
 
 Main::main();
