@@ -16,12 +16,15 @@
 
 use strict;
 use lib 'modules/IPIG';
+use GD::Graph::bars3d;
 
 BEGIN {
     require "BlastParser.class";
     import BlastParser;
     require "BlastRecordHandler.class";
     import BlastRecordHandler;
+    require "ClusterMatrix.class";
+    import ClusterMatrix;
 }
 
 
@@ -51,6 +54,22 @@ sub main {
     $parser->parse(pop(@ARGV));
 
     graph($clusters);
+
+    my @data = (
+        ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        [ 1203,  3500,  3973,  2859,  3012,  3423,  1230]
+        );
+    my $graph = new GD::Graph::bars3d( 400, 300 );
+    $graph->set(
+        x_label           => 'Day of the week',
+        y_label           => 'Number of hits',
+        title             => 'Daily Summary of Web Site',
+        );
+    my $gd = $graph->plot( \@data );
+    
+    open(IMG, '>file.png') or die $!;
+    binmode IMG;
+    print IMG $gd->png;
 }
 
 Main::main();
