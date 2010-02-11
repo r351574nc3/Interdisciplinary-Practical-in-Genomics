@@ -28,11 +28,41 @@ sub new {
     return bless {_edges => \@edges}, $class;
 }
 
+sub add {
+    my $this = shift;
+    
+    push(@$this->edges(), shift);
+}
+
 sub edges {
     my $this = shift;
 
     return $this->{_edges};
 }
 
+sub size {
+    my $this = shift;
+    
+    return scalar(@$this->{_edges});
+}
+
+sub compareCardinality {
+    my $this = shift;
+    my $tocompare = shift;
+    
+    if (ref $tocompare) {
+        if ($this->size() == $tocompare->size()) {
+            return 0;
+        }
+        elsif ($this->size() > $tocompare->size()) {
+            return 1;
+        }
+        else {
+            return -1;
+        }
+    }
+
+    return -1;
+}
 
 return 1;

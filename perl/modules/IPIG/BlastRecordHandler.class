@@ -38,12 +38,46 @@ BEGIN {
 sub new {
     my $class = shift;
 
-    return bless {}, $class;
+    return bless {_clusters => shift}, $class;
 }
 
 sub handleRecord {
     my $this = shift;
-    return new BlastRecord(@_);
+    my $record = new BlastRecord(@_);
+
+    return $record;
+}
+
+sub selfHit {
+    my $this = shift;
+    my $record = shift;
+
+    my $cluster = new Cluster();
+
+    # Adding self-hit to the cluster. Not sure if this is right or not.
+    $cluster->add(new Edge($record));
+    $this->clusters()->add($cluster));
+
+    $this->aligment($record->alignment());
+   
+}
+
+sub alignment {
+    my $this = shift;
+
+    @_ ? $this->{_alignment} = shift : return $this->{_alignment};
+}
+
+sub clusters {
+    my $this = shift;
+    
+    @_ ? $this->{_clusters} = shift : return $this->{_clusters};
+}
+
+sub current {
+    my $this = shift;
+    
+    @_ ? $this->{_current} = shift : return $this->{_current};
 }
 
 ##
@@ -51,15 +85,21 @@ sub handleRecord {
 # we can use that information to determine if it is an edge or not
 #
 # Parameters:
-#     alignment - The alignment requirements from the self-hit
 #     record    - The record to validate
 ##
 sub validateRecord {
     my $this      = shift;
     my $alignment = shift;
     my $record    = shift;
-
+    my $valid     = 0;
     
+    if ($valid) {
+        # This is an edge, so use the record to create an Edge instance
+        # Edges can be compared against each other to form a Cluster (Graph
+        # of genes)
+        my $edge = new Edge($record);
+        $this->current()->add($edge);
+    }
 }
 
 return 1;

@@ -36,6 +36,31 @@ sub new {
     return bless {_clusters => \@clusters}, $class;
 }
 
+##
+# Adds a cluster to the matrix. Compares the cardinality of the cluster $toadd 
+# to the cardinality of each index of the matrix to determine where to add it. 
+# Each index of the matrix is an array of clusters
+#
+# Parameters:
+#     $toadd - Cluster to add
+##
+sub add {
+    my $this = shift;
+    my $toadd = shift;
+
+    foreach (@$this->clusters()) {
+        my @clusters = @$_;
+        if ($#clusters > 0) {
+            if ($toadd->compareCardinality($clusters[0]) == 0) {
+                push(@clusters, $toadd);
+                return;
+            }
+        }
+    }
+    
+    push(@$this->clusters(), ($toadd));
+}
+
 sub clusters {
     my $this = shift;
 
