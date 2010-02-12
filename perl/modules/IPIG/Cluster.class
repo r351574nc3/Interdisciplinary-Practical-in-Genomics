@@ -15,9 +15,12 @@
 package Cluster;
 
 ##
-# A cluster is basically like a digraph of genes where adjacent edges are
+# A cluster is basically like a set edges in a digraph of genes where 
+# adjacent edges are
 # grouped together. One Edge is known to be adjacent to another edge if 
 # ...
+#
+# Being that a Cluster is a Set, there is no duplication
 #
 # Author: Leo Przybylski (przybyls@arizona.edu)
 ##
@@ -30,8 +33,31 @@ sub new {
 
 sub add {
     my $this = shift;
+    my $toadd = shift;
     
-    push(@$this->edges(), shift);
+    if (!$this->contains($toadd)) {
+        push(@$this->edges(), shift);
+    }
+    
+}
+
+sub union {
+    my $this = shift;
+    my $other = shift;
+    
+    my $retval = new Cluster();
+}
+
+sub contains {
+    my $this = shift;
+    my $tocompare = shift;
+
+    foreach my $edge (@$cluster->edges()) {
+        if ($edge->equals($tocompare)) {
+            return 1;
+        }
+    }
+    return 0
 }
 
 sub edges {

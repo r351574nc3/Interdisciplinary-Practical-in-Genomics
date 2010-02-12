@@ -25,7 +25,35 @@ package Edge;
 sub new {
     my $class = shift;
 
-    return bless {}, $class;
+    return bless {_record => shift}, $class;
+}
+
+sub equals {
+    my $this = shift;
+    my $tocompare = shift;
+    
+    if ($this->record()->query() eq $tocompare->record()->query()
+        && $this->record()->subject() eq $tocompare->record()->subject()) {
+        return 1;
+    }
+    return 0;
+}
+
+sub isAdjacentTo {
+    my $this = shift;
+    my $tocompare = shift;
+
+    if ($this->record()->query() eq $tocompare->record()->query()
+        || $this->record()->subject() eq $tocompare->record()->subject()) {
+        return 1;
+    }
+    return 0;
+}
+
+sub record {
+    my $this = shift;
+    
+    return $this->{_record};
 }
 
 
