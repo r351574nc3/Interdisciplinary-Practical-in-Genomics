@@ -14,6 +14,68 @@
 ######################################################################
 package BlastRecord;
 
+=head1 Class C<BlastRecord>
+
+=cut
+
+=head2 Description 
+
+=pod 
+
+Class representation of line items from blast output. C<BlastRecord> instances 
+have 
+
+=over
+
+=item query id
+
+=item subject id
+
+=item identity
+
+=item alignment length
+
+=back
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
+
+=head2 Default Constructor
+
+=pod 
+
+Constructs the C<BlastRecord> from its attributes. None are required though.
+
+=head3 Parameters
+
+=over
+
+=over
+
+=item C<query> id
+
+=item C<subject> id
+
+=item C<identity>
+
+=item C<alignment> length
+
+=item C<mismatches> - undetermined
+
+=item C<qstart> - undetermined
+
+=item C<qend> - undetermined
+
+=item C<sstart> - undetermined
+
+=item C<send> - undetermined
+
+=item C<evalue> - undetermined
+
+=back
+
+=cut
 sub new {
     my $this = bless {}, shift;
 
@@ -32,65 +94,267 @@ sub new {
     return $this
 }
 
+=head2 Method C<isSelfHit>
+
+=pod
+
+A Record is considered a I<self hit> if its query and subject are the same. This
+method compares them and returns the results. It's case-sensitive.
+
+=head3 Returns
+
+=pod C<1> if is I<self hit>; otherwise, returns C<0>
+
+=cut
 sub isSelfHit {
     my $this = shift;
     $this->query() eq $this->subject() ? 1 : 0;
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub query {
     my $this = shift;
 
     @_ ? $this->{_query} = shift : return $this->{_query};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub subject {
     my $this = shift;
 
     @_ ? $this->{_subject} = shift : return $this->{_subject};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub identity {
     my $this = shift;
 
     @_ ? $this->{_identity} = shift : return $this->{_identity};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub alignment {
     my $this = shift;
 
     @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub mismatches {
     my $this = shift;
 
     @_ ? $this->{_mismatches} = shift : return $this->{_mismatches};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub qstart {
     my $this = shift;
 
     @_ ? $this->{_qstart} = shift : return $this->{_qstart};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub qend {
     my $this = shift;
 
     @_ ? $this->{_qend} = shift : return $this->{_qend};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub sstart {
     my $this = shift;
 
     @_ ? $this->{_sstart} = shift : return $this->{_sstart};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub send {
     my $this = shift;
 
     @_ ? $this->{_send} = shift : return $this->{_send};
 }
 
+=head2 Getter/Setter C<query>
+
+=pod 
+
+Getter/Setter for the query
+
+=head3 Parameters
+
+=over
+
+=item 
+
+=back
+
+=head3 Returns
+
+=pod Gets the query. Only returns something if there is no parameter present.
+
+=cut
 sub evalue {
     my $this = shift;
 

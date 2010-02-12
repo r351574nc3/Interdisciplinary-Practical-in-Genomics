@@ -14,7 +14,7 @@
 ######################################################################
 package Edge;
 
-=head1 class Edge
+=head1 Class C<Edge>
 
 =cut
 
@@ -52,7 +52,7 @@ sub new {
     return bless {_record => shift}, $class;
 }
 
-=head2 equals
+=head2 Method C<equals>
 
 =pod 
 
@@ -63,7 +63,7 @@ C<this> match, then we consider the C<Edge> instances to be equal.
 
 =over
 
-=item tocompare - C<Edge> instance to compare against
+=item C<tocompare> - C<Edge> instance to compare against
 
 =back
 
@@ -83,7 +83,7 @@ sub equals {
     return 0;
 }
 
-=head2 isAdjacentTo
+=head2 Method C<isAdjacentTo>
 
 =pod 
 
@@ -116,7 +116,7 @@ sub isAdjacentTo {
     return 0;
 }
 
-=head2 record
+=head2 Getter/Setter C<record>
 
 =pod 
 
