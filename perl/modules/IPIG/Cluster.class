@@ -14,16 +14,22 @@
 ######################################################################
 package Cluster;
 
-##
-# A cluster is basically like a set edges in a digraph of genes where 
-# adjacent edges are
-# grouped together. One Edge is known to be adjacent to another edge if 
-# ...
-#
-# Being that a Cluster is a Set, there is no duplication
-#
-# Author: Leo Przybylski (przybyls@arizona.edu)
-##
+=head1 Class C<Cluster>
+
+=head2 Description
+
+=pod
+
+A cluster is basically like a set edges in a digraph of genes where 
+adjacent edges are
+grouped together. One Edge is known to be adjacent to another edge if 
+...
+
+Being that a Cluster is a Set, there is no duplication
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
 sub new {
     my $class = shift;
     my @edges;
@@ -31,6 +37,19 @@ sub new {
     return bless {_edges => \@edges}, $class;
 }
 
+=head2 Method C<add>
+
+=pod
+
+=head3 Parameters
+
+=over
+
+=item C<toadd> - 
+
+=back
+
+=cut
 sub add {
     my $this = shift;
     my $toadd = shift;
@@ -41,6 +60,19 @@ sub add {
     
 }
 
+=head2 Method C<union>
+
+=pod
+
+=head3 Parameters
+
+=over
+
+=item C<other> - 
+
+=back
+
+=cut
 sub union {
     my $this = shift;
     my $other = shift;
@@ -48,6 +80,21 @@ sub union {
     my $retval = new Cluster();
 }
 
+=head2 Method C<contains>
+
+=pod
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - 
+
+=back
+
+=head3 Returns
+
+=cut
 sub contains {
     my $this = shift;
     my $tocompare = shift;
@@ -60,18 +107,47 @@ sub contains {
     return 0
 }
 
+=head2 Method C<edges>
+
+=pod
+
+=head3 Returns
+
+=cut
 sub edges {
     my $this = shift;
 
     return $this->{_edges};
 }
 
+=head2 Method C<size>
+
+=pod
+
+=head3 Returns
+
+=cut
 sub size {
     my $this = shift;
     
     return scalar(@$this->{_edges});
 }
 
+=head2 Method C<compareCardinality>
+
+=pod
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - 
+
+=back
+
+=head3 Returns
+
+=cut
 sub compareCardinality {
     my $this = shift;
     my $tocompare = shift;
