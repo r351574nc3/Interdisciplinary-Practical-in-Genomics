@@ -51,8 +51,6 @@ Constructs the C<BlastRecord> from its attributes. None are required though.
 
 =over
 
-=over
-
 =item C<query> id
 
 =item C<subject> id
@@ -121,13 +119,13 @@ Getter/Setter for the query
 
 =over
 
-=item 
+=item C<query_id> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the C<query_id>. Only returns something if there is no parameter present.
 
 =cut
 sub query {
@@ -136,23 +134,23 @@ sub query {
     @_ ? $this->{_query} = shift : return $this->{_query};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<subject>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the subject
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<subject_id> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the C<subject_id>. Only returns something if there is no parameter present.
 
 =cut
 sub subject {
@@ -161,23 +159,23 @@ sub subject {
     @_ ? $this->{_subject} = shift : return $this->{_subject};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<identity>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the identity
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<identity> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the C<identity>. Only returns something if there is no parameter present.
 
 =cut
 sub identity {
@@ -186,23 +184,23 @@ sub identity {
     @_ ? $this->{_identity} = shift : return $this->{_identity};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<alignment>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the alignment
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<alignment> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the alignment. Only returns something if there is no parameter present.
 
 =cut
 sub alignment {
@@ -211,23 +209,23 @@ sub alignment {
     @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<mismatches>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the mismatches
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<mismatches> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the mismatches. Only returns something if there is no parameter present.
 
 =cut
 sub mismatches {
@@ -236,23 +234,23 @@ sub mismatches {
     @_ ? $this->{_mismatches} = shift : return $this->{_mismatches};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<qstart>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the qstart
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<qstart> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the qstart. Only returns something if there is no parameter present.
 
 =cut
 sub qstart {
@@ -261,23 +259,23 @@ sub qstart {
     @_ ? $this->{_qstart} = shift : return $this->{_qstart};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<qend>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the qend
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<qend> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the qend. Only returns something if there is no parameter present.
 
 =cut
 sub qend {
@@ -286,23 +284,23 @@ sub qend {
     @_ ? $this->{_qend} = shift : return $this->{_qend};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<sstart>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the sstart
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<sstart> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the sstart. Only returns something if there is no parameter present.
 
 =cut
 sub sstart {
@@ -311,23 +309,23 @@ sub sstart {
     @_ ? $this->{_sstart} = shift : return $this->{_sstart};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<send>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the send
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<send> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the send. Only returns something if there is no parameter present.
 
 =cut
 sub send {
@@ -336,23 +334,23 @@ sub send {
     @_ ? $this->{_send} = shift : return $this->{_send};
 }
 
-=head2 Getter/Setter C<query>
+=head2 Getter/Setter C<evalue>
 
 =pod 
 
-Getter/Setter for the query
+Getter/Setter for the evalue
 
 =head3 Parameters
 
 =over
 
-=item 
+=item C<evalue> to set (optional)
 
 =back
 
 =head3 Returns
 
-=pod Gets the query. Only returns something if there is no parameter present.
+=pod Gets the evalue. Only returns something if there is no parameter present.
 
 =cut
 sub evalue {

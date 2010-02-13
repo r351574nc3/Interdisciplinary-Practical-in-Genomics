@@ -14,21 +14,39 @@
 ######################################################################
 package ClusterMatrix;
 
-##
-# Used to contain clusters that are intended to be sorted. Clusters
-# are sorted according to the cardinality of edges per cluster. For 
-# example, clusters with 12 edges will be grouped in an array together.
-# The cardinality of that array determines the order in which these
-# clusters appear. Since the matrix is sorted in ascending order,
-# group 12 will appear after 10 and 11 due to its cluster cardinality.
-# Such information is used later to be depicted in a visual graph.
-#
-# Right now, a multidimensional array is used to do this, but it might
-# be easier to use an insertion sort and apply the Observer pattern.
-# This would require more classes, and I'm not sure I care that much.
-#
-# Author: Leo Przybylski (przybyls@arizona.edu)
-##
+
+=head1 Class C<ClusterMatrix>
+
+=cut
+
+=head2 Description 
+
+=pod 
+
+Used to contain clusters that are intended to be sorted. Clusters
+are sorted according to the cardinality of edges per cluster. For 
+example, clusters with 12 edges will be grouped in an array together.
+The cardinality of that array determines the order in which these
+clusters appear. Since the matrix is sorted in ascending order,
+group 12 will appear after 10 and 11 due to its cluster cardinality.
+Such information is used later to be depicted in a visual graph.
+
+Right now, a multidimensional array is used to do this, but it might
+be easier to use an insertion sort and apply the Observer pattern.
+This would require more classes, and I'm not sure I care that much.
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
+
+=head2 Default Constructor
+
+=pod 
+
+Constructs the C<ClusterMatrix> from its attributes. None are required though. 
+Initiates an array as its data store and saves a reference to it.
+
+=cut
 sub new {
     my $class = shift;
     my @clusters;
@@ -36,14 +54,24 @@ sub new {
     return bless {_clusters => \@clusters}, $class;
 }
 
-##
-# Adds a cluster to the matrix. Compares the cardinality of the cluster $toadd 
-# to the cardinality of each index of the matrix to determine where to add it. 
-# Each index of the matrix is an array of clusters
-#
-# Parameters:
-#     $toadd - Cluster to add
-##
+
+=head2 Method C<add>
+
+=pod 
+
+ Adds a cluster to the matrix. Compares the cardinality of the cluster $toadd 
+ to the cardinality of each index of the matrix to determine where to add it. 
+ Each index of the matrix is an array of clusters
+
+=head3 Parameters
+
+=over
+
+=item  C<toadd> - Cluster to add
+
+=back
+
+=cut
 sub add {
     my $this = shift;
     my $toadd = shift;
@@ -61,12 +89,30 @@ sub add {
     push(@$this->clusters(), ($toadd));
 }
 
+=head2 Getter C<clusters>
+
+=pod 
+
+Getter for the the stored array of clusters. C<clusters> is a read-only attribute.
+
+=head3 Returns
+
+=pod Gets the reference to C<clusters> array.
+
+=cut
 sub clusters {
     my $this = shift;
 
     return $this->{_clusters};
 }
 
+=head2 Method C<sort>
+
+=pod 
+
+Sorts C<clusters> according to the cardinality of each array of clusters contained.
+
+=cut
 sub sort {
 }
 

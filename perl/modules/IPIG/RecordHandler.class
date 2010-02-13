@@ -12,16 +12,30 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-
-##
-# Abstract class for creating instances used by the BlastParser for handling
-# records.
-#
-#
-# Author: Leo Przybylski (przybyls@arizona.edu)
-##
 package RecordHandler;
 
+=head1 Class C<RecordHandler>
+
+=cut
+
+=head2 Description 
+
+=pod 
+
+Abstract class for creating instances used by the BlastParser for handling
+records.
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
+
+=head2 Default Constructor
+
+=pod 
+
+Constructs the C<RecordHandler> from its attributes. None are required though.
+
+=cut
 sub new {
     my $class = shift;
 
@@ -29,10 +43,26 @@ sub new {
 }
 
 
+=head2 Method C<handleRecord>
+
+=pod
+
+Stub method for handling blast output records. This is the method that the 
+C<BlastParser> will call when it encounters a record.
+
+=cut
 sub handleRecord {
     my $this   = shift;
 }
 
+=head2 Method C<handleRecord>
+
+=pod
+
+Stub method for validating blast output records. Typically, the result will
+be an C<Edge> added to a C<Cluster>
+
+=cut
 sub validateRecord {
     my $this      = shift;
     my $alignment = shift;

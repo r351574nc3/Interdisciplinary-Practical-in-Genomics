@@ -14,6 +14,27 @@
 ######################################################################
 package CommentHandler;
 
+=head1 Class C<CommentHandler>
+
+=cut
+
+=head2 Description 
+
+=pod 
+
+An interface for handling comments in blast output.
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
+
+=head2 Default Constructor
+
+=pod 
+
+Constructs the C<CommentHandler> from its attributes. None are required though.
+
+=cut
 sub new {
     my $class = shift;
 
@@ -21,6 +42,14 @@ sub new {
 }
 
 
+=head2 Method C<handleComment>
+
+=pod
+
+Stub method for handling comments. This is the method that the C<BlastParser> will call
+when it encounters a comment.
+
+=cut
 sub handleComment {
     my $this   = shift;
 }
