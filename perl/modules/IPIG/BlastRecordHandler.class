@@ -130,7 +130,9 @@ Getter/Setter for the alignment. Alignment is used to validate a C<BlastRecord>
 
 =head3 Returns
 
-=pod Gets the C<alignment>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<alignment>. Only returns something if there is no parameter present.
 
 =cut
 sub alignment {
@@ -155,7 +157,9 @@ Getter/Setter for the clusters.
 
 =head3 Returns
 
-=pod Gets the C<clusters>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<clusters>. Only returns something if there is no parameter present.
 
 =cut
 sub clusters {
@@ -180,7 +184,9 @@ Getter/Setter for the current cluster.
 
 =head3 Returns
 
-=pod Gets the C<current>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<current>. Only returns something if there is no parameter present.
 
 =cut
 sub current {
@@ -206,7 +212,9 @@ sub current {
 
 =head3 Returns
 
-=pod C<1> if the record is valid, C<0> otherwise.
+=pod 
+
+C<1> if the record is valid, C<0> otherwise.
 
 =cut
 sub validateRecord {

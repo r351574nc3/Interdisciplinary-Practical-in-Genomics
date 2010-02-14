@@ -97,7 +97,9 @@ Getter for the the stored array of clusters. C<clusters> is a read-only attribut
 
 =head3 Returns
 
-=pod Gets the reference to C<clusters> array.
+=pod 
+
+Gets the reference to C<clusters> array.
 
 =cut
 sub clusters {

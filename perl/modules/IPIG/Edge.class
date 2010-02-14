@@ -69,7 +69,9 @@ C<this> match, then we consider the C<Edge> instances to be equal.
 
 =head3 Returns
 
-=pod 1 if they are equal; otherwise, returns 0
+=pod 
+
+C<1> if they are equal; otherwise, returns C<0>
 
 =cut
 sub equals {
@@ -132,7 +134,9 @@ Getter/Setter for the C<BlastRecord> of an C<Edge>
 
 =head3 Returns
 
-=pod Gets the C<BlastRecord>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<BlastRecord>. Only returns something if there is no parameter present.
 
 =cut
 sub record {

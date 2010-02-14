@@ -101,7 +101,9 @@ method compares them and returns the results. It's case-sensitive.
 
 =head3 Returns
 
-=pod C<1> if is I<self hit>; otherwise, returns C<0>
+=pod 
+
+C<1> if is I<self hit>; otherwise, returns C<0>
 
 =cut
 sub isSelfHit {

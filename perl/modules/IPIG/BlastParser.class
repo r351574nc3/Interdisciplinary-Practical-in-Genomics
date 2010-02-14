@@ -199,7 +199,9 @@ Getter/Setter for the commentHandler
 
 =head3 Returns
 
-=pod Gets the C<commentHandler>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<commentHandler>. Only returns something if there is no parameter present.
 
 =cut
 sub commentHandler {
@@ -224,7 +226,9 @@ Getter/Setter for the recordHandler
 
 =head3 Returns
 
-=pod Gets the C<recordHandler>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<recordHandler>. Only returns something if there is no parameter present.
 
 =cut
 sub recordHandler {

@@ -41,11 +41,13 @@ sub new {
 
 =pod
 
+Adds an C<Edge> instance to the C<Cluster>
+
 =head3 Parameters
 
 =over
 
-=item C<toadd> - 
+=item C<toadd> - C<Edge> instance to add
 
 =back
 
@@ -64,13 +66,22 @@ sub add {
 
 =pod
 
+Unions this C<Cluster> instance with another C<Cluster> instance. The result
+is a completely new C<Cluster>. 
+
 =head3 Parameters
 
 =over
 
-=item C<other> - 
+=item C<other> - a C<Cluster> instance to union with this
 
 =back
+
+=head3 Returns
+
+=pod 
+
+A new C<Cluster> instance containing all C<Edge> instances from both C<Cluster> instances.
 
 =cut
 sub union {
@@ -94,6 +105,10 @@ sub union {
 
 =head3 Returns
 
+=pod
+
+C<1> if C<$tocompare> is contained in the C<Cluster>; C<0> otherwise.
+
 =cut
 sub contains {
     my $this = shift;
@@ -107,11 +122,15 @@ sub contains {
     return 0
 }
 
-=head2 Method C<edges>
+=head2 Getter C<edges>
 
 =pod
 
 =head3 Returns
+
+=pod
+
+A reference to an array instance containing C<Edge> instances for this C<Cluster>
 
 =cut
 sub edges {
@@ -120,11 +139,15 @@ sub edges {
     return $this->{_edges};
 }
 
-=head2 Method C<size>
+=head2 Getter C<size>
 
 =pod
 
 =head3 Returns
+
+=pod
+
+The number of C<Edge> instances that are part of this C<Cluster>
 
 =cut
 sub size {
@@ -137,15 +160,28 @@ sub size {
 
 =pod
 
+Compares the cardinality (the number of C<Edge> instances) of this C<Cluster> instance
+to another C<Cluster> instance.
+
 =head3 Parameters
 
 =over
 
-=item C<tocompare> - 
+=item C<tocompare> - a C<Cluster> instance to compare this against
 
 =back
 
 =head3 Returns
+
+=over
+
+=item C<-1> if this C<Cluster> is smaller in cardinality than C<tocompare>
+
+=item C<0> if this C<Cluster> is shares the same cardinality as C<tocompare>
+
+=item C<1> if this C<Cluster> is larger in cardinality than C<tocompare>
+
+=back
 
 =cut
 sub compareCardinality {
