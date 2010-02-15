@@ -33,8 +33,9 @@ Being that a Cluster is a Set, there is no duplication
 sub new {
     my $class = shift;
     my @edges = ();
+    my @ids   = ();
 
-    return bless {_edges => \@edges}, $class;
+    return bless {_edges => \@edges, _ids => \@ids}, $class;
 }
 
 =head2 Method C<add>
@@ -57,7 +58,8 @@ sub add {
     my $toadd = shift;
     
     if (!$this->contains($toadd)) {
-        push(@{$this->edges()}, shift);
+        push(@{$this->edges()}, $toadd);
+        push(@{$this->ids()}, $toadd->record()->query());
     }
     
 }
@@ -123,6 +125,38 @@ sub contains {
     return 0
 }
 
+=head2 Method C<containsId>
+
+=pod
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - 
+
+=back
+
+=head3 Returns
+
+=pod
+
+C<1> if C<$tocompare> is contained in the C<Cluster>; C<0> otherwise.
+
+=cut
+sub containsId {
+    my $this = shift;
+    my $tocompare = shift;
+
+
+    foreach my $id (@{$this->ids()}) {
+        if ($id eq $tocompare) {
+            return 1;
+        }
+    }
+    return 0
+}
+
 =head2 Getter C<edges>
 
 =pod
@@ -138,6 +172,23 @@ sub edges {
     my $this = shift;
 
     return $this->{_edges};
+}
+
+=head2 Getter C<ids>
+
+=pod
+
+=head3 Returns
+
+=pod
+
+A reference to an array instance containing C<Edge> instances for this C<Cluster>
+
+=cut
+sub ids {
+    my $this = shift;
+
+    return $this->{_ids};
 }
 
 =head2 Getter C<size>

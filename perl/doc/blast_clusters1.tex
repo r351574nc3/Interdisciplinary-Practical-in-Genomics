@@ -39,6 +39,9 @@
   each query is a combination of gene and contig number. The records of blast output
   can be organized into several different types of meaningful information.
 
+
+  \includegraphics[width=120mm]{api/images/sample-graph1.png}
+
   One way in particular is to group records related by query and or hit information as
   clusters. We can then provide statistical information on clusters. By grouping clusters
   with the same cardinality of edges, we can analyze trends between different families
@@ -69,6 +72,23 @@
   if two edges share the same subject/hit identifier, then they are considered to be adjacent edges
   even though they are not in the same cluster. This means, that a union can be made between
   these two clusters.
+
+
+  {\setlength{\baselineskip}%
+           {0.0\baselineskip}
+  \section*{\hfill Classes}
+  \hrulefill \par}
+
+  \includegraphics[width=120mm]{api/images/blast_clusters1_Class1.png}  
+
+  \include{api/BlastParser}
+  \include{api/BlastRecordHandler}
+  \include{api/BlastRecord}
+  \include{api/ClusterMatrix}
+  \include{api/Cluster}
+  \include{api/CommentHandler}
+  \include{api/Edge}
+  \include{api/RecordHandler}
 
 \end{document}
 
