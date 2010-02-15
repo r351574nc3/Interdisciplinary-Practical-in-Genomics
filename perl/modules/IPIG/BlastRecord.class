@@ -127,7 +127,9 @@ Getter/Setter for the query
 
 =head3 Returns
 
-=pod Gets the C<query_id>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<query_id>. Only returns something if there is no parameter present.
 
 =cut
 sub query {
@@ -152,7 +154,9 @@ Getter/Setter for the subject
 
 =head3 Returns
 
-=pod Gets the C<subject_id>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<subject_id>. Only returns something if there is no parameter present.
 
 =cut
 sub subject {
@@ -177,7 +181,9 @@ Getter/Setter for the identity
 
 =head3 Returns
 
-=pod Gets the C<identity>. Only returns something if there is no parameter present.
+=pod 
+
+Gets the C<identity>. Only returns something if there is no parameter present.
 
 =cut
 sub identity {
@@ -202,7 +208,9 @@ Getter/Setter for the alignment
 
 =head3 Returns
 
-=pod Gets the alignment. Only returns something if there is no parameter present.
+=pod 
+
+Gets the alignment. Only returns something if there is no parameter present.
 
 =cut
 sub alignment {
@@ -227,7 +235,9 @@ Getter/Setter for the mismatches
 
 =head3 Returns
 
-=pod Gets the mismatches. Only returns something if there is no parameter present.
+=pod 
+
+Gets the mismatches. Only returns something if there is no parameter present.
 
 =cut
 sub mismatches {
@@ -252,7 +262,9 @@ Getter/Setter for the qstart
 
 =head3 Returns
 
-=pod Gets the qstart. Only returns something if there is no parameter present.
+=pod 
+
+Gets the qstart. Only returns something if there is no parameter present.
 
 =cut
 sub qstart {
@@ -277,7 +289,9 @@ Getter/Setter for the qend
 
 =head3 Returns
 
-=pod Gets the qend. Only returns something if there is no parameter present.
+=pod 
+
+Gets the qend. Only returns something if there is no parameter present.
 
 =cut
 sub qend {
@@ -302,7 +316,9 @@ Getter/Setter for the sstart
 
 =head3 Returns
 
-=pod Gets the sstart. Only returns something if there is no parameter present.
+=pod 
+
+Gets the sstart. Only returns something if there is no parameter present.
 
 =cut
 sub sstart {
@@ -327,7 +343,9 @@ Getter/Setter for the send
 
 =head3 Returns
 
-=pod Gets the send. Only returns something if there is no parameter present.
+=pod 
+
+Gets the send. Only returns something if there is no parameter present.
 
 =cut
 sub send {
@@ -352,7 +370,9 @@ Getter/Setter for the evalue
 
 =head3 Returns
 
-=pod Gets the evalue. Only returns something if there is no parameter present.
+=pod 
+
+Gets the evalue. Only returns something if there is no parameter present.
 
 =cut
 sub evalue {
