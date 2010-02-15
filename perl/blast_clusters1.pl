@@ -29,7 +29,7 @@ BEGIN {
 
 =head1 blast_calc1 Main
 
-=cut End of documentation
+=cut 
 
 package Main;
 
@@ -62,13 +62,21 @@ sub graph {
     print IMG $gd->png;
 }
 
+sub testGraph {
+    return (
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        );
+}
+
 sub main {
     my $clusters = new ClusterMatrix();
     my $parser = new BlastParser(new BlastRecordHandler($clusters));
     $parser->parse(pop(@ARGV));
 
-    graph($clusters);
+    #graph($clusters);
 
+    graph(testGraph());
 }
 
 Main::main();

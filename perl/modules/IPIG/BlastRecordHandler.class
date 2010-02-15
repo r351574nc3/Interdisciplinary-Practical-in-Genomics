@@ -37,6 +37,8 @@ BEGIN {
     import RecordHandler;
     require "BlastRecord.class";
     import BlastRecord;
+    require "Cluster.class";
+    import Cluster;
 }
 
 @ISA = (RecordHandler);
@@ -108,9 +110,9 @@ sub selfHit {
 
     # Adding self-hit to the cluster. Not sure if this is right or not.
     $cluster->add(new Edge($record));
-    $this->clusters()->add($cluster));
+    $this->clusters()->add($cluster);
 
-    $this->aligment($record->alignment());
+    $this->alignment($record->alignment());
    
 }
 

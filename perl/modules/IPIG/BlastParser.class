@@ -109,7 +109,7 @@ sub parse {
                 $this->recordHandler()->selfHit($record);
             }
             else {
-                $this->recordHandler()->validateRecord($record)) {
+                $this->recordHandler()->validateRecord($record);
             }
         }
         elsif ($this->isComment($_)) {
@@ -180,7 +180,7 @@ a record
 sub isComment {
     my $this   = shift;
     my $record = shift;
-    return !this->isRecord($record)
+    return !$this->isRecord($record)
 }
 
 =head2 Getter/Setter C<commentHandler>

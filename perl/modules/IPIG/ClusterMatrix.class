@@ -76,7 +76,7 @@ sub add {
     my $this = shift;
     my $toadd = shift;
 
-    foreach (@$this->clusters()) {
+    foreach (@{$this->clusters()}) {
         my @clusters = @$_;
         if ($#clusters > 0) {
             if ($toadd->compareCardinality($clusters[0]) == 0) {
@@ -86,7 +86,9 @@ sub add {
         }
     }
     
-    push(@$this->clusters(), ($toadd));
+    my @newClusterArr = ( $toadd );
+    my @clusterArr = @{$this->clusters()};
+    push(@clusterArr, @newClusterArr);
 }
 
 =head2 Getter C<clusters>

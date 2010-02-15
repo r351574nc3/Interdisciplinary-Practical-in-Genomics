@@ -32,7 +32,7 @@ Being that a Cluster is a Set, there is no duplication
 =cut
 sub new {
     my $class = shift;
-    my @edges;
+    my @edges = ();
 
     return bless {_edges => \@edges}, $class;
 }
@@ -57,7 +57,7 @@ sub add {
     my $toadd = shift;
     
     if (!$this->contains($toadd)) {
-        push(@$this->edges(), shift);
+        push(@{$this->edges()}, shift);
     }
     
 }
@@ -114,7 +114,8 @@ sub contains {
     my $this = shift;
     my $tocompare = shift;
 
-    foreach my $edge (@$cluster->edges()) {
+
+    foreach my $edge (@{$this->edges()}) {
         if ($edge->equals($tocompare)) {
             return 1;
         }
