@@ -12,7 +12,7 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-package BlastParser;
+package IPIG::BlastParser;
 
 =head1 Class C<BlastParser>
 
@@ -32,10 +32,10 @@ use strict;
 use warnings;
 
 BEGIN {
-    require "CommentHandler.class";
-    import CommentHandler;
-    require "Edge.class";
-    import Edge;
+    require "CommentHandler.pm";
+    import IPIG::CommentHandler;
+    require "Edge.pm";
+    import IPIG::Edge;
 }
 
 
@@ -51,6 +51,7 @@ required. If the C<CommentHandler> is not provided, a default is used.
 =over
 
 =item C<rh> - a C<RecordHandler> instance
+
 =item C<ch> - a C<CommentHandler> instance
 
 =back
@@ -64,7 +65,7 @@ sub new {
     unless ($ch) { # No comment handler
         $ch = eval {
             package AnonCommentHandler;
-            our @ISA = (qw/CommentHandler/);
+            our @ISA = (qw/IPIG::CommentHandler/);
 
             sub handleComment {
                 my $this = shift;

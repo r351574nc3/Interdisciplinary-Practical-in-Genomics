@@ -12,7 +12,7 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-package Cluster;
+package IPIG::Cluster;
 
 =head1 Class C<Cluster>
 
@@ -60,8 +60,7 @@ sub add {
     if (!$this->contains($toadd)) {
         push(@{$this->edges()}, $toadd);
         push(@{$this->ids()}, $toadd->record()->query());
-    }
-    
+    }    
 }
 
 =head2 Method C<union>

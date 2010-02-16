@@ -12,10 +12,10 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-package ClusterMatrix;
+package IPIG::ClusterGraph;
 
 
-=head1 Class C<ClusterMatrix>
+=head1 Class C<ClusterGraph>
 
 =cut
 
@@ -43,7 +43,7 @@ This would require more classes, and I'm not sure I care that much.
 
 =pod 
 
-Constructs the C<ClusterMatrix> from its attributes. None are required though. 
+Constructs the C<ClusterGraph> from its attributes. None are required though. 
 Initiates an array as its data store and saves a reference to it.
 
 =cut
@@ -76,32 +76,42 @@ sub add {
     my $this = shift;
     my $toadd = shift;
 
-    foreach (@{$this->clusters()}) {
-        my @clusters = @$_;
-        if ($#clusters > 0) {
-            if ($toadd->compareCardinality($clusters[0]) == 0) {
-                push(@clusters, $toadd);
-                return;
-            }
-        }
-    }
+
+#    foreach (@{$this->clusters()}) {
+#        print "Adding a new cluster", "\n";
+        
+#        if 
+        #my @clusters = @$_;
+        #if ($#clusters > 0) {
+        #    if ($toadd->compareCardinality($clusters[0]) == 0) {
+        #        push(@clusters, $toadd);
+        #        return;
+        #    }
+        #}
+#    }
     
-    my @newClusterArr = ( $toadd );
-    push(@{$this->clusters()}, \@newClusterArr);
+#    my @newClusterArr = ( $toadd );
+   push(@{$this->clusters()}, $toadd);
 }
 
 sub addEdge {
     my $this = shift;
     my $toadd = shift;
 
-    foreach my $clusterArr (@{$this->clusters()}) {
-        foreach my $cluster (@{$clusterArr}) {
-            if ($cluster->containsId($toadd->record()->query())) {
-                print "Adding edge $toadd->record()->query()) to cluster\n";
-                $cluster->add($toadd);
-            }
+    foreach my $cluster (@{$this->clusters()}) {
+        if (!$cluster->containsId($toadd->record()->query())) {
+            #print "Adding edge $toadd->record()->query()) to cluster\n";
+            $cluster->add($toadd);
+               return;
         }
+#        foreach my $cluster (@{$clusterArr}) {
+#        }
     }
+
+    # There is no cluster with this gene
+    my $newCluster = new IPIG::Cluster();
+    $newCluster->add($toadd);
+    $this->add($newCluster);
 }
 
 =head2 Getter C<clusters>
@@ -123,12 +133,39 @@ sub clusters {
     return $this->{_clusters};
 }
 
-sub graph {
+=head2 Method C<graph>
 
-    return [ 
-        ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"], 
-        [ 1, 2, 5, 6, 3, 1.5, 1, 3, 4], 
-        ];
+=pod 
+
+
+=head3 Returns
+
+=pod 
+
+A sorted 2-dimensional array of the data to be represented in a visual graph
+
+=cut
+sub graph {
+    my $this = shift;
+    my @graph = [[],[]];
+    
+    my $largest = 0;
+    for my $cluster (@{$this->clusters()}) {
+        push(@{$graph[0]}, $cluster->edges()->size());
+        push(@{$graph[1]}, $cluster->clusters()}[0]->size());
+    }
+
+    foreach (@{$graph[0]}) {
+        print "$_\n";
+        @blah = @{$_};
+        foreach (@blah) {
+            print $_, "\n";
+        }
+    }
+
+    return @graph;
+   
+    # return [["1", "2", "3", "4", "5"], ["1", "2", "3", "4", "5"]];
 }
 
 =head2 Method C<sort>
@@ -139,6 +176,11 @@ Sorts C<clusters> according to the cardinality of each array of clusters contain
 
 =cut
 sub sort {
+    my $this = shift;
+
+    my $unsorted = $this->clusters();
+    my @sorted = sort { $a->size() cmp $b->size() }  @{$unsorted};
+    $this->{_clusters} = \@sorted;
 }
 
 

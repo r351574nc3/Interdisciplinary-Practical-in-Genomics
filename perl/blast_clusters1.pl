@@ -19,12 +19,12 @@ use lib 'modules/IPIG';
 use GD::Graph::bars3d;
 
 BEGIN {
-    require "BlastParser.class";
-    import BlastParser;
-    require "BlastRecordHandler.class";
-    import BlastRecordHandler;
-    require "ClusterMatrix.class";
-    import ClusterMatrix;
+    require "BlastParser.pm";
+    import IPIG::BlastParser;
+    require "BlastRecordHandler.pm";
+    import IPIG::BlastRecordHandler;
+    require "ClusterGraph.pm";
+    import IPIG::ClusterGraph;
 }
 
 =head1 blast_calc1 Main
@@ -72,45 +72,47 @@ sub graph {
 }
 
 sub testGraph {
-    my $clusters = new ClusterMatrix();
+    my $clusters = new IPIG::ClusterGraph();
 
-    my $record1  = new BlastRecord("AP206_contig00001_778-11", "AP206_contig00001_778-11");
-    my $record2  = new BlastRecord("AP206_contig00001_778-11", "AP206_contig00001_778-12");
-    my $record3  = new BlastRecord("AP206_contig00001_778-11", "AP206_contig00001_778-13");
-    my $record4  = new BlastRecord("AP206_contig00001_778-11", "sicca_contig00170_13535-14302");
-    my $record5  = new BlastRecord("AP206_contig00001_778-11", "sicca_contig00170_13535-14303");
-    my $record6  = new BlastRecord("AP206_contig00001_778-11", "sicca_contig00170_13535-14304");
-    my $record7  = new BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-15");
-    my $record8  = new BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-14305");
-    my $record9  = new BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-16");
-    my $record10 = new BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-14306");
-    my $record11 = new BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-17");
-    my $record12 = new BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-14307");
-    my $record13 = new BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-18");
-    my $record14 = new BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-143028");
+    my $record1  = new IPIG::BlastRecord("AP206_contig00001_778-11", "AP206_contig00001_778-11");
+    my $record2  = new IPIG::BlastRecord("AP206_contig00001_778-11", "AP206_contig00001_778-12");
+    my $record3  = new IPIG::BlastRecord("AP206_contig00001_778-11", "AP206_contig00001_778-13");
+    my $record4  = new IPIG::BlastRecord("AP206_contig00001_778-11", "sicca_contig00170_13535-14302");
+    my $record5  = new IPIG::BlastRecord("AP206_contig00001_778-11", "sicca_contig00170_13535-14303");
+    my $record6  = new IPIG::BlastRecord("AP206_contig00001_778-11", "sicca_contig00170_13535-14304");
+    my $record7  = new IPIG::BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-15");
+    my $record8  = new IPIG::BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-14305");
+    my $record9  = new IPIG::BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-16");
+    my $record10 = new IPIG::BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-14306");
+    my $record11 = new IPIG::BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-17");
+    my $record12 = new IPIG::BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-14307");
+    my $record13 = new IPIG::BlastRecord("AP206_contig00001_778-15", "AP206_contig00001_778-18");
+    my $record14 = new IPIG::BlastRecord("AP206_contig00001_778-15", "sicca_contig00170_13535-143028");
                                   
-    $clusters->addEdge(new Edge($record1));
-    $clusters->addEdge(new Edge($record2));
-    $clusters->addEdge(new Edge($record3));
-    $clusters->addEdge(new Edge($record4));
-    $clusters->addEdge(new Edge($record5));
-    $clusters->addEdge(new Edge($record6));
-    $clusters->addEdge(new Edge($record7));
-    $clusters->addEdge(new Edge($record8));
-    $clusters->addEdge(new Edge($record9));
-    $clusters->addEdge(new Edge($record10));
-    $clusters->addEdge(new Edge($record11));
-    $clusters->addEdge(new Edge($record12));
-    $clusters->addEdge(new Edge($record13));
-    $clusters->addEdge(new Edge($record14));
+    $clusters->addEdge(new IPIG::Edge($record1));
+    $clusters->addEdge(new IPIG::Edge($record2));
+    $clusters->addEdge(new IPIG::Edge($record3));
+    $clusters->addEdge(new IPIG::Edge($record4));
+    $clusters->addEdge(new IPIG::Edge($record5));
+    $clusters->addEdge(new IPIG::Edge($record6));
+    $clusters->addEdge(new IPIG::Edge($record7));
+    $clusters->addEdge(new IPIG::Edge($record8));
+    $clusters->addEdge(new IPIG::Edge($record9));
+    $clusters->addEdge(new IPIG::Edge($record10));
+    $clusters->addEdge(new IPIG::Edge($record11));
+    $clusters->addEdge(new IPIG::Edge($record12));
+    $clusters->addEdge(new IPIG::Edge($record13));
+    $clusters->addEdge(new IPIG::Edge($record14));
+
+    print "Returning " . scalar(@{$clusters->clusters()}), "\n";
 
     return $clusters
 }
 
 sub main {
-    my $clusters = new ClusterMatrix();
-    my $parser = new BlastParser(new BlastRecordHandler($clusters));
-    $parser->parse(pop(@ARGV));
+    my $clusters = new IPIG::ClusterGraph();
+    my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
+    #$parser->parse(pop(@ARGV));
 
     #graph($clusters);
 

@@ -12,7 +12,7 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-package BlastRecordHandler;
+package IPIG::BlastRecordHandler;
 
 =head1 Class C<BlastRecordHandler>
 
@@ -33,15 +33,15 @@ package BlastRecordHandler;
 =cut
 
 BEGIN {
-    require "RecordHandler.class";
-    import RecordHandler;
-    require "BlastRecord.class";
-    import BlastRecord;
-    require "Cluster.class";
-    import Cluster;
+    require "RecordHandler.pm";
+    import IPIG::RecordHandler;
+    require "BlastRecord.pm";
+    import IPIG::BlastRecord;
+    require "Cluster.pm";
+    import IPIG::Cluster;
 }
 
-@ISA = (RecordHandler);
+@ISA = (IPIG::RecordHandler);
 
 =head2 Default Constructor
 
@@ -53,7 +53,7 @@ Constructs a C<BlastRecordHandler> from its attributes
 
 =over
 
-=item a C<ClusterMatrix>. When it handles a record, an C<Edge> is added to the C<ClusterMatrix>.
+=item a C<ClusterGraph>. When it handles a record, an C<Edge> is added to the C<ClusterGraph>.
 This makes the C<BlastRecordHandler> stateful.
 
 =back
@@ -62,7 +62,7 @@ This makes the C<BlastRecordHandler> stateful.
 sub new {
     my $class = shift;
 
-    return bless {_clusters => shift}, $class;
+    return bless {_graph => shift}, $class;
 }
 
 =head2 Method C<handleRecord>
@@ -82,7 +82,7 @@ Creates a C<BlastRecord> and handles it.
 =cut
 sub handleRecord {
     my $this = shift;
-    my $record = new BlastRecord(@_);
+    my $record = new IPIG::BlastRecord(@_);
 
     return $record;
 }
@@ -106,11 +106,12 @@ sub selfHit {
     my $this = shift;
     my $record = shift;
 
-    my $cluster = new Cluster();
+    my $cluster = new IPIG::Cluster();
 
     # Adding self-hit to the cluster. Not sure if this is right or not.
-    $cluster->add(new Edge($record));
-    $this->clusters()->add($cluster);
+    #$cluster->add(new IPIG::Edge($record));
+    #$this->clusters()->add($cluster);
+    $this->graph()->addEdge(new IPIG::Edge($record));
 
     $this->alignment($record->alignment());
    
@@ -143,17 +144,17 @@ sub alignment {
     @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
-=head2 Getter/Setter C<clusters>
+=head2 Getter/Setter C<graph>
 
 =pod 
 
-Getter/Setter for the clusters. 
+Getter/Setter for the cluster graph. 
 
 =head3 Parameters
 
 =over
 
-=item C<clusters> to set (optional)
+=item C<graph> to set (optional)
 
 =back
 
@@ -161,13 +162,13 @@ Getter/Setter for the clusters.
 
 =pod 
 
-Gets the C<clusters>. Only returns something if there is no parameter present.
+Gets the C<graph>. Only returns something if there is no parameter present.
 
 =cut
-sub clusters {
+sub graph {
     my $this = shift;
     
-    @_ ? $this->{_clusters} = shift : return $this->{_clusters};
+    @_ ? $this->{_graph} = shift : return $this->{_graph};
 }
 
 =head2 Getter/Setter C<current>
@@ -229,7 +230,7 @@ sub validateRecord {
         # This is an edge, so use the record to create an Edge instance
         # Edges can be compared against each other to form a Cluster (Graph
         # of genes)
-        my $edge = new Edge($record);
+        my $edge = new IPIG::Edge($record);
         $this->current()->add($edge);
     }
 }
