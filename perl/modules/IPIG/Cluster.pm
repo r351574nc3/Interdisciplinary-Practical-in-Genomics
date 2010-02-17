@@ -386,4 +386,35 @@ sub compareCardinality {
     return -1;
 }
 
+=head2 Getter C<edgeByHit>
+
+=pod
+
+Gets an C<Edge> from the graph by the subject id. It will iterate through
+the clusters until it finds one with the subject id it's looking for.
+
+=head3 Parameters
+
+=over
+
+=item C<subject> id of the C<Edge> to find
+
+=back
+
+=head3 Returns
+
+=pod
+
+An C<Edge> instance
+
+=cut
+sub edgeByHit {
+    my $this = shift;
+    my $subject = shift;
+    
+    foreach my $edge (@{$this->edges()}) {
+        $edge->subject() eq $subject ? return $edge : next;
+    }
+}
+
 return 1;

@@ -220,6 +220,10 @@ sub current {
  a subject that is the same as the C<BlastRecord>'s query which would make its query and subject
  the same (a self hit.)
 
+ Take note that this only works if the C<Cluster> that the C<BlastRecord> belongs to has
+ a self hit. If there isn't one, then we just say it's valid. When the self hit is discovered,
+ this C<BlastRecord> will be re-evaluated.
+
 =head3 Parameters
 
 =over
@@ -238,7 +242,7 @@ C<1> if the record is valid, C<0> otherwise.
 sub validate {
     my $this      = shift;
     my $record    = shift;
-    my $valid     = 0;
+    my $valid     = 1;          # Default to valid
     my $edge;
 
     if ($record->isa(Edge)) {
@@ -252,8 +256,10 @@ sub validate {
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
 
-    $valid = (($identReq < $record->identity()) 
-              && ($alignReq < ($record->alignment()/$selfHit->alignment())));
+    if (ref($selfHit)) { # Only validate if a self hit exists
+        $valid &= (($identReq < $record->identity()) 
+                   && ($alignReq < ($record->alignment()/$selfHit->alignment())));
+    }
     
     if ($valid) {
         # This is an edge, so use the record to create an Edge instance
