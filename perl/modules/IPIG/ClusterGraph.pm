@@ -167,20 +167,4 @@ sub graph {
     # return [["1", "2", "3", "4", "5"], ["1", "2", "3", "4", "5"]];
 }
 
-=head2 Method C<sort>
-
-=pod 
-
-Sorts C<clusters> according to the cardinality of each array of clusters contained.
-
-=cut
-sub sort {
-    my $this = shift;
-
-    my $unsorted = $this->clusters();
-    my @sorted = sort { $a->size() cmp $b->size() }  @{$unsorted};
-    $this->{_clusters} = \@sorted;
-}
-
-
 return 1;
