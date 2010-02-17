@@ -204,8 +204,76 @@ The number of C<Edge> instances that are part of this C<Cluster>
 sub size {
     my $this = shift;
     
-    return scalar(@$this->{_edges});
+    return scalar(@{$this->edges()});
 }
+
+=head2 Method C<hasAdjacentEdge>
+
+=pod
+
+Compares this C<Cluster> to another to see if the two might have edges that 
+are adjacent to each other
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - a C<Cluster> whose C<Edge> instances to compare to this one for 
+    adjacency
+
+=back
+
+=head3 Returns
+
+=pod
+
+C<1> if C<tocompare> shares at least 1 adjacent edge with this C<Cluster> instance or
+C<0> if it doesn't.
+
+=cut
+sub hasAdjacentEdge {
+    my $this = shift;
+    my $tocompare = shift;
+    
+    for my $edge (@{$tocompare->edges()}) {
+        $this->hasEdgeAdjacentTo($edge) ? return 1 : next;
+    }
+    return 0;
+}
+
+=head2 Method C<hasEdgeAdjacentTo>
+
+=pod
+
+Compares C<Edge> instances in this C<Cluster> to another to see if the the other 
+is adjacent to any C<Edge> instances in this cluster.
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - a C<Edge> who compare to others in this C<Cluster> for adjacency
+
+=back
+
+=head3 Returns
+
+=pod
+
+C<1> if C<tocompare> shares at least 1 adjacent edge with this C<Cluster> instance or
+C<0> if it doesn't.
+
+=cut
+sub hasEdgeAdjacentTo {
+    my $this = shift;
+    my $tocompare = shift;
+    
+    foreach my $edge (@{$this->edges()}) {
+        $edge->isAdjacentTo($tocompare) ? return 1 : next;
+    }
+    return 0;
+}
+
 
 =head2 Method C<compareCardinality>
 

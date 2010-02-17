@@ -99,8 +99,7 @@ sub addEdge {
     my $toadd = shift;
 
     foreach my $cluster (@{$this->clusters()}) {
-        if (!$cluster->containsId($toadd->record()->query())) {
-            #print "Adding edge $toadd->record()->query()) to cluster\n";
+        if ($cluster->containsId($toadd->record()->query())) {
             $cluster->add($toadd);
                return;
         }
@@ -150,18 +149,18 @@ sub graph {
     my @graph = [[],[]];
     
     my $largest = 0;
+    my $i = 0; 
     for my $cluster (@{$this->clusters()}) {
-        push(@{$graph[0]}, $cluster->edges()->size());
-        push(@{$graph[1]}, $cluster->clusters()}[0]->size());
+        print $cluster->ids()->[0] . " with size " . $cluster->size() . "\n";
     }
 
-    foreach (@{$graph[0]}) {
-        print "$_\n";
-        @blah = @{$_};
-        foreach (@blah) {
-            print $_, "\n";
-        }
-    }
+#    foreach (@{$graph[0]}) {
+#       print "$_\n";
+#        @blah = @{$_};
+#        foreach (@blah) {
+#            print $_, "\n";
+#        }
+#    }
 
     return @graph;
    
