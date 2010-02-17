@@ -209,7 +209,16 @@ sub current {
 =pod 
 
  Validates a C<BlastRecord> or C<Edge> using the self hit alignment information. If this record is valid,
- we can use that information to determine if it is an edge or not
+ we can use that information to determine if it is an edge or not.
+
+ A valid C<BlastRecord> has a % C<identity> larger than that of the requirement. The % C<identity>
+ requirement is determined at the point when the C<ClusterGraph> instance is created. That is, 
+ the C<ClusterGraph> knows what the requirement is. The same goes for the C<alignment> ratio
+ requirement. The C<ClusterGraph> also knows what that is. The C<alignment> ratio is determined by
+ the record alignment/self hit alignment. In order to obtain the self hit for a given record,
+ it is regarded that the C<Cluster> the C<BlastRecord> belongs in has an C<Edge> somewhere with
+ a subject that is the same as the C<BlastRecord>'s query which would make its query and subject
+ the same (a self hit.)
 
 =head3 Parameters
 
@@ -228,7 +237,6 @@ C<1> if the record is valid, C<0> otherwise.
 =cut
 sub validate {
     my $this      = shift;
-    my $alignment = shift;
     my $record    = shift;
     my $valid     = 0;
     my $edge;
@@ -237,6 +245,15 @@ sub validate {
         $edge = $record;
         $record = $edge->record();
     }
+
+    my $cluster = $this->graph()->clusterByQuery($record->query());
+    my $selfHit = $cluster->edgeByHit($record->query());
+
+    my $identReq = $this->graph()->identity();
+    my $alignReq = $this->graph()->alignment();
+
+    $valid = (($identReq < $record->identity()) 
+              && ($alignReq < ($record->alignment()/$selfHit->alignment())));
     
     if ($valid) {
         # This is an edge, so use the record to create an Edge instance
@@ -249,7 +266,6 @@ sub validate {
     }
     elsif (ref($edge)) {
         # Need to remove the $edge from the cluster
-        my $cluster = $this->graph()->clusterByQuery($record->query());
         $cluster->remove($edge);
     }
 }

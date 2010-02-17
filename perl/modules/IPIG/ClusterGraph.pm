@@ -46,12 +46,24 @@ This would require more classes, and I'm not sure I care that much.
 Constructs the C<ClusterGraph> from its attributes. None are required though. 
 Initiates an array as its data store and saves a reference to it.
 
+=head3 Parameters
+
+=over
+
+=item C<identity> - % Identity lower bound used for validation
+
+=item C<alignment> - Alignment length lower bound used for validation
+
+=back
+
 =cut
 sub new {
     my $class = shift;
     my @clusters;
 
-    return bless {_clusters => \@clusters}, $class;
+    return bless {_identity  => shift,
+                  _alignment => shift,
+                  _clusters  => \@clusters}, $class;
 }
 
 
@@ -130,6 +142,60 @@ sub clusters {
     my $this = shift;
 
     return $this->{_clusters};
+}
+
+=head2 Getter/Setter C<identity>
+
+=pod 
+
+Getter for the the % identity lower bound.
+
+=head3 Parameters
+
+=over
+
+=item C<identity> - % Identity lower bound used for validation
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the % identity lower bound
+
+=cut
+sub identity {
+    my $this = shift;
+
+    @_ ? $this->{_identity} = shift : return $this->{_identity};
+}
+
+=head2 Getter/Setter C<alignment>
+
+=pod 
+
+Getter for the the % alignment lower bound.
+
+=head3 Parameters
+
+=over
+
+=item C<alignment> - Alignment length lower bound used for validation
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the alignment length lower bound
+
+=cut
+sub alignment {
+    my $this = shift;
+
+    @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
 =head2 Getter C<clusterByQuery>

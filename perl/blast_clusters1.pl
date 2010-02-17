@@ -27,9 +27,21 @@ BEGIN {
     import IPIG::ClusterGraph;
 }
 
-=head1 blast_calc1 Main
 
-=cut 
+=head1 Class C<Main>
+
+=cut
+
+The C<Main> program entry point. Usually, called through C<&Main::main()>
+
+=head2 Description 
+
+=pod 
+
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
 
 package Main;
 
@@ -46,13 +58,20 @@ sub new {
     return bless {}, $class;
 }
 
+=head2 Default Constructor
+
+=pod 
+
+Constructs the C<Main> object instance
+
+=cut
 sub graph {
-    my $clusters = shift;
+    my $clusters = pop()->(shift, shift);
 
     my $graph = new GD::Graph::bars3d(1024, 768);
     $graph->set(
-        x_label           => 'Cluster Groups',
-        y_label           => 'Clusters/Group',
+        x_label           => '# of Clusters',
+        y_label           => '# of Genes/Cluster',
         title             => 'Gene Cluster Cardinality',
         bar_spacing       => 18,
         bar_shadow        => 9,
@@ -110,13 +129,20 @@ sub testGraph {
 }
 
 sub main {
-    my $clusters = new IPIG::ClusterGraph();
-    my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
-    #$parser->parse(pop(@ARGV));
-
-    #graph($clusters);
-
-    graph(testGraph());
+    
+    foreach my $identity ((30, 45, 60, 75, 90)) {
+        foreach my $alignment ((50, 70, 90)) {
+            graph $identity, $alignment, \&sub {                
+                my $clusters = new IPIG::ClusterGraph(shift, shift);
+                my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
+                # $parser->parse(pop(@ARGV));
+                
+                #return $clusters;
+                
+                return testGraph();
+            }
+        }
+    }
 }
 
 Main::main();
