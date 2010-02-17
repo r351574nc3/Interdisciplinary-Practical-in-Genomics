@@ -30,7 +30,7 @@ BEGIN {
 
 =head1 Class C<Main>
 
-=cut
+=pod
 
 The C<Main> program entry point. Usually, called through C<&Main::main()>
 
@@ -66,7 +66,9 @@ Constructs the C<Main> object instance
 
 =cut
 sub graph {
-    my $clusters = pop()->(shift, shift);
+    my $identity = shift;
+    my $alignment = shift;
+    my $clusters = shift()->($identity, $alignment);
 
     my $graph = new GD::Graph::bars3d(1024, 768);
     $graph->set(
@@ -85,7 +87,7 @@ sub graph {
     $graph->set_y_axis_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 20);
     my $gd = $graph->plot($clusters->graph());
     
-    open(IMG, '>file.png') or die $!;
+    open(IMG, '>i$identity_a$alignment_graph.png') or die $!;
     binmode IMG;
     print IMG $gd->png;
 }
@@ -132,7 +134,7 @@ sub main {
     
     foreach my $identity ((30, 45, 60, 75, 90)) {
         foreach my $alignment ((50, 70, 90)) {
-            graph $identity, $alignment, \&sub {                
+            graph $identity, $alignment, sub {                
                 my $clusters = new IPIG::ClusterGraph(shift, shift);
                 my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
                 # $parser->parse(pop(@ARGV));
