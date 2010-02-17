@@ -96,6 +96,64 @@ name="Returns"
 name="Method_contains"
 >Method <code>contains</code></a></h2>
 
+<p>Traverses the <code>Cluster</code> for a given <code>Edge</code></p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_Edge_to_test_for_existence"
+><code>tocompare</code> - <code>Edge</code> to test for existence</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p><code>1</code> if <code>$tocompare</code> is contained in the <code>Cluster</code>; <code>0</code> otherwise.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_indexOf"
+>Method <code>indexOf</code></a></h2>
+
+<p>Traverses the <code>Cluster</code> looking for the array index of the <code>Edge</code></p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_Edge_to_find"
+><code>tocompare</code> - <code>Edge</code> to find</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p><code>index</code> integer location of <code>$tocompare</code> within the <code>Cluster</code> array of <code>Edge</code> instances; <code>-1</code> otherwise.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_remove"
+>Method <code>remove</code></a></h2>
+
+<p>Locates and removes an <code>Edge</code> from the <code>Cluster</code>.
+This probably only happens when an <code>Edge</code> has been found to be invalid.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_Edge_to_locate_and_remove"
+><code>tocompare</code> - <code>Edge</code> to locate and remove</a></dt>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_containsId"
+>Method <code>containsId</code></a></h2>
+
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
@@ -122,6 +180,16 @@ name="Returns"
 <p>A reference to an array instance containing <code>Edge</code> instances for this <code>Cluster</code></p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
+name="Getter_ids"
+>Getter <code>ids</code></a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p>A reference to an array instance containing <code>Edge</code> instances for this <code>Cluster</code></p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
 name="Getter_size"
 >Getter <code>size</code></a></h2>
 
@@ -130,6 +198,48 @@ name="Returns"
 >Returns</a></h3>
 
 <p>The number of <code>Edge</code> instances that are part of this <code>Cluster</code></p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_hasAdjacentEdge"
+>Method <code>hasAdjacentEdge</code></a></h2>
+
+<p>Compares this <code>Cluster</code> to another to see if the two might have edges that are adjacent to each other</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_a_Cluster_whose_Edge_instances_to_compare_to_this_one_for_adjacency"
+><code>tocompare</code> - a <code>Cluster</code> whose <code>Edge</code> instances to compare to this one for adjacency</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p><code>1</code> if <code>tocompare</code> shares at least 1 adjacent edge with this <code>Cluster</code> instance or <code>0</code> if it doesn&#39;t.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_hasEdgeAdjacentTo"
+>Method <code>hasEdgeAdjacentTo</code></a></h2>
+
+<p>Compares <code>Edge</code> instances in this <code>Cluster</code> to another to see if the the other is adjacent to any <code>Edge</code> instances in this cluster.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_a_Edge_who_compare_to_others_in_this_Cluster_for_adjacency"
+><code>tocompare</code> - a <code>Edge</code> who compare to others in this <code>Cluster</code> for adjacency</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p><code>1</code> if <code>tocompare</code> shares at least 1 adjacent edge with this <code>Cluster</code> instance or <code>0</code> if it doesn&#39;t.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Method_compareCardinality"
@@ -158,6 +268,28 @@ name="Returns"
 <dt><a name="1_if_this_Cluster_is_larger_in_cardinality_than_tocompare"
 ><code>1</code> if this <code>Cluster</code> is larger in cardinality than <code>tocompare</code></a></dt>
 </dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Getter_edgeByHit"
+>Getter <code>edgeByHit</code></a></h2>
+
+<p>Gets an <code>Edge</code> from the graph by the subject id.
+It will iterate through the clusters until it finds one with the subject id it&#39;s looking for.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="subject_id_of_the_Edge_to_find"
+><code>subject</code> id of the <code>Edge</code> to find</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p>An <code>Edge</code> instance</p>
 
 <!-- end doc -->
 </div><!-- /.pagehead -->

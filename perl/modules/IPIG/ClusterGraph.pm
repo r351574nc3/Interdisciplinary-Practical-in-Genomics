@@ -71,9 +71,9 @@ sub new {
 
 =pod 
 
- Adds a cluster to the matrix. Compares the cardinality of the cluster $toadd 
- to the cardinality of each index of the matrix to determine where to add it. 
- Each index of the matrix is an array of clusters
+Adds a cluster to the matrix. Compares the cardinality of the cluster $toadd 
+to the cardinality of each index of the matrix to determine where to add it. 
+Each index of the matrix is an array of clusters
 
 =head3 Parameters
 

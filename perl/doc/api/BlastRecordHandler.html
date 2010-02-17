@@ -14,6 +14,7 @@
     <link href="https://assets1.github.com/stylesheets/bundle_github.css?b4e92e82b2459127776a4e8b69efc76d30684890" media="screen" rel="stylesheet" type="text/css" />
 
   </head>
+
   
 
   <body class="page-dashboard">
@@ -22,11 +23,10 @@
       <div id="header" class="pageheaded">
         <div class="site">
           <div class="logo"><table>
-              <tr><td><img src="http://a1.twimg.com/profile_images/595969456/lion-silhouette-small_bigger.png" alt="r351574nc3" /></a></td><td><h1>class <TT>BlastRecordHandler</TT></h1></td></tr></table></div>
+              <tr><td><img src="http://a1.twimg.com/profile_images/595969456/lion-silhouette-small_bigger.png" alt="r351574nc3" />
+                </td><td><h1>class <tt>BlastRecordHandler</tt></h1></td></tr></table></div>
             
 
-
-  
         </div>
       </div>
 
@@ -37,8 +37,8 @@
 
 
 
-<div class="pagehead dashboard">
-   <!-- start doc -->
+<div class="pagehead shrunken dashboard">
+<!-- start doc -->
 <a name='___top' class='dummyTopAnchor' ></a>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -69,7 +69,7 @@ name="Parameters"
 
 <dl>
 <dt><a 
->a <code>ClusterMatrix</code>. When it handles a record, an <code>Edge</code> is added to the <code>ClusterMatrix</code>. This makes the <code>BlastRecordHandler</code> stateful.</a></dt>
+>a <code>ClusterGraph</code>. When it handles a record, an <code>Edge</code> is added to the <code>ClusterGraph</code>. This makes the <code>BlastRecordHandler</code> stateful.</a></dt>
 </dl>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -124,25 +124,25 @@ name="Returns"
 <p>Gets the <code>alignment</code>. Only returns something if there is no parameter present.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Getter/Setter_clusters"
->Getter/Setter <code>clusters</code></a></h2>
+name="Getter/Setter_graph"
+>Getter/Setter <code>graph</code></a></h2>
 
-<p>Getter/Setter for the clusters.</p>
+<p>Getter/Setter for the cluster graph.</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="clusters_to_set_(optional)"
-><code>clusters</code> to set (optional)</a></dt>
+<dt><a name="graph_to_set_(optional)"
+><code>graph</code> to set (optional)</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Returns"
 >Returns</a></h3>
 
-<p>Gets the <code>clusters</code>. Only returns something if there is no parameter present.</p>
+<p>Gets the <code>graph</code>. Only returns something if there is no parameter present.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Getter/Setter_current"
@@ -166,19 +166,32 @@ name="Returns"
 <p>Gets the <code>current</code>. Only returns something if there is no parameter present.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Method_validateRecord"
->Method <code>validateRecord</code></a></h2>
+name="Method_validate"
+>Method <code>validate</code></a></h2>
 
-<pre> Validates this record using the self hit alignment information. If this record is valid,
- we can use that information to determine if it is an edge or not</pre>
+<pre> Validates a C&#60;BlastRecord&#62; or C&#60;Edge&#62; using the self hit alignment information. If this record is valid,
+ we can use that information to determine if it is an edge or not.
+
+ A valid C&#60;BlastRecord&#62; has a % C&#60;identity&#62; larger than that of the requirement. The % C&#60;identity&#62;
+ requirement is determined at the point when the C&#60;ClusterGraph&#62; instance is created. That is, 
+ the C&#60;ClusterGraph&#62; knows what the requirement is. The same goes for the C&#60;alignment&#62; ratio
+ requirement. The C&#60;ClusterGraph&#62; also knows what that is. The C&#60;alignment&#62; ratio is determined by
+ the record alignment/self hit alignment. In order to obtain the self hit for a given record,
+ it is regarded that the C&#60;Cluster&#62; the C&#60;BlastRecord&#62; belongs in has an C&#60;Edge&#62; somewhere with
+ a subject that is the same as the C&#60;BlastRecord&#62;&#39;s query which would make its query and subject
+ the same (a self hit.)
+
+ Take note that this only works if the C&#60;Cluster&#62; that the C&#60;BlastRecord&#62; belongs to has
+ a self hit. If there isn&#39;t one, then we just say it&#39;s valid. When the self hit is discovered,
+ this C&#60;BlastRecord&#62; will be re-evaluated.</pre>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="record_-_The_record_to_validate"
-><code>record</code> - The record to validate</a></dt>
+<dt><a name="record_-_The_BlastRecord_or_Edge_to_validate"
+><code>record</code> - The <code>BlastRecord</code> or <code>Edge</code> to validate</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
@@ -187,30 +200,10 @@ name="Returns"
 
 <p><code>1</code> if the record is valid, <code>0</code> otherwise.</p>
 
+<!-- end doc -->
 </div><!-- /.pagehead -->
 
-
-  
-
-
-
-
-
-
-      
-
-      
-    
-  </div>
-
-</div>
-
-  
-    
-</div>
-
-        </div>
-      
     </div>
+
   </body>
 </html>
