@@ -106,15 +106,21 @@ sub selfHit {
     my $this = shift;
     my $record = shift;
 
-    my $cluster = new IPIG::Cluster();
+    my $cluster = $this->graph()->clusterByQuery($record->query());
+
+    if (ref($cluster)) {
+        $cluster = new IPIG::Cluster();
+    }
+
+    # Validate all possible edges currently in the Cluster
+    foreach my $edge (@{cluster->edges()}) {
+        $this->validate($edge);
+    }
 
     # Adding self-hit to the cluster. Not sure if this is right or not.
-    #$cluster->add(new IPIG::Edge($record));
-    #$this->clusters()->add($cluster);
     $this->graph()->addEdge(new IPIG::Edge($record));
 
     $this->alignment($record->alignment());
-   
 }
 
 =head2 Getter/Setter C<alignment>
@@ -198,18 +204,18 @@ sub current {
     @_ ? $this->{_current} = shift : return $this->{_current};
 }
 
-=head2 Method C<validateRecord>
+=head2 Method C<validate>
 
 =pod 
 
- Validates this record using the self hit alignment information. If this record is valid,
+ Validates a C<BlastRecord> or C<Edge> using the self hit alignment information. If this record is valid,
  we can use that information to determine if it is an edge or not
 
 =head3 Parameters
 
 =over
 
-=item C<record>    - The record to validate
+=item C<record>    - The C<BlastRecord> or C<Edge> to validate
 
 =back
 
@@ -220,18 +226,31 @@ sub current {
 C<1> if the record is valid, C<0> otherwise.
 
 =cut
-sub validateRecord {
+sub validate {
     my $this      = shift;
     my $alignment = shift;
     my $record    = shift;
     my $valid     = 0;
+    my $edge;
+
+    if ($record->isa(Edge)) {
+        $edge = $record;
+        $record = $edge->record();
+    }
     
     if ($valid) {
         # This is an edge, so use the record to create an Edge instance
         # Edges can be compared against each other to form a Cluster (Graph
         # of genes)
-        my $edge = new IPIG::Edge($record);
-        $this->current()->add($edge);
+
+        if (!ref($edge)) {
+            $this->graph()->addEdge($edge);
+        }
+    }
+    elsif (ref($edge)) {
+        # Need to remove the $edge from the cluster
+        my $cluster = $this->graph()->clusterByQuery($record->query());
+        $cluster->remove($edge);
     }
 }
 

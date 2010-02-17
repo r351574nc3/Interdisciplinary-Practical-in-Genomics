@@ -110,7 +110,7 @@ sub parse {
                 $this->recordHandler()->selfHit($record);
             }
             else {
-                $this->recordHandler()->validateRecord($record);
+                $this->recordHandler()->validate($record);
             }
         }
         elsif ($this->isComment($_)) {

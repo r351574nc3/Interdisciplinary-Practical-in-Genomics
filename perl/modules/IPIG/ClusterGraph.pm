@@ -132,6 +132,37 @@ sub clusters {
     return $this->{_clusters};
 }
 
+=head2 Getter C<clusterByQuery>
+
+=pod
+
+Gets a C<Cluster> from the graph by the query id. It will iterate through
+the clusters until it finds one with the query id it's looking for.
+
+=head3 Parameters
+
+=over
+
+=item C<query> id of the C<Cluster> to find
+
+=back
+
+=head3 Returns
+
+=pod
+
+A C<Cluster> instance
+
+=cut
+sub clusterByQuery {
+    my $this = shift;
+    my $query = shift;
+    
+    foreach my $cluster (@{$this->clusters()}) {
+        $cluster->containsId($query) ? return $cluster : next;
+    }
+}
+
 =head2 Method C<graph>
 
 =pod 
