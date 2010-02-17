@@ -132,8 +132,6 @@ sub addEdge {
             $cluster->add($toadd);
                return;
         }
-#        foreach my $cluster (@{$clusterArr}) {
-#        }
     }
 
     # There is no cluster with this gene
@@ -260,25 +258,58 @@ A sorted 2-dimensional array of the data to be represented in a visual graph
 =cut
 sub graph {
     my $this = shift;
-    my @graph = [[],[]];
+    my $graph = [[],[]];
+    my %graphHash;
     
     my $largest = 0;
-    my $i = 0; 
-    for my $cluster (@{$this->clusters()}) {
-        print $cluster->ids()->[0] . " with size " . $cluster->size() . "\n";
+#     print "Number of clusters is " . scalar @{$this->clusters()}, "\n";
+    for (my $x = 0; $x < scalar @{$this->clusters()} - 1; $x++) {
+#        print "Found cluster with size " . $this->clusters()->[$x]->size() . "\n";
+#        print "id = " . $this->clusters()->[$x]->ids()->[0] . "\n";
+        
+        if ($this->clusters()->[$x]->size() < 2) {
+            delete $this->clusters()->[$x];
+        }
+
+        for (my $y = 0; $y < scalar @{$this->clusters()} - 1; $y++) {
+            if (!$this->clusters()->[$y] 
+                || $this->clusters()->[$y]->size() < 2) {
+                splice(@{$this->clusters()}, $y, 1);
+                $y--;
+                next;
+            }
+            next if ($this->clusters()->[$x] eq $this->clusters()->[$y]); # Skip the same cluster
+            
+            # print $this->clusters()->[$x] . " ne " . $this->clusters()->[$y] . "\n";
+
+            print "Trying to union $x with $y", "\n";
+            my $newCluster = $this->clusters()->[$x]->union($this->clusters()->[$y]);
+            if ($newCluster) {
+                print "Got new cluster " . $newCluster->size(), "\n";
+                $this->clusters()->[$x] = $newCluster;
+                # delete $this->clusters()->[$y];
+                # print "Removing cluster $y\n";
+                splice(@{$this->clusters()}, $y, 1);
+                $y--;
+            }
+        }
+
+#        unless ($this->clusters()->[$x]) {
+#            splice(@{$this->clusters()}, $x, 1);
+#            $x--;
+#        }
     }
 
-#    foreach (@{$graph[0]}) {
-#       print "$_\n";
-#        @blah = @{$_};
-#        foreach (@blah) {
-#            print $_, "\n";
-#        }
-#    }
+    foreach my $cluster (@{$this->clusters()}) {
+        next unless($cluster);
+        next if ($cluster->size() < 2);
+        $graphHash{$cluster->size()}++;
+    }
+    
+    push(@{$graph->[0]}, keys %graphHash);
+    push(@{$graph->[1]}, values %graphHash);
 
-    return @graph;
-   
-    # return [["1", "2", "3", "4", "5"], ["1", "2", "3", "4", "5"]];
+    return $graph;
 }
 
 return 1;

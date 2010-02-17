@@ -59,8 +59,12 @@ sub add {
     
     if (!$this->contains($toadd)) {
         push(@{$this->edges()}, $toadd);
-        push(@{$this->ids()}, $toadd->record()->query());
-    }    
+        
+        if (!$this->containsId($toadd->record()->query())) {
+            push(@{$this->ids()}, $toadd->record()->query());
+        }
+    }
+
 }
 
 =head2 Method C<union>
@@ -82,14 +86,33 @@ is a completely new C<Cluster>.
 
 =pod 
 
-A new C<Cluster> instance containing all C<Edge> instances from both C<Cluster> instances.
+A new C<Cluster> instance containing all C<Edge> instances from both C<Cluster> instances. If 
+a union is not possible, nothing is returned
 
 =cut
 sub union {
     my $this = shift;
     my $other = shift;
-    
-    my $retval = new Cluster();
+
+    print "Unioning cluster of size " . $this->size() . " with size " . $other->size() . "\n";
+
+    return if (!$this->hasAdjacentEdge($other));
+
+    my $retval = new IPIG::Cluster();
+
+    foreach my $edge (@{$this->edges()}) {
+        # print "Adding $edge\n";
+        $retval->add($edge);
+    }
+
+    foreach my $edge (@{$other->edges()}) {
+        # print "Adding $edge\n";
+        $retval->add($edge);
+    }
+
+    # print "Returning size " . $retval->size(), "\n";
+
+    return $retval;
 }
 
 =head2 Method C<contains>
@@ -384,6 +407,33 @@ sub compareCardinality {
     }
 
     return -1;
+}
+
+=head2 Getter/Setter C<alignment>
+
+=pod 
+
+Getter/Setter for the alignment
+
+=head3 Parameters
+
+=over
+
+=item C<alignment> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the alignment. Only returns something if there is no parameter present.
+
+=cut
+sub alignment {
+    my $this = shift;
+
+    @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
 =head2 Getter C<edgeByHit>

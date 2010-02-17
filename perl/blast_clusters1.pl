@@ -69,11 +69,11 @@ sub graph {
     my $identity = shift;
     my $alignment = shift;
     my $clusters = shift()->($identity, $alignment);
-
+    
     my $graph = new GD::Graph::bars3d(1024, 768);
     $graph->set(
-        x_label           => '# of Clusters',
-        y_label           => '# of Genes/Cluster',
+        x_label           => '# of Genes/Cluster',
+        y_label           => '# of Clusters',
         title             => 'Gene Cluster Cardinality',
         bar_spacing       => 18,
         bar_shadow        => 9,
@@ -87,7 +87,7 @@ sub graph {
     $graph->set_y_axis_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 20);
     my $gd = $graph->plot($clusters->graph());
     
-    open(IMG, '>i$identity_a$alignment_graph.png') or die $!;
+    open(IMG, ">i${identity}_a${alignment}_graph.png") or die $!;
     binmode IMG;
     print IMG $gd->png;
 }
@@ -125,23 +125,23 @@ sub testGraph {
     $clusters->addEdge(new IPIG::Edge($record13));
     $clusters->addEdge(new IPIG::Edge($record14));
 
-    print "Returning " . scalar(@{$clusters->clusters()}), "\n";
-
     return $clusters
 }
 
 sub main {
+    my $blast_file = pop(@ARGV);
     
-    foreach my $identity ((30, 45, 60, 75, 90)) {
-        foreach my $alignment ((50, 70, 90)) {
+#    foreach my $identity ((30, 45, 60, 75, 90)) {
+    foreach my $identity ((30, 45)) {
+#        foreach my $alignment ((50, 70, 90)) {
+        foreach my $alignment ((50)) {
             graph $identity, $alignment, sub {                
+#            graph 30, 50, sub {                
                 my $clusters = new IPIG::ClusterGraph(shift, shift);
                 my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
-                $parser->parse(pop(@ARGV));
+                $parser->parse($blast_file);
                 
-                #return $clusters;
-                
-                return testGraph();
+                return $clusters;
             }
         }
     }

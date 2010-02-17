@@ -119,35 +119,6 @@ sub selfHit {
 
     # Adding self-hit to the cluster. Not sure if this is right or not.
     $this->graph()->addEdge(new IPIG::Edge($record));
-
-    $this->alignment($record->alignment());
-}
-
-=head2 Getter/Setter C<alignment>
-
-=pod 
-
-Getter/Setter for the alignment. Alignment is used to validate a C<BlastRecord>
-
-=head3 Parameters
-
-=over
-
-=item C<alignment> to set (optional)
-
-=back
-
-=head3 Returns
-
-=pod 
-
-Gets the C<alignment>. Only returns something if there is no parameter present.
-
-=cut
-sub alignment {
-    my $this = shift;
-
-    @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
 =head2 Getter/Setter C<graph>
@@ -249,13 +220,14 @@ sub validate {
         $edge = $record;
         $record = $edge->record();
     }
+        
     my $cluster = $this->graph()->clusterByQuery($record->query());
     my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
 
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
 
-    if (ref($selfHit)) { # Only validate if a self hit exists
+    if ($selfHit) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
                    && ($alignReq < ($record->alignment()/$selfHit->record()->alignment())));
     }
@@ -264,7 +236,6 @@ sub validate {
         # This is an edge, so use the record to create an Edge instance
         # Edges can be compared against each other to form a Cluster (Graph
         # of genes)
-
         if (ref($edge)) {
             $this->graph()->addEdge($edge);
         }
