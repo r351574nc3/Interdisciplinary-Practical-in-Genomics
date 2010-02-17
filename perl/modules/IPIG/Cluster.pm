@@ -96,11 +96,13 @@ sub union {
 
 =pod
 
+Traverses the C<Cluster> for a given C<Edge>
+
 =head3 Parameters
 
 =over
 
-=item C<tocompare> - 
+=item C<tocompare> - C<Edge> to test for existence
 
 =back
 
@@ -121,8 +123,70 @@ sub contains {
             return 1;
         }
     }
-    return 0
+    return 0;
 }
+
+=head2 Method C<indexOf>
+
+=pod
+
+Traverses the C<Cluster> looking for the array index of the C<Edge>
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - C<Edge> to find
+
+=back
+
+=head3 Returns
+
+=pod
+
+C<index> integer location of C<$tocompare> within the C<Cluster> array of C<Edge> instances; C<-1> otherwise.
+
+=cut
+sub indexOf {
+    my $this = shift;
+    my $tocompare = shift;
+
+
+    for (my $i = 0; $i < scalar @{$this->edges()}; $i++) {
+        my $edge = $this->edges()->[$i];
+        if ($edge->equals($tocompare)) {
+            return $i;
+        }
+    }
+    return -1;
+}
+
+=head2 Method C<remove>
+
+=pod
+
+Locates and removes an C<Edge> from the C<Cluster>. This probably only happens
+when an C<Edge> has been found to be invalid.
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - C<Edge> to locate and remove
+
+=back
+
+=cut
+sub remove {
+    my $this = shift;
+    my $edge = shift;
+
+    my $idx = $this->indexOf($edge);
+    
+    # Do the remove via splicing out the element!
+    splice(@{$this->{_edges}}, $idx, 1);
+}
+
 
 =head2 Method C<containsId>
 
