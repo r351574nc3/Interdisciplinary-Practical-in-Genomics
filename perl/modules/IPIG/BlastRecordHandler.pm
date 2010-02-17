@@ -108,12 +108,12 @@ sub selfHit {
 
     my $cluster = $this->graph()->clusterByQuery($record->query());
 
-    if (ref($cluster)) {
+    if (!ref($cluster)) {
         $cluster = new IPIG::Cluster();
     }
 
     # Validate all possible edges currently in the Cluster
-    foreach my $edge (@{cluster->edges()}) {
+    foreach my $edge (@{$cluster->edges()}) {
         $this->validate($edge);
     }
 
@@ -245,20 +245,19 @@ sub validate {
     my $valid     = 1;          # Default to valid
     my $edge;
 
-    if ($record->isa(Edge)) {
+    if ($record->isa(IPIG::Edge)) {
         $edge = $record;
         $record = $edge->record();
     }
-
     my $cluster = $this->graph()->clusterByQuery($record->query());
-    my $selfHit = $cluster->edgeByHit($record->query());
+    my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
 
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
 
     if (ref($selfHit)) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
-                   && ($alignReq < ($record->alignment()/$selfHit->alignment())));
+                   && ($alignReq < ($record->alignment()/$selfHit->record()->alignment())));
     }
     
     if ($valid) {
@@ -266,8 +265,11 @@ sub validate {
         # Edges can be compared against each other to form a Cluster (Graph
         # of genes)
 
-        if (!ref($edge)) {
+        if (ref($edge)) {
             $this->graph()->addEdge($edge);
+        }
+        else {
+            $this->graph()->addEdge(new IPIG::Edge($record));
         }
     }
     elsif (ref($edge)) {

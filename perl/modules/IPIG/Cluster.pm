@@ -413,7 +413,7 @@ sub edgeByHit {
     my $subject = shift;
     
     foreach my $edge (@{$this->edges()}) {
-        $edge->subject() eq $subject ? return $edge : next;
+        $edge->record()->subject() eq $subject ? return $edge : next;
     }
 }
 

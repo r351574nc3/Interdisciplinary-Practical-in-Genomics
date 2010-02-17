@@ -106,6 +106,23 @@ sub add {
    push(@{$this->clusters()}, $toadd);
 }
 
+=head2 Method C<addEdge>
+
+=pod
+
+Add an C<Edge> to a C<Cluster> in the C<ClusterGraph>. First, try to locate a
+C<Cluster> with the same query id as the C<Edge> to add. If one cannot be found,
+then instantiate one.
+
+=head3 Parameters
+
+=over
+
+=item C<toadd> - C<Edge> instance to add
+
+=back
+
+=cut
 sub addEdge {
     my $this = shift;
     my $toadd = shift;

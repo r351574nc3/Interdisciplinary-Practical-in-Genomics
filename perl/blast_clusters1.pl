@@ -137,7 +137,7 @@ sub main {
             graph $identity, $alignment, sub {                
                 my $clusters = new IPIG::ClusterGraph(shift, shift);
                 my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
-                # $parser->parse(pop(@ARGV));
+                $parser->parse(pop(@ARGV));
                 
                 #return $clusters;
                 
