@@ -222,14 +222,14 @@ sub validate {
     }
         
     my $cluster = $this->graph()->clusterByQuery($record->query());
-    my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
+    # my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
 
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
 
     if ($selfHit) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
-                   && ($alignReq < ($record->alignment()/$selfHit->record()->alignment())));
+                   && ($alignReq < ($record->alignment()/$cluster()->alignment())));
     }
     
     if ($valid) {

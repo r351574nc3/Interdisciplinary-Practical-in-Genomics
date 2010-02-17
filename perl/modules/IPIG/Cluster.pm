@@ -58,7 +58,9 @@ sub add {
     my $toadd = shift;
     
     if (!$this->contains($toadd)) {
-        push(@{$this->edges()}, $toadd);
+        unless ($toadd->record()->isSelfHit()) {
+            push(@{$this->edges()}, $toadd);
+        }
         
         if (!$this->containsId($toadd->record()->query())) {
             push(@{$this->ids()}, $toadd->record()->query());

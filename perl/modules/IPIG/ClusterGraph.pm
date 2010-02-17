@@ -267,17 +267,7 @@ sub graph {
 #        print "Found cluster with size " . $this->clusters()->[$x]->size() . "\n";
 #        print "id = " . $this->clusters()->[$x]->ids()->[0] . "\n";
         
-        if ($this->clusters()->[$x]->size() < 2) {
-            delete $this->clusters()->[$x];
-        }
-
         for (my $y = 0; $y < scalar @{$this->clusters()} - 1; $y++) {
-            if (!$this->clusters()->[$y] 
-                || $this->clusters()->[$y]->size() < 2) {
-                splice(@{$this->clusters()}, $y, 1);
-                $y--;
-                next;
-            }
             next if ($this->clusters()->[$x] eq $this->clusters()->[$y]); # Skip the same cluster
             
             # print $this->clusters()->[$x] . " ne " . $this->clusters()->[$y] . "\n";
