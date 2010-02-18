@@ -229,7 +229,7 @@ sub validate {
 
     if ($selfHit) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
-                   && ($alignReq < ($record->alignment()/$cluster()->alignment())));
+                   && ($alignReq < ($record->alignment()/$cluster->alignment())));
     }
     
     if ($valid) {
