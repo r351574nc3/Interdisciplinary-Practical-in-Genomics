@@ -78,8 +78,7 @@ sub equals {
     my $this = shift;
     my $tocompare = shift;
     
-    if ($this->record()->query() eq $tocompare->record()->query()
-        && $this->record()->subject() eq $tocompare->record()->subject()) {
+    if ($this->record()->subject() eq $tocompare->record()->subject()) {
         return 1;
     }
     return 0;
@@ -112,7 +111,8 @@ sub isAdjacentTo {
     my $this = shift;
     my $tocompare = shift;
 
-    if ($this->record()->subject() eq $tocompare->record()->subject()) {
+    if ($this->record()->query() eq $tocompare->record()->subject() 
+        || $this->record()->subject() eq $tocompare->record()->query()) {
         return 1;
     }
     return 0;

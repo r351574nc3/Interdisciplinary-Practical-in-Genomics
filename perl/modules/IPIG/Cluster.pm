@@ -96,7 +96,7 @@ sub union {
     my $this = shift;
     my $other = shift;
 
-    # print "Unioning cluster of size " . $this->size() . " with size " . $other->size() . "\n";
+    print "Unioning cluster of size " . $this->size() . " with size " . $other->size() . "\n";
 
     return if (!$this->hasAdjacentEdge($other));
     return if ($this->size() < 1 || $other->size() < 1);

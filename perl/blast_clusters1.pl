@@ -138,7 +138,7 @@ sub main {
     my $blast_file = pop(@ARGV);
     
     foreach my $identity ((30, 45, 60, 75, 90)) {
-#    foreach my $identity ((30, 45)) {               # For debugging
+#    foreach my $identity ((30)) {               # For debugging
         foreach my $alignment ((50, 70, 90)) {
 #        foreach my $alignment ((50)) {              # For debugging
             graph $identity, $alignment, sub {                
