@@ -103,10 +103,10 @@ Handles I<self hit> blast records
 
 =cut
 sub selfHit {
-    my $this = shift;
-    my $record = shift;
+    my $this    = shift;
+    my $record  = shift;
 
-    my $cluster = $this->graph()->clusterByQuery($record->query());
+    my $cluster = $this->graph()->clusters()->{$record->query()};
 
     if (!ref($cluster)) {
         $cluster = new IPIG::Cluster();
@@ -220,9 +220,9 @@ sub validate {
         $edge = $record;
         $record = $edge->record();
     }
-        
-    my $cluster = $this->graph()->clusterByQuery($record->query());
-    # my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
+
+    my $cluster = $this->graph()->clusters()->{$record->query()};
+    my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
 
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();

@@ -59,11 +59,11 @@ Initiates an array as its data store and saves a reference to it.
 =cut
 sub new {
     my $class = shift;
-    my @clusters;
+    my %clusters;
 
     return bless {_identity  => shift,
                   _alignment => shift,
-                  _clusters  => \@clusters}, $class;
+                  _clusters  => \%clusters}, $class;
 }
 
 
@@ -85,7 +85,8 @@ Each index of the matrix is an array of clusters
 
 =cut
 sub add {
-    my $this = shift;
+    my $this  = shift;
+    my $name  = shift;
     my $toadd = shift;
 
 
@@ -103,7 +104,7 @@ sub add {
 #    }
     
 #    my @newClusterArr = ( $toadd );
-   push(@{$this->clusters()}, $toadd);
+   $this->clusters()->{$name} = $toadd;
 }
 
 =head2 Method C<addEdge>
@@ -124,20 +125,19 @@ then instantiate one.
 
 =cut
 sub addEdge {
-    my $this = shift;
-    my $toadd = shift;
+    my $this    = shift;
+    my $toadd   = shift;
+    my $cluster = $this->clusters()->{$toadd->record()->query()};
 
-    foreach my $cluster (@{$this->clusters()}) {
-        if ($cluster->containsId($toadd->record()->query())) {
-            $cluster->add($toadd);
-               return;
-        }
+    if ($cluster) {
+        $cluster->add($toadd);
+        return;
     }
 
     # There is no cluster with this gene
     my $newCluster = new IPIG::Cluster();
     $newCluster->add($toadd);
-    $this->add($newCluster);
+    $this->add($toadd->record()->query(), $newCluster);
 }
 
 =head2 Getter C<clusters>
@@ -213,37 +213,6 @@ sub alignment {
     @_ ? $this->{_alignment} = shift : return $this->{_alignment};
 }
 
-=head2 Getter C<clusterByQuery>
-
-=pod
-
-Gets a C<Cluster> from the graph by the query id. It will iterate through
-the clusters until it finds one with the query id it's looking for.
-
-=head3 Parameters
-
-=over
-
-=item C<query> id of the C<Cluster> to find
-
-=back
-
-=head3 Returns
-
-=pod
-
-A C<Cluster> instance
-
-=cut
-sub clusterByQuery {
-    my $this = shift;
-    my $query = shift;
-    
-    foreach my $cluster (@{$this->clusters()}) {
-        $cluster->containsId($query) ? return $cluster : next;
-    }
-}
-
 =head2 Method C<graph>
 
 =pod 
@@ -261,38 +230,33 @@ sub graph {
     my $graph = [[],[]];
     my %graphHash;
     
-    my $largest = 0;
-#     print "Number of clusters is " . scalar @{$this->clusters()}, "\n";
-    for (my $x = 0; $x < scalar @{$this->clusters()} - 1; $x++) {
-#        print "Found cluster with size " . $this->clusters()->[$x]->size() . "\n";
-#        print "id = " . $this->clusters()->[$x]->ids()->[0] . "\n";
-        
-        for (my $y = 0; $y < scalar @{$this->clusters()} - 1; $y++) {
-            next if ($this->clusters()->[$x] eq $this->clusters()->[$y]); # Skip the same cluster
-            
-            # print $this->clusters()->[$x] . " ne " . $this->clusters()->[$y] . "\n";
 
-            print "Trying to union $x with $y", "\n";
-            my $newCluster = $this->clusters()->[$x]->union($this->clusters()->[$y]);
+    foreach my $xkey (keys %{$this->clusters()}) {
+        next unless($this->clusters->{$xkey});
+
+        foreach my $ykey (keys %{$this->clusters()}) { 
+            next if ($xkey eq $ykey);
+            next unless($this->clusters()->{$ykey});
+
+            # Clean up 0 size clusters (clusters that had 
+            # a self hit but nothing else)
+            if ($this->clusters()->{$ykey}->size() < 1) {
+                delete $this->clusters()->{$ykey};
+                next;
+            }
+
+            # print "Trying to union $x with $y", "\n";
+            my $newCluster = $this->clusters()->{$xkey}->union($this->clusters()->{$ykey});
             if ($newCluster) {
-                print "Got new cluster " . $newCluster->size(), "\n";
-                $this->clusters()->[$x] = $newCluster;
-                # delete $this->clusters()->[$y];
-                # print "Removing cluster $y\n";
-                splice(@{$this->clusters()}, $y, 1);
-                $y--;
+                # print "Got new cluster " . $newCluster->size(), "\n";
+                $this->clusters()->{$xkey} = $newCluster;
+                delete $this->clusters()->{$ykey}
             }
         }
-
-#        unless ($this->clusters()->[$x]) {
-#            splice(@{$this->clusters()}, $x, 1);
-#            $x--;
-#        }
     }
-
-    foreach my $cluster (@{$this->clusters()}) {
+    foreach my $cluster (values %{$this->clusters()}) {
         next unless($cluster);
-        next if ($cluster->size() < 2);
+        next if ($cluster->size() < 1);
         $graphHash{$cluster->size()}++;
     }
     

@@ -15,8 +15,10 @@
 ######################################################################
 
 use strict;
+use warnings;
 use lib 'modules/IPIG';
 use GD::Graph::bars3d;
+use Getopt::Std;
 
 BEGIN {
     require "BlastParser.pm";
@@ -131,12 +133,12 @@ sub testGraph {
 sub main {
     my $blast_file = pop(@ARGV);
     
-#    foreach my $identity ((30, 45, 60, 75, 90)) {
-    foreach my $identity ((30, 45)) {
-#        foreach my $alignment ((50, 70, 90)) {
-        foreach my $alignment ((50)) {
+    foreach my $identity ((30, 45, 60, 75, 90)) {
+#    foreach my $identity ((30, 45)) {               # For debugging
+        foreach my $alignment ((50, 70, 90)) {
+#        foreach my $alignment ((50)) {              # For debugging
             graph $identity, $alignment, sub {                
-#            graph 30, 50, sub {                
+#            graph 30, 50, sub {                     # For debugging
                 my $clusters = new IPIG::ClusterGraph(shift, shift);
                 my $parser = new IPIG::BlastParser(new IPIG::BlastRecordHandler($clusters));
                 $parser->parse($blast_file);
@@ -146,5 +148,16 @@ sub main {
         }
     }
 }
+__PACKAGE__;
+
+
+sub HELP_MESSAGE {
+    print <<EOF;
+Who dey?
+EOF
+}
+
+$main::VERSION = "1.6";
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
 
 Main::main();

@@ -98,9 +98,16 @@ sub parse {
     my $this  = shift;
     my $input = shift;
     print "Opening $input\n";
+
+    my $recordCount    = 0;
+    my $totalRecords   = $this->recordCount($input);
+    my $template       = "\r|%s| %d%% (%d/%d) records";
+    my $progressLength = 45;
+    my $progressRatio  = $progressLength/100;
     
     open(BLASTIN, "<" . $input);
     while(<BLASTIN>) {
+        $recordCount++;
         chop();
         if ($this->isRecord($_)) {
             my $alignment = 0;
@@ -116,8 +123,31 @@ sub parse {
         elsif ($this->isComment($_)) {
             $this->commentHandler()->handleComment();
         }
+
+        my $percent = ($recordCount/$totalRecords) * 100;
+        my $progress = (($recordCount/$totalRecords) * (100 * $progressRatio));
+        my $progressBuffer = "";
+
+        for (0 .. $progress) {
+            $progressBuffer .= '=';
+        }
+
+        for ($progress .. $progressLength) {
+            $progressBuffer .= ' ';
+        }
+
+        print sprintf($template, $progressBuffer, $percent , $recordCount, $totalRecords)
     }
     close(BLASTIN);
+}
+
+sub recordCount {
+    my $this = shift;
+    my $input = shift;
+    
+    my $wc = `wc -l $input`;
+    my @wcArr = split(/\s/, $wc);
+    return $wcArr[0];
 }
 
 =head2 Method C<parseRecord>
