@@ -29,6 +29,14 @@ BEGIN {
     import IPIG::ClusterGraph;
 }
 
+sub HELP_MESSAGE {
+    print <<EOF;
+Who dey?
+EOF
+}
+
+$main::VERSION = "1.6";
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
 
 =head1 Class C<Main>
 
@@ -46,10 +54,6 @@ The C<Main> program entry point. Usually, called through C<&Main::main()>
 =cut
 
 package Main;
-
-use strict;
-
-use warnings;
 
 use base 'Exporter';
 
@@ -148,16 +152,7 @@ sub main {
         }
     }
 }
-__PACKAGE__;
 
 
-sub HELP_MESSAGE {
-    print <<EOF;
-Who dey?
-EOF
-}
-
-$main::VERSION = "1.6";
-$Getopt::Std::STANDARD_HELP_VERSION = 1;
 
 Main::main();

@@ -230,13 +230,21 @@ sub graph {
     my $graph = [[],[]];
     my %graphHash;
     
+    my @keys = keys %{$this->clusters()};
+    my $clusterCount   = 0;
+    my $totalClusters  = scalar(@keys);
+    my $template       = "\r|%s| %d%% (%d/%d) clusters";
+    my $progressLength = 45;
+    my $progressRatio  = $progressLength/100;
 
-    foreach my $xkey (keys %{$this->clusters()}) {
+    foreach my $xkey (@keys) {
+        $clusterCount++;
         next unless($this->clusters->{$xkey});
 
-        foreach my $ykey (keys %{$this->clusters()}) { 
+        foreach my $ykey (@keys) { 
             next if ($xkey eq $ykey);
-            next unless($this->clusters()->{$ykey});
+            next unless($this->clusters()->{$ykey}
+                && $this->clusters()->{$xkey});
 
             # Clean up 0 size clusters (clusters that had 
             # a self hit but nothing else)
@@ -253,7 +261,22 @@ sub graph {
                 delete $this->clusters()->{$ykey}
             }
         }
+
+        my $percent = ($clusterCount/$totalClusters) * 100;
+        my $progress = (($clusterCount/$totalRecords) * (100 * $progressRatio));
+        my $progressBuffer = "";
+
+        for (0 .. $progress) {
+            $progressBuffer .= '=';
+        }
+
+        for ($progress .. $progressLength) {
+            $progressBuffer .= ' ';
+        }
+
+        print sprintf($template, $progressBuffer, $percent, $clusterCount, $totalClusters)
     }
+
     foreach my $cluster (values %{$this->clusters()}) {
         next unless($cluster);
         next if ($cluster->size() < 1);
