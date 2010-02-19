@@ -96,24 +96,15 @@ sub union {
     my $this = shift;
     my $other = shift;
 
-    print "Unioning cluster of size " . $this->size() . " with size " . $other->size() . "\n";
+    # print "Unioning cluster of size " . $this->size() . " with size " . $other->size() . "\n";
 
     return if (!$this->hasAdjacentEdge($other));
     return if ($this->size() < 1 || $other->size() < 1);
 
-    my $retval = new IPIG::Cluster();
-
-    foreach my $edge (@{$this->edges()}) {
-        # print "Adding $edge\n";
-        $retval->add($edge);
-    }
-
     foreach my $edge (@{$other->edges()}) {
         # print "Adding $edge\n";
-        $retval->add($edge);
+        $this->add($edge);
     }
-
-    # print "Returning size " . $retval->size(), "\n";
 
     return $retval;
 }

@@ -257,13 +257,12 @@ sub graph {
             my $newCluster = $this->clusters()->{$xkey}->union($this->clusters()->{$ykey});
             if ($newCluster) {
                 # print "Got new cluster " . $newCluster->size(), "\n";
-                $this->clusters()->{$xkey} = $newCluster;
                 delete $this->clusters()->{$ykey}
             }
         }
 
         my $percent = ($clusterCount/$totalClusters) * 100;
-        my $progress = (($clusterCount/$totalRecords) * (100 * $progressRatio));
+        my $progress = (($clusterCount/$totalClusters) * (100 * $progressRatio));
         my $progressBuffer = "";
 
         for (0 .. $progress) {

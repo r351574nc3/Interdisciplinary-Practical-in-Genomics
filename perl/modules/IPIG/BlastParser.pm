@@ -136,7 +136,9 @@ sub parse {
             $progressBuffer .= ' ';
         }
 
-        print sprintf($template, $progressBuffer, $percent, $recordCount, $totalRecords)
+        if ($recordCount % 100 == 0) {
+            print sprintf($template, $progressBuffer, $percent, $recordCount, $totalRecords)
+        }
     }
     close(BLASTIN);
 }
