@@ -31,7 +31,7 @@ C<>
 
 =head2 Usage
 
-C<cat protein_sequence_file.txt | ./probable_words.pl>
+C<cat your_protein_sequence_file | perl probable_words.pl>
 
 =head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
 
@@ -279,6 +279,8 @@ Finally, it returns the ratio of these two numbers as the expected count.
 
 =head3 Returns
 
+Total expected number for the reading frame
+
 =cut
 sub expectedCountForOrf {
    my %params  = @_;
@@ -300,7 +302,7 @@ sub expectedCountForOrf {
 my $protein = readProteinSequence();
 my $dus     = 'GCCGTCTGAA';
 my $expected_num = 0;
-
+     
 for my $orf (1 .. 3) {    # Use reading frames 1-3
 
     $expected_num += expectedCountForOrf(protein => $protein, 
