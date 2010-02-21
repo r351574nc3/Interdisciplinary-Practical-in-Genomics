@@ -33,12 +33,14 @@ package IPIG::BlastRecordHandler;
 =cut
 
 BEGIN {
-    require "RecordHandler.pm";
-    import IPIG::RecordHandler;
     require "BlastRecord.pm";
     import IPIG::BlastRecord;
     require "Cluster.pm";
     import IPIG::Cluster;
+    require "Gene.pm";
+    import IPIG::Gene;
+    require "RecordHandler.pm";
+    import IPIG::RecordHandler;
 }
 
 @ISA = (IPIG::RecordHandler);
@@ -53,7 +55,7 @@ Constructs a C<BlastRecordHandler> from its attributes
 
 =over
 
-=item a C<ClusterGraph>. When it handles a record, an C<Edge> is added to the C<ClusterGraph>.
+=item a C<ClusterGraph>. When it handles a record, an C<Gene> is added to the C<ClusterGraph>.
 This makes the C<BlastRecordHandler> stateful.
 
 =back
@@ -61,8 +63,9 @@ This makes the C<BlastRecordHandler> stateful.
 =cut
 sub new {
     my $class = shift;
-
-    return bless {_graph => shift}, $class;
+    my %alignments;
+    
+    return bless {_graph => shift, _alignments => \%alignments}, $class;
 }
 
 =head2 Method C<handleRecord>
@@ -108,17 +111,16 @@ sub selfHit {
 
     my $cluster = $this->graph()->clusters()->{$record->query()};
 
-    if (!ref($cluster)) {
-        $cluster = new IPIG::Cluster();
-    }
-
-    # Validate all possible edges currently in the Cluster
-    foreach my $edge (@{$cluster->edges()}) {
-        $this->validate($edge);
+    if (ref($cluster)) {
+        # Validate all possible genes currently in the Cluster
+        foreach my $gene (@{$cluster->genes()}) {
+            $this->validate($gene);
+        }
     }
 
     # Adding self-hit to the cluster. Not sure if this is right or not.
-    $this->graph()->addEdge(new IPIG::Edge($record));
+    # $this->graph()->addGene(new IPIG::Gene($record));
+    $this->alignments()->{$record->query()} = $record->alignment();
 }
 
 =head2 Getter/Setter C<graph>
@@ -175,19 +177,47 @@ sub current {
     @_ ? $this->{_current} = shift : return $this->{_current};
 }
 
+=head2 Getter/Setter C<alignments>
+
+=pod 
+
+Getter/Setter for the alignment length requirements hash. Each alignment length 
+is stored with the query id as the key.
+
+=head3 Parameters
+
+=over
+
+=item C<alignments> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the C<alignments>. Only returns something if there is no parameter present.
+
+=cut
+sub alignments {
+    my $this = shift;
+    
+    @_ ? $this->{_alignments} = shift : return $this->{_alignments};
+}
+
 =head2 Method C<validate>
 
 =pod 
 
-Validates a C<BlastRecord> or C<Edge> using the self hit alignment information. If this record is valid,
-we can use that information to determine if it is an edge or not.
+Validates a C<BlastRecord> or C<Gene> using the self hit alignment information. If this record is valid,
+we can use that information to determine if it is an gene or not.
 
 A valid C<BlastRecord> has a % C<identity> larger than that of the requirement. The % C<identity>
 requirement is determined at the point when the C<ClusterGraph> instance is created. That is, 
 the C<ClusterGraph> knows what the requirement is. The same goes for the C<alignment> ratio
 requirement. The C<ClusterGraph> also knows what that is. The C<alignment> ratio is determined by
 the record alignment/self hit alignment. In order to obtain the self hit for a given record,
-it is regarded that the C<Cluster> the C<BlastRecord> belongs in has an C<Edge> somewhere with
+it is regarded that the C<Cluster> the C<BlastRecord> belongs in has an C<Gene> somewhere with
 a subject that is the same as the C<BlastRecord>'s query which would make its query and subject
 the same (a self hit.)
 
@@ -199,7 +229,7 @@ this C<BlastRecord> will be re-evaluated.
 
 =over
 
-=item C<record>    - The C<BlastRecord> or C<Edge> to validate
+=item C<record>    - The C<BlastRecord> or C<Gene> to validate
 
 =back
 
@@ -214,38 +244,39 @@ sub validate {
     my $this      = shift;
     my $record    = shift;
     my $valid     = 1;          # Default to valid
-    my $edge;
+    my $gene;
 
-    if ($record->isa(IPIG::Edge)) {
-        $edge = $record;
-        $record = $edge->record();
+    if ($record->isa(IPIG::Gene)) {
+        $gene = $record;
+        $record = $gene->record();
     }
 
     my $cluster = $this->graph()->clusters()->{$record->query()};
-    my $selfHit = $cluster ? $cluster->edgeByHit($record->query()): 0;
+    my $selfHit = $cluster ? $cluster->geneByHit($record->query()): 0;
 
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
+    my $alignMax = $this->alignments->{$record->query()};
 
     if ($selfHit) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
-                   && ($alignReq < ($record->alignment()/$cluster->alignment())));
+                   && ($alignReq < ($record->alignment()/$alignMax)));
     }
     
     if ($valid) {
-        # This is an edge, so use the record to create an Edge instance
-        # Edges can be compared against each other to form a Cluster (Graph
+        # This is an gene, so use the record to create an Gene instance
+        # Genes can be compared against each other to form a Cluster (Graph
         # of genes)
-        if (ref($edge)) {
-            $this->graph()->addEdge($edge);
+        if (ref($gene)) {
+            $this->graph()->addGene($gene);
         }
         else {
-            $this->graph()->addEdge(new IPIG::Edge($record));
+            $this->graph()->addGene(new IPIG::Gene($record));
         }
     }
-    elsif (ref($edge)) {
-        # Need to remove the $edge from the cluster
-        $cluster->remove($edge);
+    elsif (ref($gene)) {
+        # Need to remove the $gene from the cluster
+        $cluster->remove($gene);
     }
 }
 

@@ -61,7 +61,7 @@ sub readProteinSequence {
     }
     
     $seq =~ s/\s//g; # Remove all spaces
-    return $`;
+    return $seq;
 }
 
 =head2 C<getWordsByOrf>
@@ -91,19 +91,19 @@ A new word string
 sub getWordsByOrf {
     my %params  = @_;
     my $frame   = $params{frame};
-    my $wordlen = $params{frame};
-    my $dus     = $params{frame};
+    my $wordlen = $params{wordlen};
+    my $dus     = $params{dus};
 
     my $retval = [];
 
-    while (len($dus) < ($frame + $wordlen)) {
+    while (length($dus) < ($frame + $wordlen)) {
         $dus .= $dus;
     }
 
     for ($frame .. ($frame + $wordlen)) {
         push(@{$retval}, substr($dus, $frame, $wordlen));
     }
-    
+
     return $retval;
 }
 
@@ -134,6 +134,7 @@ A fully reversed DUS String
 sub reverseDus {
     my @dusArr = reverse(split(//, shift));
     my $sub    = shift;
+
     
     foreach (@dusArr) {
         if ($sub) {
@@ -141,7 +142,7 @@ sub reverseDus {
         }
     }
 
-    return join(@dusArr);
+    return join('', @dusArr);
 }
 
 =head2 occurrences
@@ -168,9 +169,8 @@ Integer total number of occurences of C<substr> withing C<str>
 
 =cut
 sub occurrences {
-    my %params = @_;
-    my $str    = $params{str};
-    my $substr = $params{str};
+    my $str    = shift;
+    my $substr = shift;
 
     
     my $idx = 0;
@@ -227,13 +227,14 @@ sub occurCountForOrf {
     my $count   = 1;
 
     my $words  = [];
-    
 
     push(@{$words}, 
-         getWordsByOrf(frame => $frame, dus => $dus), # Normal DUS
-         getWordsByOrf(frame   => $frame, 
-                       wordlen => $wordlen,
-                       dus     => reverseDus($dus),   # Reversed
+         @{getWordsByOrf(frame   => $frame, 
+                         wordlen => $wordlen,
+                         dus     => $dus)}, # Normal DUS
+         @{getWordsByOrf(frame   => $frame, 
+                         wordlen => $wordlen,
+                         dus     => reverseDus($dus,   # Reversed
                        sub { # Anonymous function for reversing characters
                            my $achar = shift;
                            
@@ -241,15 +242,14 @@ sub occurCountForOrf {
                            return 'G' if ($achar eq 'C');
                            return 'C' if ($achar eq 'G');
                            return 'A' if ($achar eq 'T');
-                       })
+                                             }))
+         }
         );
-
 
     # Check for occurrences of each word
     foreach my $word (@{$words}) {
-
         # Multiply occurrences for each word together
-        $count *= occurences($word, $protein);
+        $count *= occurrences($protein, $word);
     }
 
     return $count;
@@ -302,14 +302,14 @@ sub expectedCountForOrf {
 my $protein = readProteinSequence();
 my $dus     = 'GCCGTCTGAA';
 my $expected_num = 0;
-     
-for my $orf (1 .. 3) {    # Use reading frames 1-3
 
+for my $orf (1 .. 3) {    # Use reading frames 1-3
     $expected_num += expectedCountForOrf(protein => $protein, 
                                          frame   => $orf, 
                                          dus     => $dus);
+print "Expected Number for ORF $orf: " . int($expected_num) . "\n";
 }
 
-print "Expected Number: " . int($expected_num) . "\n";
+print "Total Expected Number for ORF: " . int($expected_num) . "\n";
 
 exit 0;

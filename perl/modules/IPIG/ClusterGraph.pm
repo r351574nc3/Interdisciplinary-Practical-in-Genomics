@@ -24,8 +24,8 @@ package IPIG::ClusterGraph;
 =pod 
 
 Used to contain clusters that are intended to be sorted. Clusters
-are sorted according to the cardinality of edges per cluster. For 
-example, clusters with 12 edges will be grouped in an array together.
+are sorted according to the cardinality of genes per cluster. For 
+example, clusters with 12 genes will be grouped in an array together.
 The cardinality of that array determines the order in which these
 clusters appear. Since the matrix is sorted in ascending order,
 group 12 will appear after 10 and 11 due to its cluster cardinality.
@@ -60,10 +60,14 @@ Initiates an array as its data store and saves a reference to it.
 sub new {
     my $class = shift;
     my %clusters;
+    my $size = 0;
 
     return bless {_identity  => shift,
                   _alignment => shift,
-                  _clusters  => \%clusters}, $class;
+                  _edges     => [],
+                  _vertices  => [],
+                  _clusters  => \%clusters,
+                  _size      => $size}, $class;
 }
 
 
@@ -92,24 +96,24 @@ sub add {
    $this->clusters()->{$name} = $toadd;
 }
 
-=head2 Method C<addEdge>
+=head2 Method C<addGene>
 
 =pod
 
-Add an C<Edge> to a C<Cluster> in the C<ClusterGraph>. First, try to locate a
-C<Cluster> with the same query id as the C<Edge> to add. If one cannot be found,
+Add an C<Gene> to a C<Cluster> in the C<ClusterGraph>. First, try to locate a
+C<Cluster> with the same query id as the C<Gene> to add. If one cannot be found,
 then instantiate one.
 
 =head3 Parameters
 
 =over
 
-=item C<toadd> - C<Edge> instance to add
+=item C<toadd> - C<Gene> instance to add
 
 =back
 
 =cut
-sub addEdge {
+sub addGene {
     my $this    = shift;
     my $toadd   = shift;
     my $cluster = $this->clusters()->{$toadd->record()->query()};
@@ -202,6 +206,8 @@ sub alignment {
 
 =pod 
 
+Creates a data structure that can be used by the GD::Graph module.
+
 
 =head3 Returns
 
@@ -221,6 +227,7 @@ sub graph {
     my $template       = "\r|%s| %d%% (%d/%d) clusters";
     my $progressLength = 45;
     my $progressRatio  = $progressLength/100;
+    my %replacement;
 
     print "Total Clusters is $totalClusters\n";
 
@@ -229,24 +236,24 @@ sub graph {
         my $cluster = $this->clusters->{$xkey};
 
         next unless($this->clusters->{$xkey});
-        
-        
-        my @edges = @{$cluster->edges()};
-        print "Got " . scalar @edges . " edges\n";
 
-        foreach my $edge (@edges) {
-            my $name = $edge->record()->subject();
+        $replacement{$xkey} = $cluster;        
+        
+        my @genes = @{$cluster->genes()};
+
+        foreach my $gene (@genes) {
+            my $name = $gene->record()->subject();
             my $other = $this->clusters()->{$name};
 
             next if ($xkey eq $name);
             next unless ($other);
             
-            print "Trying to union $xkey with $name", "\n";
+            # print "Trying to union $xkey with $name", "\n";
             my $newCluster = $this->clusters()->{$xkey}->union($other);
             if ($newCluster) {
-                print "Got new cluster " . $newCluster->size(), "\n";
+                # print "Got new cluster " . $newCluster->size(), "\n";
                 delete $this->clusters()->{$name}
-            }
+            }            
         }
 
         my $percent = ($clusterCount/$totalClusters) * 100;
@@ -261,63 +268,65 @@ sub graph {
             $progressBuffer .= ' ';
         }
         
-        print sprintf($template, $progressBuffer, $percent, $clusterCount, $totalClusters)
+        print STDERR sprintf($template, $progressBuffer, $percent, $clusterCount, $totalClusters)
     }
 
     print "\n";
+    
+    print "Total clusters is now: " . scalar(%replacement), "\n";
 
     $clusterCount = 0;
     @keys = keys %{$this->clusters()};
     $clusterCount   = 0;
     $totalClusters  = scalar(@keys); $totalClusters *= $totalClusters;
 
-    foreach my $xkey (@keys) {
-        $clusterCount++;
-        next unless($this->clusters->{$xkey});
+#    foreach my $xkey (@keys) {
+#        $clusterCount++;
+#        next unless($this->clusters->{$xkey});
 
-        foreach my $ykey (@keys) { 
-            next if ($xkey eq $ykey);
-            next unless($this->clusters()->{$ykey}
-                && $this->clusters()->{$xkey});
+#        foreach my $ykey (@keys) { 
+#            next if ($xkey eq $ykey);
+#            next unless($this->clusters()->{$ykey}
+#                && $this->clusters()->{$xkey});
 
             # Clean up 0 size clusters (clusters that had 
             # a self hit but nothing else)
-            if ($this->clusters()->{$ykey}->size() < 1) {
-                delete $this->clusters()->{$ykey};
-                next;
-            }
+#            if ($this->clusters()->{$ykey}->size() < 1) {
+#                delete $this->clusters()->{$ykey};
+#                next;
+#            }
 
-            # print "Trying to union $x with $y", "\n";
-            my $newCluster = $this->clusters()->{$xkey}->union($this->clusters()->{$ykey});
-            if ($newCluster) {
-                print "Got new cluster " . $newCluster->size(), "\n";
-                delete $this->clusters()->{$ykey}
-            }
+#            # print "Trying to union $x with $y", "\n";
+#            my $newCluster = $this->clusters()->{$xkey}->union($this->clusters()->{$ykey});
+#            if ($newCluster) {
+#                print "Got new cluster " . $newCluster->size(), "\n";
+#                delete $this->clusters()->{$ykey}
+#            }
 
-            my $percent = ($clusterCount/$totalClusters) * 100;
-            my $progress = (($clusterCount/$totalClusters) * (100 * $progressRatio));
-            my $progressBuffer = "";
+#            my $percent = ($clusterCount/$totalClusters) * 100;
+#            my $progress = (($clusterCount/$totalClusters) * (100 * $progressRatio));
+#            my $progressBuffer = "";
             
-            for (0 .. $progress) {
-                $progressBuffer .= '=';
-            }
+#            for (0 .. $progress) {
+#                $progressBuffer .= '=';
+#            }
             
-            for ($progress .. $progressLength) {
-                $progressBuffer .= ' ';
-            }
+#            for ($progress .. $progressLength) {
+#                $progressBuffer .= ' ';
+#            }
             
-            print sprintf($template, $progressBuffer, $percent, $clusterCount, $totalClusters)
-        }
-    }
-
-    foreach my $cluster (values %{$this->clusters()}) {
-        next unless($cluster);
-        next if ($cluster->size() < 1);
-        $graphHash{$cluster->size()}++;
-    }
+#            print sprintf($template, $progressBuffer, $percent, $clusterCount, $totalClusters)
+#        }
+#    }
+#
+#    foreach my $cluster (values %{$this->clusters()}) {
+#        next unless($cluster);
+#        next if ($cluster->size() < 1);
+#        $graphHash{$cluster->size()}++;
+#    }
     
-    push(@{$graph->[0]}, keys %graphHash);
-    push(@{$graph->[1]}, values %graphHash);
+#    push(@{$graph->[0]}, keys %graphHash);
+#    push(@{$graph->[1]}, values %graphHash);
 
     return $graph;
 }

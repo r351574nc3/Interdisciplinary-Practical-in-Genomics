@@ -12,9 +12,9 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-package IPIG::Cluster;
+package IPIG::Graph;
 
-=head1 Class C<Cluster>
+=head1 Class C<Graph>
 
 =head2 Description
 
@@ -35,8 +35,7 @@ sub new {
     my $class = shift;
 
     return bless {_genes    => [], 
-                  _graph    => new IPIG::Graph(),
-                  _ids      => []}, $class;
+                  _edges    => []}, $class;
 }
 
 =head2 Method C<add>
@@ -70,44 +69,58 @@ sub add {
 
 }
 
-=head2 Method C<union>
+=head2 Method C<addEdge>
 
 =pod
 
-Unions this C<Cluster> instance with another C<Cluster> instance. The result
-is a completely new C<Cluster>. 
+Adds an C<Gene> instance to the C<Cluster>
 
 =head3 Parameters
 
 =over
 
-=item C<other> - a C<Cluster> instance to union with this
+=item C<toadd> - C<Gene> instance to add
 
 =back
 
-=head3 Returns
+=cut
+sub addEdge {
+    my $this   = shift;
+    my %params = @_;
+    my $source = $params{source};
+    my $target = $params{target};
+    
+    return if (!validateEndpoints(source, destination));
+    
+    edges[source] |= 1 << target;
+    edges[target] |= 1 << source;
+}
 
-=pod 
+=head2 Method C<addEdge>
 
-A new C<Cluster> instance containing all C<Gene> instances from both C<Cluster> instances. If 
-a union is not possible, nothing is returned
+=pod
+
+Adds an C<Gene> instance to the C<Cluster>
+
+=head3 Parameters
+
+=over
+
+=item C<toadd> - C<Gene> instance to add
+
+=back
 
 =cut
-sub union {
+sub validateEndpoints {
     my $this = shift;
-    my $other = shift;
+    my $source = shift;
+    my $target = shift;
+    
+    return 0 if (contains($source));
 
-    # print "Unioning cluster of size " . $this->size() . " with size " . $other->size() . "\n";
+    return 0 if (contains($target));
 
-    return if (!$this->hasAdjacentGene($other));
-    return if ($this->size() < 1 || $other->size() < 1);
-
-    foreach my $gene (@{$other->genes()}) {
-        # print "Adding $gene\n";
-        $this->add($gene);
-    }
-
-    return $retval;
+    return 1;
 }
 
 =head2 Method C<contains>
@@ -142,6 +155,35 @@ sub contains {
         }
     }
     return 0;
+}
+
+=head2 Method C<isEdge>
+
+=pod
+
+Traverses the C<Cluster> for a given C<Gene>
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - C<Gene> to test for existence
+
+=back
+
+=head3 Returns
+
+=pod
+
+C<1> if C<$tocompare> is contained in the C<Cluster>; C<0> otherwise.
+
+=cut
+sub isEdge {
+    my %params = @_;
+    my $source = $params{source};
+    my $target = $params{target};
+
+    return ((edges[source] & (1 << target)) == (1 << target)); 
 }
 
 =head2 Method C<indexOf>
@@ -179,6 +221,34 @@ sub indexOf {
     return -1;
 }
 
+=head2 Method C<removeEdge>
+
+=pod
+
+Locates and removes an C<Gene> from the C<Cluster>. This probably only happens
+when an C<Gene> has been found to be invalid.
+
+=head3 Parameters
+
+=over
+
+=item C<tocompare> - C<Gene> to locate and remove
+
+=back
+
+=cut
+sub removeEdge{
+    my $this = shift;
+    my %params = @_;
+    my $source = $params{source};
+    my $target = $params{target};
+    
+    return if (!validateEndpoints(source, destination));
+    
+    edges[source] ^= 1 << target;
+    edges[target] ^= 1 << source;
+}
+
 =head2 Method C<remove>
 
 =pod
@@ -195,65 +265,24 @@ when an C<Gene> has been found to be invalid.
 =back
 
 =cut
-sub remove {
+sub removeGene {
     my $this = shift;
     my $gene = shift;
 
-    my $idx = $this->indexOf($gene);
-    
-    # Do the remove via splicing out the element!
-    splice(@{$this->{_genes}}, $idx, 1);
-}
-
-
-=head2 Method C<containsId>
-
-=pod
-
-=head3 Parameters
-
-=over
-
-=item C<tocompare> - 
-
-=back
-
-=head3 Returns
-
-=pod
-
-C<1> if C<$tocompare> is contained in the C<Cluster>; C<0> otherwise.
-
-=cut
-sub containsId {
-    my $this = shift;
-    my $tocompare = shift;
-
-
-    foreach my $id (@{$this->ids()}) {
-        if ($id eq $tocompare) {
-            return 1;
-        }
+    delete $this->genes()->[$gene];
+    $this->{_size}--;
+        
+    $this->edges()->[$gene] = 0;
+    for my $idx (0 .. scalar(@{$this->edges()})) {
+        if ($idx == $gene) {
+            continue;
+        }                               
+        
+        $this->genes()->[$idx] ^= 1 << $gene;
     }
-    return 0
 }
 
-=head2 Getter C<graph>
 
-=pod
-
-=head3 Returns
-
-=pod
-
-A reference to an array instance containing C<Gene> instances for this C<Cluster>
-
-=cut
-sub graph {
-    my $this = shift;
-
-    return $this->{_graph};
-}
 
 =head2 Getter C<genes>
 
@@ -303,10 +332,10 @@ The number of C<Gene> instances that are part of this C<Cluster>
 sub size {
     my $this = shift;
     
-    return $this->graph()->size();
+    return $this->{_size};
 }
 
-=head2 Method C<hasAdjacentGene>
+=head2 Method C<getAdjacent>
 
 =pod
 
@@ -330,7 +359,7 @@ C<1> if C<tocompare> shares at least 1 adjacent gene with this C<Cluster> instan
 C<0> if it doesn't.
 
 =cut
-sub hasAdjacentGene {
+sub getAdjacent {
     my $this = shift;
     my $tocompare = shift;
     
@@ -338,145 +367,6 @@ sub hasAdjacentGene {
         $this->hasGeneAdjacentTo($gene) ? return 1 : next;
     }
     return 0;
-}
-
-=head2 Method C<hasGeneAdjacentTo>
-
-=pod
-
-Compares C<Gene> instances in this C<Cluster> to another to see if the the other 
-is adjacent to any C<Gene> instances in this cluster.
-
-=head3 Parameters
-
-=over
-
-=item C<tocompare> - a C<Gene> who compare to others in this C<Cluster> for adjacency
-
-=back
-
-=head3 Returns
-
-=pod
-
-C<1> if C<tocompare> shares at least 1 adjacent gene with this C<Cluster> instance or
-C<0> if it doesn't.
-
-=cut
-sub hasGeneAdjacentTo {
-    my $this = shift;
-    my $tocompare = shift;
-    
-    foreach my $gene (@{$this->genes()}) {
-        $gene->isAdjacentTo($tocompare) ? return 1 : next;
-    }
-    return 0;
-}
-
-
-=head2 Method C<compareCardinality>
-
-=pod
-
-Compares the cardinality (the number of C<Gene> instances) of this C<Cluster> instance
-to another C<Cluster> instance.
-
-=head3 Parameters
-
-=over
-
-=item C<tocompare> - a C<Cluster> instance to compare this against
-
-=back
-
-=head3 Returns
-
-=over
-
-=item C<-1> if this C<Cluster> is smaller in cardinality than C<tocompare>
-
-=item C<0> if this C<Cluster> is shares the same cardinality as C<tocompare>
-
-=item C<1> if this C<Cluster> is larger in cardinality than C<tocompare>
-
-=back
-
-=cut
-sub compareCardinality {
-    my $this = shift;
-    my $tocompare = shift;
-    
-    if (ref $tocompare) {
-        if ($this->size() == $tocompare->size()) {
-            return 0;
-        }
-        elsif ($this->size() > $tocompare->size()) {
-            return 1;
-        }
-        else {
-            return -1;
-        }
-    }
-
-    return -1;
-}
-
-=head2 Getter/Setter C<alignment>
-
-=pod 
-
-Getter/Setter for the alignment
-
-=head3 Parameters
-
-=over
-
-=item C<alignment> to set (optional)
-
-=back
-
-=head3 Returns
-
-=pod 
-
-Gets the alignment. Only returns something if there is no parameter present.
-
-=cut
-sub alignment {
-    my $this = shift;
-
-    @_ ? $this->{_alignment} = shift : return $this->{_alignment};
-}
-
-=head2 Getter C<geneByHit>
-
-=pod
-
-Gets an C<Gene> from the graph by the subject id. It will iterate through
-the clusters until it finds one with the subject id it's looking for.
-
-=head3 Parameters
-
-=over
-
-=item C<subject> id of the C<Gene> to find
-
-=back
-
-=head3 Returns
-
-=pod
-
-An C<Gene> instance
-
-=cut
-sub geneByHit {
-    my $this = shift;
-    my $subject = shift;
-    
-    foreach my $gene (@{$this->genes()}) {
-        $gene->record()->subject() eq $subject ? return $gene : next;
-    }
 }
 
 return 1;
