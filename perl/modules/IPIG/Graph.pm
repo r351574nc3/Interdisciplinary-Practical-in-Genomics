@@ -92,8 +92,8 @@ sub addEdge {
     
     return if (!validateEndpoints(source, destination));
     
-    edges[source] |= 1 << target;
-    edges[target] |= 1 << source;
+    $edges[$source] |= 1 << target;
+    $edges[$target] |= 1 << source;
 }
 
 =head2 Method C<addEdge>
@@ -183,7 +183,7 @@ sub isEdge {
     my $source = $params{source};
     my $target = $params{target};
 
-    return ((edges[source] & (1 << target)) == (1 << target)); 
+    return (($edges[$source] & (1 << $target)) == (1 << $target)); 
 }
 
 =head2 Method C<indexOf>
@@ -243,10 +243,10 @@ sub removeEdge{
     my $source = $params{source};
     my $target = $params{target};
     
-    return if (!validateEndpoints(source, destination));
+    return if (!validateEndpoints($source, $destination));
     
-    edges[source] ^= 1 << target;
-    edges[target] ^= 1 << source;
+    $edges[$source] ^= 1 << $target;
+    $edges[$target] ^= 1 << $source;
 }
 
 =head2 Method C<remove>
@@ -275,7 +275,7 @@ sub removeGene {
     $this->edges()->[$gene] = 0;
     for my $idx (0 .. scalar(@{$this->edges()})) {
         if ($idx == $gene) {
-            continue;
+            next;
         }                               
         
         $this->genes()->[$idx] ^= 1 << $gene;

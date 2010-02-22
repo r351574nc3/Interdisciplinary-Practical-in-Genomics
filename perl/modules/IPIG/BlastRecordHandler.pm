@@ -109,13 +109,16 @@ sub selfHit {
     my $this    = shift;
     my $record  = shift;
 
-    my $cluster = $this->graph()->clusters()->{$record->query()};
+    my $cluster = $this->graph()->cluster($record->query());
 
     if (ref($cluster)) {
         # Validate all possible genes currently in the Cluster
         foreach my $gene (@{$cluster->genes()}) {
             $this->validate($gene);
         }
+    }
+    else {
+        $this->graph()->add($record->query(), new IPIG::Cluster());
     }
 
     # Adding self-hit to the cluster. Not sure if this is right or not.
@@ -246,19 +249,17 @@ sub validate {
     my $valid     = 1;          # Default to valid
     my $gene;
 
+    # Since it can be a gene or record, we do some type-checking
     if ($record->isa(IPIG::Gene)) {
         $gene = $record;
         $record = $gene->record();
     }
 
-    my $cluster = $this->graph()->clusters()->{$record->query()};
-    my $selfHit = $cluster ? $cluster->geneByHit($record->query()): 0;
-
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
     my $alignMax = $this->alignments->{$record->query()};
 
-    if ($selfHit) { # Only validate if a self hit exists
+    if ($alignMax) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
                    && ($alignReq < ($record->alignment()/$alignMax)));
     }
@@ -274,10 +275,48 @@ sub validate {
             $this->graph()->addGene(new IPIG::Gene($record));
         }
     }
-    elsif (ref($gene)) {
+#    elsif (ref($gene)) {
         # Need to remove the $gene from the cluster
-        $cluster->remove($gene);
+#        $cluster->remove($gene);
+#    }
+}
+
+=head2 Method C<clusterForRecord>
+
+=pod 
+
+Lookup the C<Cluster> belonging to a C<BlastRecord>. Uses both C<query> and C<subject>
+properties of the C<BlastRecord>
+
+=head3 Parameters
+
+=over
+
+=item C<record>    - The C<BlastRecord> or C<Gene> to lookup a C<Cluster> for
+
+=back
+
+=head3 Returns
+
+=pod 
+
+A C<Cluster>
+
+=cut
+sub clusterForRecord {
+    my $this   = shift;
+    my $record = shift;
+
+    my $cluster = $this->graph()->cluster($record->query());
+    if (!$cluster) {
+        $cluster = $this->graph()->clusters($record->subject()); 
     }
+
+    if (!$cluster) {
+        $cluster = new IPIG::Cluster();
+    }
+
+    return $cluster;
 }
 
 return 1;

@@ -27,7 +27,7 @@ Uptake Sequences on a given Protein Sequence
 
 The point is to programmatically implement:
 
-C<>
+C<>,
 
 =head2 Usage
 

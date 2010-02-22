@@ -31,10 +31,19 @@ Being that a Cluster is a Set, there is no duplication
 =head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
 
 =cut
+
+BEGIN {
+    require "Graph.pm";
+    import IPIG::Graph;
+}
+
 sub new {
     my $class = shift;
+    my %index;
 
-    return bless {_genes    => [], 
+    return bless {_index    => \%index,
+                  _genes    => [],
+                  _size     => 0,
                   _graph    => new IPIG::Graph(),
                   _ids      => []}, $class;
 }
@@ -58,16 +67,20 @@ sub add {
     my $this = shift;
     my $toadd = shift;
     
-    if (!$this->contains($toadd)) {
+    my $idx = $this->indexOf($toadd);
+    if ($idx == -1) {
         unless ($toadd->record()->isSelfHit()) {
             push(@{$this->genes()}, $toadd);
+            $this->{_index}->{$toadd->record()->subject()} = $this->{_size};
+            $this->{_size}++;
         }
         
-        if (!$this->containsId($toadd->record()->query())) {
-            push(@{$this->ids()}, $toadd->record()->query());
-        }
+#        if (!$this->containsId($toadd->record()->query())) {
+#            push(@{$this->ids()}, $toadd->record()->query());
+#        }
     }
-
+    
+    
 }
 
 =head2 Method C<union>
@@ -136,12 +149,7 @@ sub contains {
     my $tocompare = shift;
 
 
-    foreach my $gene (@{$this->genes()}) {
-        if ($gene->equals($tocompare)) {
-            return 1;
-        }
-    }
-    return 0;
+    return ($this->indexOf($tocompare) > -1)
 }
 
 =head2 Method C<indexOf>
@@ -169,14 +177,20 @@ sub indexOf {
     my $this = shift;
     my $tocompare = shift;
 
+    my $index;
 
-    for (my $i = 0; $i < scalar @{$this->genes()}; $i++) {
-        my $gene = $this->genes()->[$i];
-        if ($gene->equals($tocompare)) {
-            return $i;
-        }
+    if (ref $tocompare) {
+        $index = $this->{_index}->{$tocompare->record()->subject()};
     }
-    return -1;
+    else {
+        $index = $this->{_index}->{$tocompare};
+    }
+
+    if (!$index) {
+        $index = -1;
+    }
+    
+    return $index;
 }
 
 =head2 Method C<remove>
@@ -303,7 +317,7 @@ The number of C<Gene> instances that are part of this C<Cluster>
 sub size {
     my $this = shift;
     
-    return $this->graph()->size();
+    return $this->{_size};
 }
 
 =head2 Method C<hasAdjacentGene>
@@ -421,39 +435,12 @@ sub compareCardinality {
     return -1;
 }
 
-=head2 Getter/Setter C<alignment>
-
-=pod 
-
-Getter/Setter for the alignment
-
-=head3 Parameters
-
-=over
-
-=item C<alignment> to set (optional)
-
-=back
-
-=head3 Returns
-
-=pod 
-
-Gets the alignment. Only returns something if there is no parameter present.
-
-=cut
-sub alignment {
-    my $this = shift;
-
-    @_ ? $this->{_alignment} = shift : return $this->{_alignment};
-}
-
 =head2 Getter C<geneByHit>
 
 =pod
 
 Gets an C<Gene> from the graph by the subject id. It will iterate through
-the clusters until it finds one with the subject id it's looking for.
+the genes until it finds one with the subject id it's looking for.
 
 =head3 Parameters
 
@@ -473,10 +460,9 @@ An C<Gene> instance
 sub geneByHit {
     my $this = shift;
     my $subject = shift;
-    
-    foreach my $gene (@{$this->genes()}) {
-        $gene->record()->subject() eq $subject ? return $gene : next;
-    }
+
+    my $idx = $this->indexOf($subject);
+    return $this->genes()->[$idx];
 }
 
 return 1;
