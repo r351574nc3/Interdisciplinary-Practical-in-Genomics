@@ -12,9 +12,9 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
-package IPIG::Edge;
+package IPIG::Gene;
 
-=head1 Class C<Edge>
+=head1 Class C<Gene>
 
 =cut
 
@@ -22,11 +22,11 @@ package IPIG::Edge;
 
 =pod 
 
-C<Edge> instances can be grouped together to form clusters (graphs of genes). A
-C<Cluster> is basically like a digraph of genes where adjacent C<Edge> instancess are
-grouped together. One C<Edge> is known to be adjacent to another C<Edge> if 
+C<Gene> instances can be grouped together to form clusters (graphs of genes). A
+C<Cluster> is basically like a digraph of genes where adjacent C<Gene> instancess are
+grouped together. One C<Gene> is known to be adjacent to another C<Gene> if 
 they belong to the same cluster (ie., have the same query id.) It is 
-possible to union one C<Cluster> with another. This would produce C<Edge>
+possible to union one C<Cluster> with another. This would produce C<Gene>
 instances that were adjacent because of common I<subject id>
 
 =head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
@@ -57,13 +57,13 @@ sub new {
 =pod 
 
 If the C<query> and the C<subject> of C<tocompare> match the C<query> and C<subject> of
-C<this> match, then we consider the C<Edge> instances to be equal.
+C<this> match, then we consider the C<Gene> instances to be equal.
 
 =head3 Parameters
 
 =over
 
-=item C<tocompare> - C<Edge> instance to compare against
+=item C<tocompare> - C<Gene> instance to compare against
 
 =back
 
@@ -88,13 +88,13 @@ sub equals {
 
 =pod 
 
-An C<Edge> is adjacent to another C<Edge> if their subjects match.
+An C<Gene> is adjacent to another C<Gene> if their subjects match.
 
 =head3 Parameters
 
 =over
 
-=item C<tocompare> - an C<Edge> instance to compare against
+=item C<tocompare> - an C<Gene> instance to compare against
 
 =back
 
@@ -122,7 +122,7 @@ sub isAdjacentTo {
 
 =pod 
 
-Getter/Setter for the C<BlastRecord> of an C<Edge>
+Getter/Setter for the C<BlastRecord> of an C<Gene>
 
 =head3 Parameters
 
