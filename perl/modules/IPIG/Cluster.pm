@@ -215,8 +215,10 @@ sub remove {
 
     my $idx = $this->indexOf($gene);
     
-    # Do the remove via splicing out the element!
-    splice(@{$this->{_genes}}, $idx, 1);
+    if ($idx > -1) { # Only remove a gene that exists
+        # Do the remove via splicing out the element!    
+        splice(@{$this->{_genes}}, $idx, 1);
+    }
 }
 
 

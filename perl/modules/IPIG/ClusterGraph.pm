@@ -91,9 +91,10 @@ sub add {
     my $name  = shift;
     my $toadd = shift;
 
-    #print "Adding cluster for $name\n";
     $this->{_index}->{$name} = $this->size();
     push(@{$this->clusters()}, $toadd);
+    # print "New size " . scalar @{$this->clusters()}, "\n";
+    $this->{_size}++;
 }
 
 =head2 Method C<addGene>
@@ -116,27 +117,36 @@ then instantiate one.
 sub addGene {
     my $this    = shift;
     my $toadd   = shift;
-    my $cluster = $this->cluster($toadd->record()->query());
+    my $qclust  = $this->cluster($toadd->record()->query());
+    my $sclust  = $this->cluster($toadd->record()->subject());
 
-    if ($cluster) {
-        $cluster->add($toadd);
+    # Query cluster
+    if ($qclust) {
+        $qclust->add($toadd);
+
+        if (!$sclust) {
+            # Create back reference
+            $this->{_index}->{$toadd->record()->subject()} = $this->{_index}->{$toadd->record()->query()};
+        }
     }
-    else {
+
+    if ($sclust) {
+        $sclust->add($toadd);
+
+        if (!$qclust) {
+            # Create back reference
+            $this->{_index}->{$toadd->record()->query()} = $this->{_index}->{$toadd->record()->subject()};
+        }
+    }
+    
+    if (!$sclust && !$qclust) {
         my $newCluster = new IPIG::Cluster();
         $newCluster->add($toadd);
         $this->add($toadd->record()->query(), $newCluster);
-    }
 
-    $cluster = $this->cluster($toadd->record()->subject());
-
-    if ($cluster) {
-        $cluster->add($toadd);
-    }
-    else {
-        my $newCluster = new IPIG::Cluster();
-        $newCluster->add($toadd);
-        $this->add($toadd->record()->subject(), $newCluster);
-    }
+        # Create back reference
+        $this->{_index}->{$toadd->record()->subject()} = $this->{_index}->{$toadd->record()->query()};
+    }    
 }
 
 =head2 Getter C<clusters>
@@ -175,7 +185,9 @@ sub cluster {
     my $this = shift;
     my $name = shift;
 
-    return $this->clusters()->[$this->{_index}->{$name}];
+    my $idx = $this->{_index}->{$name};
+
+    $idx ? return $this->clusters()->[$idx] : return;
 }
 
 =head2 Getter/Setter C<identity>
@@ -255,7 +267,6 @@ sub size {
 
 Creates a data structure that can be used by the GD::Graph module.
 
-
 =head3 Returns
 
 =pod 
@@ -268,15 +279,13 @@ sub graph {
     my $graph = [[],[]];
     my %graphHash;
 
-    print "Got cluster size " . scalar @{$this->clusters()}, "\n";
-
     foreach my $cluster (@{$this->clusters()}) {
-        next unless($cluster);
+        #next unless($cluster);
         next if ($cluster->size() < 1);
         # print "Got cluster with size ", $cluster->size(), "\n";
         $graphHash{$cluster->size()}++;
     }
-    
+    close(DEAD);
     push(@{$graph->[0]}, keys %graphHash);
     push(@{$graph->[1]}, values %graphHash);
 

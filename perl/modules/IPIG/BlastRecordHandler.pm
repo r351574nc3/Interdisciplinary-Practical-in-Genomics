@@ -255,30 +255,32 @@ sub validate {
         $record = $gene->record();
     }
 
+    my $cluster  = $this->clusterForRecord($record);
     my $identReq = $this->graph()->identity();
     my $alignReq = $this->graph()->alignment();
     my $alignMax = $this->alignments->{$record->query()};
 
     if ($alignMax) { # Only validate if a self hit exists
         $valid &= (($identReq < $record->identity()) 
-                   && ($alignReq < ($record->alignment()/$alignMax)));
+                   && ($alignReq < (($record->alignment()/$alignMax) * 100)));
+    }
+    else {
+        $this->{_notvalidated}++;
     }
     
     if ($valid) {
         # This is an gene, so use the record to create an Gene instance
         # Genes can be compared against each other to form a Cluster (Graph
         # of genes)
-        if (ref($gene)) {
-            $this->graph()->addGene($gene);
-        }
-        else {
+        if (!ref($gene)) {
+            # print "Adding a gene" . $record->subject(), "\n";
             $this->graph()->addGene(new IPIG::Gene($record));
         }
     }
-#    elsif (ref($gene)) {
+    elsif (ref($gene) && $cluster) { # Gene was added to the cluster prematurely
         # Need to remove the $gene from the cluster
-#        $cluster->remove($gene);
-#    }
+        $cluster->remove($gene);
+    }
 }
 
 =head2 Method C<clusterForRecord>
@@ -309,11 +311,8 @@ sub clusterForRecord {
 
     my $cluster = $this->graph()->cluster($record->query());
     if (!$cluster) {
-        $cluster = $this->graph()->clusters($record->subject()); 
-    }
-
-    if (!$cluster) {
-        $cluster = new IPIG::Cluster();
+        # If you can't find one, shouldn't find the other. Check anyway.
+        $cluster = $this->graph()->cluster($record->subject()); 
     }
 
     return $cluster;

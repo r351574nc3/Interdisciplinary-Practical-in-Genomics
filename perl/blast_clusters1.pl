@@ -76,22 +76,24 @@ sub graph {
     my $alignment = shift;
     my $clusters = shift()->($identity, $alignment);
     
-    my $graph = new GD::Graph::bars3d(1024, 768);
+    my $graphData = $clusters->graph();
+    my $graph = new GD::Graph::bars3d(scalar(@{$graphData->[0]}) * 50, 768);
     $graph->set(
         x_label           => '# of Genes/Cluster',
         y_label           => '# of Clusters',
         title             => 'Gene Cluster Cardinality',
-        bar_spacing       => 18,
+        show_values       => 1,
+        bar_spacing       => 10,
         bar_shadow        => 9,
         shadowclr         => 'dred'
         );
-    $graph->set_title_font(['/usr/share/fonts/truetype/msttcorefonts/arial.ttf'], 44);
-    $graph->set_x_label_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 30);
-    $graph->set_y_label_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 30);
-    $graph->set_values_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 20);
-    $graph->set_x_axis_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 20);
-    $graph->set_y_axis_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 20);
-    my $gd = $graph->plot($clusters->graph());
+    $graph->set_title_font(['/usr/share/fonts/truetype/msttcorefonts/arial.ttf'], 40);
+    $graph->set_x_label_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 25);
+    $graph->set_y_label_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 25);
+    $graph->set_values_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 18);
+    $graph->set_x_axis_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 18);
+    $graph->set_y_axis_font('/usr/share/fonts/truetype/msttcorefonts/arial.ttf', 18);
+    my $gd = $graph->plot($graphData);
     
     open(IMG, ">i${identity}_a${alignment}_graph.png") or die $!;
     binmode IMG;
