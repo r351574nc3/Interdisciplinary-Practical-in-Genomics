@@ -34,8 +34,6 @@ use warnings;
 BEGIN {
     require "CommentHandler.pm";
     import IPIG::CommentHandler;
-    require "Edge.pm";
-    import IPIG::Edge;
 }
 
 

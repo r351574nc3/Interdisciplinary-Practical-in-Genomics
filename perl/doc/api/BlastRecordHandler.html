@@ -38,9 +38,6 @@
 
 
 <div class="pagehead shrunken dashboard">
-<!-- start doc -->
-<a name='___top' class='dummyTopAnchor' ></a>
-
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Description"
 >Description</a></h2>
@@ -69,7 +66,7 @@ name="Parameters"
 
 <dl>
 <dt><a 
->a <code>ClusterGraph</code>. When it handles a record, an <code>Edge</code> is added to the <code>ClusterGraph</code>. This makes the <code>BlastRecordHandler</code> stateful.</a></dt>
+>a <code>ClusterGraph</code>. When it handles a record, an <code>Gene</code> is added to the <code>ClusterGraph</code>. This makes the <code>BlastRecordHandler</code> stateful.</a></dt>
 </dl>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -101,27 +98,6 @@ name="Parameters"
 <dt><a name="record_-_BlastRecord_instance"
 ><code>record</code> - <code>BlastRecord</code> instance</a></dt>
 </dl>
-
-<h2><a class='u' href='#___top' title='click to go to top of document'
-name="Getter/Setter_alignment"
->Getter/Setter <code>alignment</code></a></h2>
-
-<p>Getter/Setter for the alignment. Alignment is used to validate a <code>BlastRecord</code></p>
-
-<h3><a class='u' href='#___top' title='click to go to top of document'
-name="Parameters"
->Parameters</a></h3>
-
-<dl>
-<dt><a name="alignment_to_set_(optional)"
-><code>alignment</code> to set (optional)</a></dt>
-</dl>
-
-<h3><a class='u' href='#___top' title='click to go to top of document'
-name="Returns"
->Returns</a></h3>
-
-<p>Gets the <code>alignment</code>. Only returns something if there is no parameter present.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Getter/Setter_graph"
@@ -166,32 +142,43 @@ name="Returns"
 <p>Gets the <code>current</code>. Only returns something if there is no parameter present.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Method_validate"
->Method <code>validate</code></a></h2>
+name="Getter/Setter_alignments"
+>Getter/Setter <code>alignments</code></a></h2>
 
-<pre> Validates a C&#60;BlastRecord&#62; or C&#60;Edge&#62; using the self hit alignment information. If this record is valid,
- we can use that information to determine if it is an edge or not.
-
- A valid C&#60;BlastRecord&#62; has a % C&#60;identity&#62; larger than that of the requirement. The % C&#60;identity&#62;
- requirement is determined at the point when the C&#60;ClusterGraph&#62; instance is created. That is, 
- the C&#60;ClusterGraph&#62; knows what the requirement is. The same goes for the C&#60;alignment&#62; ratio
- requirement. The C&#60;ClusterGraph&#62; also knows what that is. The C&#60;alignment&#62; ratio is determined by
- the record alignment/self hit alignment. In order to obtain the self hit for a given record,
- it is regarded that the C&#60;Cluster&#62; the C&#60;BlastRecord&#62; belongs in has an C&#60;Edge&#62; somewhere with
- a subject that is the same as the C&#60;BlastRecord&#62;&#39;s query which would make its query and subject
- the same (a self hit.)
-
- Take note that this only works if the C&#60;Cluster&#62; that the C&#60;BlastRecord&#62; belongs to has
- a self hit. If there isn&#39;t one, then we just say it&#39;s valid. When the self hit is discovered,
- this C&#60;BlastRecord&#62; will be re-evaluated.</pre>
+<p>Getter/Setter for the alignment length requirements hash. Each alignment length is stored with the query id as the key.</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="record_-_The_BlastRecord_or_Edge_to_validate"
-><code>record</code> - The <code>BlastRecord</code> or <code>Edge</code> to validate</a></dt>
+<dt><a name="alignments_to_set_(optional)"
+><code>alignments</code> to set (optional)</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p>Gets the <code>alignments</code>. Only returns something if there is no parameter present.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_validate"
+>Method <code>validate</code></a></h2>
+
+<p>Validates a <code>BlastRecord</code> or <code>Gene</code> using the self hit alignment information. If this record is valid, we can use that information to determine if it is an gene or not.</p>
+
+<p>A valid <code>BlastRecord</code> has a % <code>identity</code> larger than that of the requirement. The % <code>identity</code> requirement is determined at the point when the <code>ClusterGraph</code> instance is created. That is, the <code>ClusterGraph</code> knows what the requirement is. The same goes for the <code>alignment</code> ratio requirement. The <code>ClusterGraph</code> also knows what that is. The <code>alignment</code> ratio is determined by the record alignment/self hit alignment. In order to obtain the self hit for a given record, it is regarded that the <code>Cluster</code> the <code>BlastRecord</code> belongs in has an <code>Gene</code> somewhere with a subject that is the same as the <code>BlastRecord</code>&#39;s query which would make its query and subject the same (a self hit.)</p>
+
+<p>Take note that this only works if the <code>Cluster</code> that the <code>BlastRecord</code> belongs to has a self hit. If there isn&#39;t one, then we just say it&#39;s valid. When the self hit is discovered, this <code>BlastRecord</code> will be re-evaluated.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="record_-_The_BlastRecord_or_Gene_to_validate"
+><code>record</code> - The <code>BlastRecord</code> or <code>Gene</code> to validate</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
@@ -199,6 +186,27 @@ name="Returns"
 >Returns</a></h3>
 
 <p><code>1</code> if the record is valid, <code>0</code> otherwise.</p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_clusterForRecord"
+>Method <code>clusterForRecord</code></a></h2>
+
+<p>Lookup the <code>Cluster</code> belonging to a <code>BlastRecord</code>. Uses both <code>query</code> and <code>subject</code> properties of the <code>BlastRecord</code></p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="record_-_The_BlastRecord_or_Gene_to_lookup_a_Cluster_for"
+><code>record</code> - The <code>BlastRecord</code> or <code>Gene</code> to lookup a <code>Cluster</code> for</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p>A <code>Cluster</code></p>
 
 <!-- end doc -->
 </div><!-- /.pagehead -->

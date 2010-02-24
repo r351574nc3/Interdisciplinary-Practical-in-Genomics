@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-        <title>Cluster Class</title>
+        <title>Class Cluster</title>
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub" />
     <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub" />
 
@@ -38,15 +38,13 @@
 
 
 <div class="pagehead shrunken dashboard">
-<!-- start doc -->
-<a name='___top' class='dummyTopAnchor' ></a>
-
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Description"
 >Description</a></h2>
 
-<p>A cluster is basically like a set edges in a digraph of genes where adjacent edges are grouped together.
-One Edge is known to be adjacent to another edge if ...</p>
+<p>A cluster is basically like a set genes in a digraph of genes where adjacent genes are grouped together.
+One Gene is known to be adjacent to another gene if its query points to the subject or query of another or its subject points to the query or subject of another.
+...</p>
 
 <p>Being that a Cluster is a Set,
 there is no duplication</p>
@@ -59,15 +57,15 @@ name="Author:_Leo_Przybylski_(przybyls@arizona.edu)"
 name="Method_add"
 >Method <code>add</code></a></h2>
 
-<p>Adds an <code>Edge</code> instance to the <code>Cluster</code></p>
+<p>Adds an <code>Gene</code> instance to the <code>Cluster</code></p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="toadd_-_Edge_instance_to_add"
-><code>toadd</code> - <code>Edge</code> instance to add</a></dt>
+<dt><a name="toadd_-_Gene_instance_to_add"
+><code>toadd</code> - <code>Gene</code> instance to add</a></dt>
 </dl>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -90,21 +88,23 @@ name="Parameters"
 name="Returns"
 >Returns</a></h3>
 
-<p>A new <code>Cluster</code> instance containing all <code>Edge</code> instances from both <code>Cluster</code> instances.</p>
+<p>A new <code>Cluster</code> instance containing all <code>Gene</code> instances from both <code>Cluster</code> instances.
+If a union is not possible,
+nothing is returned</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Method_contains"
 >Method <code>contains</code></a></h2>
 
-<p>Traverses the <code>Cluster</code> for a given <code>Edge</code></p>
+<p>Traverses the <code>Cluster</code> for a given <code>Gene</code></p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="tocompare_-_Edge_to_test_for_existence"
-><code>tocompare</code> - <code>Edge</code> to test for existence</a></dt>
+<dt><a name="tocompare_-_Gene_to_test_for_existence"
+><code>tocompare</code> - <code>Gene</code> to test for existence</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
@@ -117,37 +117,37 @@ name="Returns"
 name="Method_indexOf"
 >Method <code>indexOf</code></a></h2>
 
-<p>Traverses the <code>Cluster</code> looking for the array index of the <code>Edge</code></p>
+<p>Traverses the <code>Cluster</code> looking for the array index of the <code>Gene</code></p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="tocompare_-_Edge_to_find"
-><code>tocompare</code> - <code>Edge</code> to find</a></dt>
+<dt><a name="tocompare_-_Gene_to_find"
+><code>tocompare</code> - <code>Gene</code> to find</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Returns"
 >Returns</a></h3>
 
-<p><code>index</code> integer location of <code>$tocompare</code> within the <code>Cluster</code> array of <code>Edge</code> instances; <code>-1</code> otherwise.</p>
+<p><code>index</code> integer location of <code>$tocompare</code> within the <code>Cluster</code> array of <code>Gene</code> instances; <code>-1</code> otherwise.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Method_remove"
 >Method <code>remove</code></a></h2>
 
-<p>Locates and removes an <code>Edge</code> from the <code>Cluster</code>.
-This probably only happens when an <code>Edge</code> has been found to be invalid.</p>
+<p>Locates and removes an <code>Gene</code> from the <code>Cluster</code>.
+This probably only happens when an <code>Gene</code> has been found to be invalid.</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="tocompare_-_Edge_to_locate_and_remove"
-><code>tocompare</code> - <code>Edge</code> to locate and remove</a></dt>
+<dt><a name="tocompare_-_Gene_to_locate_and_remove"
+><code>tocompare</code> - <code>Gene</code> to locate and remove</a></dt>
 </dl>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
@@ -170,14 +170,24 @@ name="Returns"
 <p><code>1</code> if <code>$tocompare</code> is contained in the <code>Cluster</code>; <code>0</code> otherwise.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Getter_edges"
->Getter <code>edges</code></a></h2>
+name="Getter_graph"
+>Getter <code>graph</code></a></h2>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Returns"
 >Returns</a></h3>
 
-<p>A reference to an array instance containing <code>Edge</code> instances for this <code>Cluster</code></p>
+<p>A reference to an array instance containing <code>Gene</code> instances for this <code>Cluster</code></p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Getter_genes"
+>Getter <code>genes</code></a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p>A reference to an array instance containing <code>Gene</code> instances for this <code>Cluster</code></p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Getter_ids"
@@ -187,7 +197,7 @@ name="Getter_ids"
 name="Returns"
 >Returns</a></h3>
 
-<p>A reference to an array instance containing <code>Edge</code> instances for this <code>Cluster</code></p>
+<p>A reference to an array instance containing <code>Gene</code> instances for this <code>Cluster</code></p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Getter_size"
@@ -197,55 +207,55 @@ name="Getter_size"
 name="Returns"
 >Returns</a></h3>
 
-<p>The number of <code>Edge</code> instances that are part of this <code>Cluster</code></p>
+<p>The number of <code>Gene</code> instances that are part of this <code>Cluster</code></p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Method_hasAdjacentEdge"
->Method <code>hasAdjacentEdge</code></a></h2>
+name="Method_hasAdjacentGene"
+>Method <code>hasAdjacentGene</code></a></h2>
 
-<p>Compares this <code>Cluster</code> to another to see if the two might have edges that are adjacent to each other</p>
+<p>Compares this <code>Cluster</code> to another to see if the two might have genes that are adjacent to each other</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="tocompare_-_a_Cluster_whose_Edge_instances_to_compare_to_this_one_for_adjacency"
-><code>tocompare</code> - a <code>Cluster</code> whose <code>Edge</code> instances to compare to this one for adjacency</a></dt>
+<dt><a name="tocompare_-_a_Cluster_whose_Gene_instances_to_compare_to_this_one_for_adjacency"
+><code>tocompare</code> - a <code>Cluster</code> whose <code>Gene</code> instances to compare to this one for adjacency</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Returns"
 >Returns</a></h3>
 
-<p><code>1</code> if <code>tocompare</code> shares at least 1 adjacent edge with this <code>Cluster</code> instance or <code>0</code> if it doesn&#39;t.</p>
+<p><code>1</code> if <code>tocompare</code> shares at least 1 adjacent gene with this <code>Cluster</code> instance or <code>0</code> if it doesn&#39;t.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Method_hasEdgeAdjacentTo"
->Method <code>hasEdgeAdjacentTo</code></a></h2>
+name="Method_hasGeneAdjacentTo"
+>Method <code>hasGeneAdjacentTo</code></a></h2>
 
-<p>Compares <code>Edge</code> instances in this <code>Cluster</code> to another to see if the the other is adjacent to any <code>Edge</code> instances in this cluster.</p>
+<p>Compares <code>Gene</code> instances in this <code>Cluster</code> to another to see if the the other is adjacent to any <code>Gene</code> instances in this cluster.</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="tocompare_-_a_Edge_who_compare_to_others_in_this_Cluster_for_adjacency"
-><code>tocompare</code> - a <code>Edge</code> who compare to others in this <code>Cluster</code> for adjacency</a></dt>
+<dt><a name="tocompare_-_a_Gene_who_compare_to_others_in_this_Cluster_for_adjacency"
+><code>tocompare</code> - a <code>Gene</code> who compare to others in this <code>Cluster</code> for adjacency</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Returns"
 >Returns</a></h3>
 
-<p><code>1</code> if <code>tocompare</code> shares at least 1 adjacent edge with this <code>Cluster</code> instance or <code>0</code> if it doesn&#39;t.</p>
+<p><code>1</code> if <code>tocompare</code> shares at least 1 adjacent gene with this <code>Cluster</code> instance or <code>0</code> if it doesn&#39;t.</p>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
 name="Method_compareCardinality"
 >Method <code>compareCardinality</code></a></h2>
 
-<p>Compares the cardinality (the number of <code>Edge</code> instances) of this <code>Cluster</code> instance to another <code>Cluster</code> instance.</p>
+<p>Compares the cardinality (the number of <code>Gene</code> instances) of this <code>Cluster</code> instance to another <code>Cluster</code> instance.</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
@@ -270,26 +280,26 @@ name="Returns"
 </dl>
 
 <h2><a class='u' href='#___top' title='click to go to top of document'
-name="Getter_edgeByHit"
->Getter <code>edgeByHit</code></a></h2>
+name="Getter_geneByHit"
+>Getter <code>geneByHit</code></a></h2>
 
-<p>Gets an <code>Edge</code> from the graph by the subject id.
-It will iterate through the clusters until it finds one with the subject id it&#39;s looking for.</p>
+<p>Gets an <code>Gene</code> from the graph by the subject id.
+It will iterate through the genes until it finds one with the subject id it&#39;s looking for.</p>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Parameters"
 >Parameters</a></h3>
 
 <dl>
-<dt><a name="subject_id_of_the_Edge_to_find"
-><code>subject</code> id of the <code>Edge</code> to find</a></dt>
+<dt><a name="subject_id_of_the_Gene_to_find"
+><code>subject</code> id of the <code>Gene</code> to find</a></dt>
 </dl>
 
 <h3><a class='u' href='#___top' title='click to go to top of document'
 name="Returns"
 >Returns</a></h3>
 
-<p>An <code>Edge</code> instance</p>
+<p>An <code>Gene</code> instance</p>
 
 <!-- end doc -->
 </div><!-- /.pagehead -->

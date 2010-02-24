@@ -35,6 +35,10 @@ Right now, a multidimensional array is used to do this, but it might
 be easier to use an insertion sort and apply the Observer pattern.
 This would require more classes, and I'm not sure I care that much.
 
+An index is kept (a C<HASH>) to key the index (the indices of the cluster
+in the array storage) by a Gene. EVERY gene will points to an index
+for a cluster.
+
 =head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
 
 =cut
@@ -73,9 +77,12 @@ sub new {
 
 =pod 
 
-Adds a cluster to the matrix. Compares the cardinality of the cluster $toadd 
-to the cardinality of each index of the matrix to determine where to add it. 
-Each index of the matrix is an array of clusters
+Adds a C<Cluster> to the graph. Sets the index to the last unoccupied index
+and records it in the index C<HASH>. Finally, the cluster is appended to the
+array store.
+
+
+This is the only place where the size of the C<ClusterGraph> is incremented.
 
 =head3 Parameters
 
@@ -102,7 +109,8 @@ sub add {
 =pod
 
 Add an C<Gene> to a C<Cluster> in the C<ClusterGraph>. First, try to locate a
-C<Cluster> with the same query id as the C<Gene> to add. If one cannot be found,
+C<Cluster> with the same query id as the C<Gene> to add. Make sure that this
+cluster is also referenced by the subject/hit id. If one cannot be found,
 then instantiate one.
 
 =head3 Parameters
@@ -172,7 +180,7 @@ sub clusters {
 
 =pod 
 
-Getter for the the stored array of clusters. C<clusters> is a read-only attribute.
+Getter for the the a specific C<cluster> by its index. C<cluster> is a read-only attribute.
 
 =head3 Returns
 
@@ -265,7 +273,7 @@ sub size {
 
 =pod 
 
-Creates a data structure that can be used by the GD::Graph module.
+Creates a data structure that can be used by the C<GD::Graph> module.
 
 =head3 Returns
 
@@ -285,9 +293,13 @@ sub graph {
         # print "Got cluster with size ", $cluster->size(), "\n";
         $graphHash{$cluster->size()}++;
     }
-    close(DEAD);
-    push(@{$graph->[0]}, keys %graphHash);
-    push(@{$graph->[1]}, values %graphHash);
+    
+    my @order = sort { $graphHash{$b} <=> $graphHash{$a} } keys %graphHash;
+
+    foreach my $key (@order) {
+        push(@{$graph->[0]}, $key);
+        push(@{$graph->[1]}, $graphHash{$key});        
+    }
 
     return $graph;
 }
