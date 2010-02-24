@@ -46,6 +46,14 @@ C<cat your_protein_sequence_file | perl probable_words.pl>
 Reads the Protein Sequence information from standard input, combines it into a single
 String and finally removes all spaces from it.
 
+=head3 Parameters
+
+=over
+
+=item dus - DUS to check for
+
+=back
+
 =head3 Returns
 
 =pod
@@ -54,14 +62,54 @@ String representing the protein sequence to check probability against
 
 =cut
 sub readProteinSequence {
+    my $dus    = shift;
+    my %retval;
+
+    print "Reading proteins\n";
+
     my $seq = '';
+    my $header;
     while(<>) {
         chop;
+
+        if ($_ =~ /^\>/) {
+            if ($seq && validateDus(protein => $seq, dus => $dus)) {
+                $seq =~ s/\s//g; # Remove all spaces
+                $retval{$header} = $seq;
+                $seq = '';
+            }
+
+            $header = $_;
+            next;
+        }
+
         $seq .= uc($_);  # Concatenate STDIN
     }
+
+    # Finish last sequence
+    if ($seq && $header) {
+        if ($seq && validateDus(protein => $seq, dus => $dus)) {
+            $seq =~ s/\s//g; # Remove all spaces
+            $retval{$header} = $seq;
+            undef $seq
+        }
+        else {
+            print "Can't find $dus in $seq\n";
+        }
+        
+    }
     
-    $seq =~ s/\s//g; # Remove all spaces
-    return $seq;
+    return \%retval;
+}
+
+sub validateDus {
+    my %params  = @_;
+    my $protein = $params{protein};
+    my $dus     = $params{dus};
+
+    return unless ($protein && $dus);
+    
+    return index($protein, $dus) > -1
 }
 
 =head2 C<getWords>
@@ -324,40 +372,26 @@ sub expectedCountForOrf {
    return $expected;
 }
 
-my $protein  = readProteinSequence();
-my $dus      = 'GCCGTCTGAA';
-my $expected = 0;
-my $four_mers    = getWords(  start => 1,
-                            wordlen => 4, 
-                                dus => $dus);
-my $five_mers    = getWords(wordlen => 5,
-                                dus => $dus);
-
-for my $orf (1 .. 3) {    # Use reading frames 1-3
-    my $expectedOrf = expectedCountForOrf(protein => $protein, 
-                                            frame => $orf, 
-                                            words => [$four_mers, $five_mers]);
-    $expected += $expectedOrf;
+my $dus = 'GCCGTCTGAA';
+my $proteins = readProteinSequence($dus);
+while (my ($header, $protein) = each %{$proteins}) {
+    print $header, "\n";
+    my $expected = 0;
+    my $four_mers = getWords(  start => 1,
+                             wordlen => 4, 
+                                 dus => $dus);
+    my $five_mers = getWords(wordlen => 5,
+                                 dus => $dus);
+    
+    for my $orf (1 .. 3) {    # Use reading frames 1-3
+        my $expectedOrf = expectedCountForOrf(protein => $protein, 
+                                              frame => $orf, 
+                                              words => [$four_mers, $five_mers]);
+        $expected += $expectedOrf;
     print "Expected Number for ORF $orf: " . int($expectedOrf) . "\n";
+    }
+    
+    print "Total Expected Number for ORF: " . int($expected) . "\n";
+    
 }
-
-print "Total Expected Number for ORF: " . int($expected) . "\n";
-
-$four_mers    = getReverseWords(  start => 1,
-                                wordlen => 4, 
-                                    dus => $dus);
-$five_mers    = getReverseWords(wordlen => 5,
-                                    dus => $dus);
-
-# Now to do it in reverse
-for my $orf (1 .. 3) {    # Use reading frames 1-3
-    my $expectedOrf = expectedCountForOrf(protein => $protein, 
-                                            frame => $orf, 
-                                            words => [$four_mers, $five_mers]);
-    $expected += $expectedOrf;
-    print "Reverse Expected Number for ORF $orf: " . int($expectedOrf) . "\n";
-}
-
-print "Reverse Total Expected Number for ORF: " . int($expected) . "\n";
-
 exit 0;
