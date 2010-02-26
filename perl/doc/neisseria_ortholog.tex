@@ -1,0 +1,133 @@
+\documentclass[11pt,notitlepage]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}            % adds more math symbols
+\usepackage{amssymb}
+\usepackage{multicol}
+\title{Neisseria Ortholog Analysis Tool}
+\author{Leo Przybylski\\
+\texttt{przybyls@arizona.edu}}
+
+\newcommand{\question}[2]{\textbf{#1.} #2}
+\newcommand{\subquestion}[2]{\par\hspace{0.5cm} \textbf{#1)} #2}
+\newenvironment{answer}{\endpar%
+
+}
+
+    % Give wider margins; gives more text per page.
+
+\setlength{\topmargin}{0.00in}
+\setlength{\textheight}{8.75in}
+\setlength{\textwidth}{6.625in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+
+\setlength{\parindent}{0.0cm}	% Don't indent the paragraphs
+%\setlength{\parskip}{0.4cm}	% distance between paragraphs
+
+\begin{document}
+  \maketitle
+  \tableofcontents
+
+  \abstract{\ldots
+}
+  {\setlength{\baselineskip}%
+           {0.0\baselineskip}
+  \section*{\hfill Background}
+  \hrulefill \par}
+  When a blast query is made, results are recorded with the identifier of the query
+  as well as the identifier for the result or hit. The convention used to name the
+  each query is a combination of gene and contig number. The records of blast output
+  can be organized into several different types of meaningful information.
+
+
+ %% \includegraphics[width=120mm]{api/images/sample-graph1.png}
+
+  \includegraphics[width=145mm]{i90_a90_graph.png}
+
+
+  One way in particular is to group records related by query and or hit information as
+  clusters. We can then provide statistical information on clusters. By grouping clusters
+  with the same cardinality of edges, we can analyze trends between different families
+  of bacteria.  
+
+  {\setlength{\baselineskip}%
+           {0.0\baselineskip}
+  \section*{\hfill Clusters}
+  \hrulefill \par}
+  A Cluster is a set of edges where the query identifiers match. For example, in the
+  following blast results:
+
+  \noindent \verb|AP206_contig00001_4923-1612	cinerea_contig00013_10696-7277	47.65	1129	517	23	29	1103	31	1139	0.0	 884|
+
+  \noindent \verb|AP206_contig00001_4923-1612	elongata_contig01464_47682-51131	46.11	1156	545	24	7	1103	13	1149	0.0	 851|
+  \\
+
+  The records belong in the same cluster because they were results of the same query. Not
+  all records that match the query identifier become edges. The edge must also
+
+
+  Originally,
+  it was assumed that a cluster would only have edges that match the query; however, since
+  the clusters are considered to be a set, it is possible to create a union between clusters 
+  resulting in a new cluster containing edges from the two that were unioned.
+
+  Unions between clusters is determined by whether two clusters have edges that relate. For example,
+  if two edges share the same subject/hit identifier, then they are considered to be adjacent edges
+  even though they are not in the same cluster. This means, that a union can be made between
+  these two clusters.
+
+  {\setlength{\baselineskip}%
+           {0.0\baselineskip}
+  \section*{\hfill Conclusion}
+  \hrulefill \par}
+
+  \includegraphics[width=145mm]{i30_a50_graph.png}
+  
+  \includegraphics[width=145mm]{i30_a70_graph.png}
+  
+  \includegraphics[width=145mm]{i30_a90_graph.png}
+  
+  \includegraphics[width=145mm]{i45_a50_graph.png}
+  
+  \includegraphics[width=145mm]{i45_a70_graph.png}
+  
+  \includegraphics[width=145mm]{i45_a90_graph.png}
+  
+  \includegraphics[width=145mm]{i60_a50_graph.png}
+  
+  \includegraphics[width=145mm]{i60_a70_graph.png}
+  
+  \includegraphics[width=145mm]{i60_a90_graph.png}
+  
+  \includegraphics[width=145mm]{i75_a50_graph.png}
+  
+  \includegraphics[width=145mm]{i75_a70_graph.png}
+  
+  \includegraphics[width=145mm]{i75_a90_graph.png}
+  
+  \includegraphics[width=145mm]{i90_a50_graph.png}
+  
+  \includegraphics[width=145mm]{i90_a70_graph.png}
+  
+  \includegraphics[width=145mm]{i90_a90_graph.png}
+
+
+
+  {\setlength{\baselineskip}%
+           {0.0\baselineskip}
+  \section*{\hfill Classes}
+  \hrulefill \par}
+
+  \includegraphics[width=120mm]{api/images/blast_clusters1_Class1.png}  
+
+  \include{api/BlastParser}
+  \include{api/BlastRecordHandler}
+  \include{api/BlastRecord}
+  \include{api/ClusterMatrix}
+  \include{api/Cluster}
+  \include{api/CommentHandler}
+  \include{api/Edge}
+  \include{api/RecordHandler}
+
+\end{document}
+
