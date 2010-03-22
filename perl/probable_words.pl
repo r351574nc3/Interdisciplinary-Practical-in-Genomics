@@ -20,26 +20,36 @@ use Getopt::Std;
 
 use Getopt::Long;
 use Pod::Usage;
+use Log::Log4perl qw(:easy);
 
 my $man = 0;
 my $help = 0;
 
-=head1 NAME
+=head1 NAME probable_words.pl
     
     probable_words - Determines expected numeric probability of reading frames 1 - 3 for DNA
-Uptake Sequences on a given Protein Sequence
+Uptake Sequences on a given Protein Sequence. 
 
-The point is to programmatically implement:
-
-C<>,
+Automatically, determines nucleutide or protein sequences read from STDIN
 
 =head1 SYNOPSIS
 
     cat your_protein_sequence_file | perl probable_words.pl [options]
 
   Options:
-    -help            brief help message
-    -man             full documentation
+    --dus               DNA Uptake Sequence [default=GCCGTCTGAA]
+    --debug             The debug level. Debug levels are:
+                        1 - DEBUG
+                        2 - INFO
+                        3 - WARN
+                        4 - ERROR
+                        5 - FATAL
+                        [default=ERROR]
+    -(-n)on-coding      Sequence provided is a Non-Coding Sequence [default=no]
+    -(-r)everse         Reverse the DUS [default=no]
+    -(-o)rder           Order of the Markov Model to use. [default=2]
+    -(-h)elp/?          brief help message
+    -(-m)an             full documentation
 
 =head1 OPTIONS
 
@@ -47,7 +57,7 @@ C<>,
 
 =item B<-help>
 
-    Print a brief help message and exits.
+Print a brief help message and exits.
 
 =item B<-man>
 
@@ -87,12 +97,28 @@ String and finally removes all spaces from it.
 
 String representing the protein sequence to check probability against
 
+=head3 Examples
+
+=over 8
+
+=item Check for probability in NM-MC58 nucleutide as a non-coding sequence with debug level DEBUG
+
+C<cat ../NM-MC58.gbk | perl probable_words.pl -n --debug=1>
+
+=item Check for probability in NM-MC58 nucleutide with debug level WARN. Check both the DUS and the reverse DUS.
+
+C<cat ../NM-MC58.gbk | perl probable_words.pl -r --debug=3>
+
+=item View the perldoc
+
+C<perl probable_words.pl --man>
+
 =cut
 sub readProteinSequence {
     my $dus    = shift;
     my %retval;
 
-    print "Reading proteins\n";
+    get_logger()->info("Reading proteins\n");
 
     my $seq = '';
     my $header;
@@ -121,7 +147,7 @@ sub readProteinSequence {
             undef $seq
         }
         else {
-            print "Can't find $dus in $seq\n";
+            get_logger()->info("Can't find $dus in $seq\n");
         }
         
     }
@@ -202,7 +228,7 @@ ONLY IN REVERSE!!!
 A new word string 
 
 =cut
-sub getReverseWords {
+sub getReversedWords {
     my %params  = @_;
     my $start   = $params{start};
     my $wordlen = $params{wordlen};
@@ -213,13 +239,10 @@ sub getReverseWords {
                     wordlen => $wordlen, 
                         dus => reverseDus($dus,   # Reversed DUS
             sub { # Anonymous function for reversing characters
-                my $achar = shift;
-                
-                return 'T' if ($achar eq 'A');
-                return 'G' if ($achar eq 'C');
-                return 'C' if ($achar eq 'G');
-                return 'A' if ($achar eq 'T');
-                                          })
+                my $retval = shift;
+                $retval =~ tr/ACGT/TGCA/;
+                return $retval;
+            })
         );
 }
 
@@ -248,17 +271,11 @@ A fully reversed DUS String
 
 =cut
 sub reverseDus {
-    my @dusArr = reverse(split(//, shift));
+    my $dus = reverse shift;
     my $sub    = shift;
 
     
-    foreach (@dusArr) {
-        if ($sub) {
-            $_ = &$sub($_);
-        }
-    }
-
-    return join('', @dusArr);
+    return &$sub($dus);
 }
 
 =head2 occurrences
@@ -404,20 +421,30 @@ sub expectedCountForOrf {
    return;
 }
 
-my $dus = 'GCCGTCTGAA';
-my $order = 4;
+my $dus     = 'GCCGTCTGAA';
+my $order   = 2;
+my $ncds    = 0; # Non Coding Sequence
+my $reverse = 0;
+my $debug   = 4;
 
-GetOptions( 'help|?' => \$help, 
+GetOptions( 'help|?' => \$help,
                  man => \$man, 
+           'reverse' => \$reverse,
+        'non-coding' => \$ncds,
              "dus=s" => \$dus, 
+           'debug=s' => \$debug,
            "order=i" => \$order) or pod2usage(2);
 
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
+$debug = 10000 * $debug;
+Log::Log4perl->easy_init($debug);
+
 my $proteins = readProteinSequence($dus);
+get_logger()->info("Checking DUS $dus");
 while (my ($header, $protein) = each %{$proteins}) {
-    print $header, "\n";
+    get_logger()->info($header . "\n");
     my $expected = 0;
     my $k_mers = getWords(  start => 1,
                           wordlen => $order, 
@@ -435,11 +462,46 @@ while (my ($header, $protein) = each %{$proteins}) {
         else {
             $expectedOrf = "undefined";
         }
-        print "Expected Number for ORF $orf: " . $expectedOrf . "\n";
+        get_logger()->info("Expected Number for ORF $orf: " . $expectedOrf . "\n");
     }
     
-    print "Total Expected Number for ORF: " . $expected . "\n";
+    get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
     
+}
+
+if ($reverse) {
+    $dus = reverseDus($dus,   # Reversed DUS
+                      sub { # Anonymous function for reversing characters
+                          my $retval = shift;
+                          $retval =~ tr/ACGT/TGCA/;
+                          return $retval;
+                      });
+    get_logger()->info("Checking DUS $dus");
+    while (my ($header, $protein) = each %{$proteins}) {
+        get_logger()->info($header, "\n");
+        my $expected = 0;
+        my $k_mers = getWords(  start => 1,
+                                wordlen => $order, 
+                                dus => $dus);
+        my $k_plus_one_mers = getWords(wordlen => $order + 1,
+                                       dus => $dus);
+        
+        for my $orf (1 .. 3) {    # Use reading frames 1-3
+            my $expectedOrf = expectedCountForOrf(protein => $protein, 
+                                                  frame => $orf, 
+                                                words => [$k_mers, $k_plus_one_mers]);
+            if ($expectedOrf) {
+                $expected += $expectedOrf;
+            }
+            else {
+                $expectedOrf = "undefined";
+            }
+            get_logger()->info("Expected Number for ORF $orf: " . $expectedOrf . "\n");
+        }
+        
+        get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
+        
+    }
 }
 exit 0;
 __END__
