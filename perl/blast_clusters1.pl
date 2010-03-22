@@ -139,10 +139,10 @@ sub testGraph {
 sub main {
     my $blast_file = pop(@ARGV);
     
-    foreach my $identity ((30, 45, 60, 75, 90)) {
-#    foreach my $identity ((30)) {               # For debugging
-        foreach my $alignment ((50, 70, 90)) {
-#        foreach my $alignment ((50)) {              # For debugging
+#    foreach my $identity ((30, 45, 60, 75, 90)) {
+    foreach my $identity ((40)) {               # For debugging
+#        foreach my $alignment ((50, 70, 90)) {
+        foreach my $alignment ((70)) {              # For debugging
             graph $identity, $alignment, sub {                
 #            graph 30, 50, sub {                     # For debugging
                 my $clusters = new IPIG::ClusterGraph(shift, shift);

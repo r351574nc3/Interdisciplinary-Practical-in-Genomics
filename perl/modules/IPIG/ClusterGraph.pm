@@ -294,7 +294,8 @@ sub graph {
         $graphHash{$cluster->size()}++;
     }
     
-    my @order = sort { $graphHash{$b} <=> $graphHash{$a} } keys %graphHash;
+    my @order = sort { $a <=> $b } keys %graphHash;
+    #my @order = keys %graphHash;
 
     foreach my $key (@order) {
         push(@{$graph->[0]}, $key);

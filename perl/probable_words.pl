@@ -18,20 +18,47 @@ use strict;
 use warnings;
 use Getopt::Std;
 
-=head1 probable_words
+use Getopt::Long;
+use Pod::Usage;
 
-=pod
+my $man = 0;
+my $help = 0;
 
-Determines expected numeric probability of reading frames 1 - 3 for DNA
+=head1 NAME
+    
+    probable_words - Determines expected numeric probability of reading frames 1 - 3 for DNA
 Uptake Sequences on a given Protein Sequence
 
 The point is to programmatically implement:
 
 C<>,
 
-=head2 Usage
+=head1 SYNOPSIS
 
-C<cat your_protein_sequence_file | perl probable_words.pl>
+    cat your_protein_sequence_file | perl probable_words.pl [options]
+
+  Options:
+    -help            brief help message
+    -man             full documentation
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-help>
+
+    Print a brief help message and exits.
+
+=item B<-man>
+
+Prints the manual page and exits.
+
+=back
+
+=head1 DESCRIPTION
+
+Determines expected numeric probability of reading frames 1 - 3 for DNA
+Uptake Sequences on a given Protein Sequence
 
 =head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
 
@@ -73,11 +100,11 @@ sub readProteinSequence {
         chop;
 
         if ($_ =~ /^\>/) {
-            if ($seq && validateDus(protein => $seq, dus => $dus)) {
+#            if ($seq && validateDus(protein => $seq, dus => $dus)) {
                 $seq =~ s/\s//g; # Remove all spaces
                 $retval{$header} = $seq;
                 $seq = '';
-            }
+#           }
 
             $header = $_;
             next;
@@ -144,7 +171,7 @@ sub getWords {
     my $retval = [];
     $start = 0 unless($start);
 
-    for ($start .. ($wordlen - 1)) {
+    for ($start .. $wordlen) {
         push(@{$retval}, substr($dus, $_, $wordlen));
     }
 
@@ -262,16 +289,17 @@ sub occurrences {
     my $str     = $params{str};
     my $substr  = $params{substr};
     my $frame   = $params{frame};
-    my $length = 10; # Assuming frame length is always 10. Ask about this.
+    my $length = 3; # Assuming frame length is always 10. Ask about this.
 
     
     my $idx = 0;
     my $wordCount = 0;
-    
-    for (my $i = ($frame - 1); ($i + $length) < length($str); $i += $length) { 
-        $wordCount++ if (index($str, $substr, $idx) != -1);
+
+    for (my $i = ($frame - 1); ($i + 3) < length($str); $i += 3) { 
+        my $frame_substr = substr($str, $i, length($substr));
+        $wordCount++ if (index($frame_substr, $substr) != -1);
     }
-    
+
     return $wordCount;
 }
 
@@ -363,35 +391,55 @@ sub expectedCountForOrf {
    my $frame   = $params{frame};
    my $words   = $params{words};
 
-   my $expected = occurCountForOrf(protein => $protein, 
-                                   frame   => $frame,   # r
-                                   words   => $words->[1])
-       / occurCountForOrf(protein => $protein, 
-                          frame   => $frame + 1,        # r + 1
-                          words   => $words->[0]);
-   return $expected;
+   my $four_mer_result = occurCountForOrf(protein => $protein, 
+                                          frame   => $frame + 1,        # r + 1
+                                          words   => $words->[0]);
+   my $five_mer_result = occurCountForOrf(protein => $protein, 
+                                          frame   => $frame,   # r
+                                          words   => $words->[1]);
+ 
+   if ($four_mer_result > 1) {
+       return int($five_mer_result / $four_mer_result);
+   }
+   return;
 }
 
 my $dus = 'GCCGTCTGAA';
+my $order = 4;
+
+GetOptions( 'help|?' => \$help, 
+                 man => \$man, 
+             "dus=s" => \$dus, 
+           "order=i" => \$order) or pod2usage(2);
+
+pod2usage(1) if $help;
+pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+
 my $proteins = readProteinSequence($dus);
 while (my ($header, $protein) = each %{$proteins}) {
     print $header, "\n";
     my $expected = 0;
-    my $four_mers = getWords(  start => 1,
-                             wordlen => 4, 
-                                 dus => $dus);
-    my $five_mers = getWords(wordlen => 5,
-                                 dus => $dus);
+    my $k_mers = getWords(  start => 1,
+                          wordlen => $order, 
+                              dus => $dus);
+    my $k_plus_one_mers = getWords(wordlen => $order + 1,
+                                       dus => $dus);
     
     for my $orf (1 .. 3) {    # Use reading frames 1-3
         my $expectedOrf = expectedCountForOrf(protein => $protein, 
-                                              frame => $orf, 
-                                              words => [$four_mers, $five_mers]);
-        $expected += $expectedOrf;
-    print "Expected Number for ORF $orf: " . int($expectedOrf) . "\n";
+                                                frame => $orf, 
+                                                words => [$k_mers, $k_plus_one_mers]);
+        if ($expectedOrf) {
+            $expected += $expectedOrf;
+        }
+        else {
+            $expectedOrf = "undefined";
+        }
+        print "Expected Number for ORF $orf: " . $expectedOrf . "\n";
     }
     
-    print "Total Expected Number for ORF: " . int($expected) . "\n";
+    print "Total Expected Number for ORF: " . $expected . "\n";
     
 }
 exit 0;
+__END__

@@ -48,7 +48,9 @@
   One way in particular is to group records related by query and or hit information as
   clusters. We can then provide statistical information on clusters. By grouping clusters
   with the same cardinality of edges, we can analyze trends between different families
-  of bacteria.  
+  of bacteria. One can analyze that similar families can grow at the same rate or that 
+  similar families can recombine with similar genes. This is the benefit of ortholog
+  analysis of gene clusters.
 
   {\setlength{\baselineskip}%
            {0.0\baselineskip}
@@ -63,23 +65,35 @@
   \\
 
   The records belong in the same cluster because they were results of the same query. Not
-  all records that match the query identifier become edges. The edge must also
+  all records that match the query identifier become edges. 
+
+  \subsection{Identifying Cluster Edges} 
+  
+  A gene may relate to another gene cluster by defining a cross-cluster relationship. For example, if we added the 
+  following data:
+
+  \noindent \verb|sicca_contig00265_4037-6052	AP206_contig00001_4923-1612	24.92	309	170	14	408	671	812	1103	4e-04	42.4|
+
+  The above will create an edge between \emph{AP206\_contig00001\_4923\-1612} and \emph{sicca\_contig00265\_4037\-6052}
+  clusters. Then, all of the hits relating to the \emph{sicca\_contig00265\_4037\-6052} query will
+  suddenly be added to the cluster as well.
+
+  The edge must also fulfill 
+  identity percentage and alignment length ratio requirements. The identity percentage must
+  be with in the bounds specified at runtime. The identity percentage requirement is within the range 
+  $\in \{30, 45, 60, 75, 90\}$. Likewise, the alignment length ratio must be within the range
+  $\in \{50, 70, 90\}$ which is defined at runtime. Again, the identity percentage and
+  alignment length ratio requirements are variable and determined at runtime. This study
+  provided results on each permutation of identity percentage and alignment length ratio.
 
 
-  Originally,
-  it was assumed that a cluster would only have edges that match the query; however, since
-  the clusters are considered to be a set, it is possible to create a union between clusters 
-  resulting in a new cluster containing edges from the two that were unioned.
-
-  Unions between clusters is determined by whether two clusters have edges that relate. For example,
-  if two edges share the same subject/hit identifier, then they are considered to be adjacent edges
-  even though they are not in the same cluster. This means, that a union can be made between
-  these two clusters.
 
   {\setlength{\baselineskip}%
            {0.0\baselineskip}
   \section*{\hfill Conclusion}
   \hrulefill \par}
+  
+  \subsection{Poisson Distributions}
 
   \includegraphics[width=145mm]{i30_a50_graph.png}
   
