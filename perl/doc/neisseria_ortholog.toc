@@ -1,6 +1,0 @@
-\contentsline {section}{\numberline {1}Class \texttt {BlastParser}}{10}
-\contentsline {section}{\numberline {2}Class \texttt {BlastRecordHandler}}{12}
-\contentsline {section}{\numberline {3}Class \texttt {BlastRecord}}{15}
-\contentsline {section}{\numberline {4}Class \texttt {Cluster}}{18}
-\contentsline {section}{\numberline {5}Class \texttt {CommentHandler}}{21}
-\contentsline {section}{\numberline {6}Class \texttt {RecordHandler}}{22}
