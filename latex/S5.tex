@@ -1,0 +1,100 @@
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{hyperlatex}
+\setcounter{htmldepth}{0}
+
+\definecolor{DarkBlue}{rgb}{0,0,0.55}
+\definecolor{DarkGreen}{rgb}{0,0.4,0}
+\definecolor{Purple}{rgb}{0.5,0,0.5}
+
+\begin{ifhtml}
+\newcommand{\HlxSubTitle}{}
+\newcommand{\HlxSubTitleP}{}
+\newcommand{\subtitle}[1]{\renewcommand{\HlxSubTitleP}{1}%
+  \renewcommand{\HlxSubTitle}{#1}}
+\newcommand{\HlxAffiliation}{}
+\newcommand{\HlxAffiliationP}{}
+\newcommand{\affiliation}[1]{\renewcommand{\HlxAffiliationP}{1}%
+  \renewcommand{\HlxAffiliation}{#1}}
+\newcommand{\sf}[1]{\xml{span style="font-family: sans-serif;"}#1\xml{/span}}
+\newcommand{\rm}[1]{\xml{span style="font-family: serif;"}#1\xml{/span}}
+\newcommand{\bf}[1]{\xml{span style="font-weight: bold;"}#1\xml{/span}}
+\newcommand{\href}[2]{\xml{a href="#1"}#2\xml{/a}}
+\newcommand{\HlxStyleSheet}{
+  \begin{rawxml}
+    <!-- metadata -->
+    <meta name="generator" content="S5" />
+    <meta name="version" content="S5 1.1" />
+    <meta name="company" content="Leosandbox " />
+    <!-- configuration parameters -->
+    <meta name="defaultView" content="slideshow" />
+    <meta name="controlVis" content="hidden" />
+    <!-- style sheet links -->
+    <link rel="stylesheet" href="ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+    <link rel="stylesheet" href="ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+    <link rel="stylesheet" href="ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+    <link rel="stylesheet" href="ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+    <script src="ui/default/slides.js" type="text/javascript"></script>
+
+  \end{rawxml}
+}
+
+\newcommand{\maketitle}{
+    \xml{div class="slide"}
+    \xml{h1}\HlxTitle\xml{/h1}
+    \xml{h2}\HlxSubTitle\xml{/h2}
+    \xml{h3}\HlxAuthor\xml{/h3}
+    \xml{h4}\HlxAffiliation\xml{/h4}
+    \xml{/div}}
+\end{ifhtml}
+
+\newenvironment{s5presentation}{\endpar%
+  \HlxBlk\begin{rawxml}
+  <div class="header">
+    <div class="header_l">
+      <div class="header_r">
+      &nbsp;
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="content_l">
+      <div class="content_r">
+        <img src="ui/default/blank.gif" id="filler" border="0"/>
+<div class="layout">
+  <div id="controls"><!-- DO NOT EDIT --></div>
+  <div id="currentSlide"><!-- DO NOT EDIT --></div>
+  <div id="header">
+    <img style="position: relative; top:30px; left: 18px;" id="logo" src="ui/default/logo.png" />
+  </div>
+  <div id="footer">
+    <div class="footer_l">
+      <div class="footer_r">
+        <h1/>
+        <h2>\end{rawxml}\HlxDate\begin{rawxml}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+ </div>
+<div class="presentation">
+    \end{rawxml}}{\HlxBlk\xml{/div}}
+\newenvironment{s5slide}{\xml{div class="slide"}
+\newenvironment{s5notes}{\xml{div class="notes"}}{\xml{/div}}
+}{\xml{/div}}
+\newcommand{\fulltitle}[1]{\title{#1}\htmlonly{\htmltitle{#1}}}
+\newcommand{\thumbnail}[2]{\endpar%
+\xml{a href="#1" id="external" rel="lightbox[gallery]"}\xml{img src="#2" id="external" border="0" width="100"/}\xml{/a}
+}
+\newenvironment{slideshow}{\endpar%
+  \HlxBlk\xml{ul class="gallery"}\begingroup\stepcounter{listcounter}%
+  \newcounter{gallerycounter}%
+  \newcommand{\item}{%
+      \setcounter{gallerycounter}{\thelistcounter}%
+      \HlxBlk\xml{li}}\ignorespaces}%
+    {\begin{ifequal}{\thegallerycounter}{\thelistcounter}%
+        \xml{/li}\end{ifequal}\endgroup%
+    \HlxBlk\xml{/ul}}

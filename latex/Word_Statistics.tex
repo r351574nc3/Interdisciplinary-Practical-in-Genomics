@@ -1,0 +1,66 @@
+\documentclass[12pt,notitlepage]{article}
+\author{Leo Przybylski}
+\usepackage{graphicx}
+\input{S5.tex}
+\fulltitle{DNA, Words and Models}
+\W \subtitle{Discussion}
+
+\W \affiliation{University of Arizona}
+
+
+\begin{document}
+  \W \begin{s5presentation}
+  \maketitle
+
+\begin{ifhtml}
+    \begin{s5slide}
+      \section{Overview}
+      \begin{enumerate}
+        \item Mathematic notation
+        \item Markov Model
+        \item Permutation Model
+        \item Multi-order models
+        \item Changing frequency
+        \item Changing location
+      \end{enumerate}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Mathematic Notation}
+      \begin{enumerate}
+        \item page xix
+      \end{enumerate}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Problem}
+      \begin{itemize}
+        \item Not certain to locate desired 4-mer in orf
+        \item Frequent encounters of 0 results with a given 4-mer (divide by zero)
+      \end{itemize}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Permutation Model}
+      \begin{itemize}
+        \item page 12
+        \item Factorial leads to never 0 denominator
+      \end{itemize}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Markov Model}
+      \begin{itemize}
+        \item page 32
+        \item Frequent encounters of 0 results with a given 4-mer (divide by zero)
+        \item Gaussian approximation
+          \begin{itemize}
+          \item page 64
+          \item What we're trying to do
+          \end{itemize}
+      \end{itemize}
+    \end{s5slide}
+\end{ifhtml}  
+
+  \W \end{s5presentation}
+\end{document}
