@@ -1,0 +1,713 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.11.5)  27 FEB 2010 17:29
+entering extended mode
+ %&-line parsing enabled.
+**neisseria_ortholog.tex
+(./neisseria_ortholog.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, farsi, croatian, ukrainian, russian, bulgarian, czech, slov
+ak, danish, dutch, finnish, basque, french, german, ngerman, ibycus, greek, mon
+ogreek, ancientgreek, hungarian, italian, latin, mongolian, norsk, icelandic, i
+nterlingua, turkish, coptic, romanian, welsh, serbian, slovenian, estonian, esp
+eranto, uppersorbian, indonesian, polish, portuguese, spanish, catalan, galicia
+n, swedish, ukenglish, pinyin, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size11.clo
+File: size11.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-texlive/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks15
+\ex@=\dimen105
+))
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen106
+)
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen107
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks16
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks17
+\eqnshift@=\dimen108
+\alignsep@=\dimen109
+\tagshift@=\dimen110
+\tagwidth@=\dimen111
+\totwidth@=\dimen112
+\lineht@=\dimen113
+\@envbody=\toks18
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks19
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(/usr/share/texmf-texlive/tex/latex/tools/multicol.sty
+Package: multicol 2006/05/18 v1.6g multicolumn formatting (FMi)
+\c@tracingmulticols=\count100
+\mult@box=\box28
+\multicol@leftmargin=\dimen114
+\c@unbalance=\count101
+\c@collectmore=\count102
+\doublecol@number=\count103
+\multicoltolerance=\count104
+\multicolpretolerance=\count105
+\full@width=\dimen115
+\page@free=\dimen116
+\premulticols=\dimen117
+\postmulticols=\dimen118
+\multicolsep=\skip46
+\multicolbaselineskip=\skip47
+\partial@page=\box29
+\last@line=\box30
+\mult@rightbox=\box31
+\mult@grightbox=\box32
+\mult@gfirstbox=\box33
+\mult@firstbox=\box34
+\@tempa=\box35
+\@tempa=\box36
+\@tempa=\box37
+\@tempa=\box38
+\@tempa=\box39
+\@tempa=\box40
+\@tempa=\box41
+\@tempa=\box42
+\@tempa=\box43
+\@tempa=\box44
+\@tempa=\box45
+\@tempa=\box46
+\@tempa=\box47
+\@tempa=\box48
+\@tempa=\box49
+\@tempa=\box50
+\@tempa=\box51
+\c@columnbadness=\count106
+\c@finalcolumnbadness=\count107
+\last@try=\dimen119
+\multicolovershoot=\dimen120
+\multicolundershoot=\dimen121
+\mult@nat@firstbox=\box52
+\colbreak@box=\box53
+)
+(./neisseria_ortholog.aux (./api/BlastParser.aux
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+) (./api/BlastRecordHandler.aux
+
+LaTeX Warning: Label `Description' multiply defined.
+
+
+LaTeX Warning: Label `Author:_Leo_Przybylski_przybyls_arizona_edu_' multiply de
+fined.
+
+
+LaTeX Warning: Label `Default_Constructor' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+) (./api/BlastRecord.aux
+
+LaTeX Warning: Label `Description' multiply defined.
+
+
+LaTeX Warning: Label `Author:_Leo_Przybylski_przybyls_arizona_edu_' multiply de
+fined.
+
+
+LaTeX Warning: Label `Default_Constructor' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Method_isSelfHit' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+) (./api/ClusterMatrix.aux) (./api/Cluster.aux
+
+LaTeX Warning: Label `Description' multiply defined.
+
+
+LaTeX Warning: Label `Author:_Leo_Przybylski_przybyls_arizona_edu_' multiply de
+fined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+
+LaTeX Warning: Label `Parameters' multiply defined.
+
+
+LaTeX Warning: Label `Returns' multiply defined.
+
+) (./api/CommentHandler.aux
+
+LaTeX Warning: Label `Description' multiply defined.
+
+
+LaTeX Warning: Label `Author:_Leo_Przybylski_przybyls_arizona_edu_' multiply de
+fined.
+
+
+LaTeX Warning: Label `Default_Constructor' multiply defined.
+
+) (./api/Edge.aux) (./api/RecordHandler.aux
+
+LaTeX Warning: Label `Description' multiply defined.
+
+
+LaTeX Warning: Label `Author:_Leo_Przybylski_przybyls_arizona_edu_' multiply de
+fined.
+
+
+LaTeX Warning: Label `Default_Constructor' multiply defined.
+
+
+LaTeX Warning: Label `Method_handleRecord' multiply defined.
+
+
+LaTeX Warning: Label `Method_handleRecord' multiply defined.
+
+))
+\openout1 = `neisseria_ortholog.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+ (/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count108
+\scratchdimen=\dimen122
+\scratchbox=\box54
+\nofMPsegments=\count109
+\nofMParguments=\count110
+\everyMPshowfont=\toks20
+\MPscratchCnt=\count111
+\MPscratchDim=\dimen123
+\MPnumerator=\count112
+\everyMPtoPDFconversion=\toks21
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 28.
+ (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 28.
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+) (./neisseria_ortholog.toc
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 1.
+)
+\tf@toc=\write3
+\openout3 = `neisseria_ortholog.toc'.
+
+ <i90_a90_graph.png, id=1, 1154.3125pt x 770.88pt>
+File: i90_a90_graph.png Graphic file (type png)
+ <use i90_a90_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 45--46
+[][] 
+ []
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (16.95753pt too wide) in paragraph at lines 62--63
+[]\OT1/cmtt/m/n/10 AP206_contig00001_4923-1612 cinerea_contig00013_10696-7277 4
+7.65 1129 517 23 29 1103
+ []
+
+
+Overfull \hbox (22.20749pt too wide) in paragraph at lines 64--66
+[]\OT1/cmtt/m/n/10 AP206_contig00001_4923-1612 elongata_contig01464_47682-51131
+ 46.11 1156 545 24 7 1103
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--66
+
+ []
+
+
+Overfull \hbox (16.95753pt too wide) in paragraph at lines 72--73
+[]\OT1/cmtt/m/n/10 sicca_contig00265_4037-6052 AP206_contig00001_4923-1612 24.9
+2 309 170 14 408 671 812
+ []
+
+
+Overfull \hbox (9.98016pt too wide) in paragraph at lines 74--77
+[]\OT1/cmr/m/n/10 The above will cre-ate an edge be-tween \OT1/cmr/m/it/10 AP20
+6[]contig00001[]4923-1612 \OT1/cmr/m/n/10 and \OT1/cmr/m/it/10 sicca[]contig002
+65[]4037-
+ []
+
+<i30_a50_graph.png, id=13, 2760.3125pt x 770.88pt> [2 <./i90_a90_graph.png>]
+File: i30_a50_graph.png Graphic file (type png)
+
+<use i30_a50_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 93--94
+[][] 
+ []
+
+<i30_a70_graph.png, id=21, 2860.6875pt x 770.88pt>
+File: i30_a70_graph.png Graphic file (type png)
+ <use i30_a70_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 95--96
+[][] 
+ []
+
+<i30_a90_graph.png, id=22, 2609.75pt x 770.88pt>
+File: i30_a90_graph.png Graphic file (type png)
+ <use i30_a90_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 97--98
+[][] 
+ []
+
+<i45_a50_graph.png, id=23, 1907.125pt x 770.88pt>
+File: i45_a50_graph.png Graphic file (type png)
+ <use i45_a50_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 99--100
+[][] 
+ []
+
+<i45_a70_graph.png, id=24, 1856.9375pt x 770.88pt>
+File: i45_a70_graph.png Graphic file (type png)
+ <use i45_a70_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 101--102
+[][] 
+ []
+
+<i45_a90_graph.png, id=25, 1856.9375pt x 770.88pt> [3 <./i30_a50_graph.png> <./
+i30_a70_graph.png> <./i30_a90_graph.png> <./i45_a50_graph.png>]
+File: i45_a90_graph.png Graphic file (type png)
+
+<use i45_a90_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 103--104
+[][] 
+ []
+
+<i60_a50_graph.png, id=33, 1756.5625pt x 770.88pt>
+File: i60_a50_graph.png Graphic file (type png)
+ <use i60_a50_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 105--106
+[][] 
+ []
+
+<i60_a70_graph.png, id=34, 1606.0pt x 770.88pt>
+File: i60_a70_graph.png Graphic file (type png)
+ <use i60_a70_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 107--108
+[][] 
+ []
+
+<i60_a90_graph.png, id=35, 1606.0pt x 770.88pt> [4 <./i45_a70_graph.png> <./i45
+_a90_graph.png> <./i60_a50_graph.png>]
+File: i60_a90_graph.png Graphic file (type png)
+ <use i60_a90_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 109--110
+[][] 
+ []
+
+<i75_a50_graph.png, id=42, 1355.0625pt x 770.88pt>
+File: i75_a50_graph.png Graphic file (type png)
+ <use i75_a50_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 111--112
+[][] 
+ []
+
+<i75_a70_graph.png, id=43, 1355.0625pt x 770.88pt> [5 <./i60_a70_graph.png> <./
+i60_a90_graph.png>]
+File: i75_a70_graph.png Graphic file (type png)
+ <use i75_a70_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 113--114
+[][] 
+ []
+
+<i75_a90_graph.png, id=49, 1355.0625pt x 770.88pt>
+File: i75_a90_graph.png Graphic file (type png)
+ <use i75_a90_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 115--116
+[][] 
+ []
+
+<i90_a50_graph.png, id=50, 1104.125pt x 770.88pt> [6 <./i75_a50_graph.png> <./i
+75_a70_graph.png>]
+File: i90_a50_graph.png Graphic file (type png)
+ <use i90_a50_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 117--118
+[][] 
+ []
+
+<i90_a70_graph.png, id=56, 1355.0625pt x 770.88pt>
+File: i90_a70_graph.png Graphic file (type png)
+ <use i90_a70_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 119--120
+[][] 
+ []
+
+[7 <./i75_a90_graph.png> <./i90_a50_graph.png>]
+File: i90_a90_graph.png Graphic file (type png)
+ <use i90_a90_graph.png>
+Overfull \hbox (3.52635pt too wide) in paragraph at lines 121--122
+[][] 
+ []
+
+<api/images/blast_clusters1_Class1.png, id=63, 1029.8475pt x 622.325pt>
+File: api/images/blast_clusters1_Class1.png Graphic file (type png)
+
+<use api/images/blast_clusters1_Class1.png> [8 <./i90_a70_graph.png>] [9 <./api
+/images/blast_clusters1_Class1.png (PNG copy)>]
+\openout2 = `api/BlastParser.aux'.
+
+ (./api/BlastParser.tex
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 4.
+
+Overfull \hbox (17.07927pt too wide) in paragraph at lines 14--16
+\OT1/cmr/m/n/10 Constructs the \OT1/cmtt/m/n/10 BlastParser \OT1/cmr/m/n/10 fro
+m its at-tributes. A \OT1/cmtt/m/n/10 RecordHandler \OT1/cmr/m/n/10 is re-quire
+d. If the \OT1/cmtt/m/n/10 CommentHandler
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 20.
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 22.
+[10
+
+]) [11]
+\openout2 = `api/BlastRecordHandler.aux'.
+
+ (./api/BlastRecordHandler.tex [12
+
+
+]) [13] [14]
+\openout2 = `api/BlastRecord.aux'.
+
+ (./api/BlastRecord.tex [15
+
+
+] [16]) [17]
+\openout2 = `api/ClusterMatrix.aux'.
+
+
+No file api/ClusterMatrix.tex.
+\openout2 = `api/Cluster.aux'.
+
+(./api/Cluster.tex [18
+
+
+
+
+] [19]) [20]
+\openout2 = `api/CommentHandler.aux'.
+
+ (./api/CommentHandler.tex) [21
+
+
+]
+\openout2 = `api/Edge.aux'.
+
+
+No file api/Edge.tex.
+\openout2 = `api/RecordHandler.aux'.
+
+(./api/RecordHandler.tex) [22
+
+
+
+
+] (./neisseria_ortholog.aux (./api/BlastParser.aux) (./api/BlastRecordHandler.a
+ux) (./api/BlastRecord.aux)
+(./api/ClusterMatrix.aux) (./api/Cluster.aux) (./api/CommentHandler.aux)
+(./api/Edge.aux) (./api/RecordHandler.aux))
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2074 strings out of 94074
+ 26321 string characters out of 1165153
+ 77214 words of memory out of 1500000
+ 5287 multiletter control sequences out of 10000+50000
+ 13499 words of font info for 53 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 27i,6n,24p,271b,234s stack positions out of 5000i,500n,6000p,200000b,5000s
+</usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf
+-texlive/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type
+1/bluesky/cm/cmbxti10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmmi
+10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/t
+exmf-texlive/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/t
+ype1/bluesky/cm/cmr17.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy
+10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/
+texmf-texlive/fonts/type1/bluesky/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts
+/type1/bluesky/cm/cmtt12.pfb>
+Output written on neisseria_ortholog.pdf (22 pages, 786018 bytes).
+PDF statistics:
+ 148 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+

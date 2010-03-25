@@ -1,0 +1,127 @@
+%% \tableofcontents
+
+\section{Class \texttt{BlastRecordHandler}\label{Class_BlastRecordHandler}\index{Class BlastRecordHandler}}
+\subsection*{Description\label{Description}\index{Description}}
+\begin{verbatim}
+ Allows for different types of record handling of Blast output. Used
+ as an adapter passed to the BlastParser for different handling of 
+ blast information.
+\end{verbatim}
+\subsubsection*{Author: \textit{Leo Przybylski (przybyls@arizona.edu)}\label{Author:_Leo_Przybylski_przybyls_arizona_edu_}\index{Author: Leo Przybylski (przybyls@arizona.edu)}}
+\subsubsection*{Inherits From: \texttt{RecordHandler}\label{Inherits_From:_RecordHandler}\index{Inherits From: RecordHandler}}
+\subsection*{Default Constructor\label{Default_Constructor}\index{Default Constructor}}
+
+
+Constructs a \texttt{BlastRecordHandler} from its attributes
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{a \texttt{ClusterGraph}. When it handles}] \textbf{a record, an \texttt{Gene} is added to the \texttt{ClusterGraph}. This makes the \texttt{BlastRecordHandler} stateful.}\end{description}
+\subsection*{Method \texttt{handleRecord}\label{Method_handleRecord}\index{Method handleRecord}}
+
+
+Creates a \texttt{BlastRecord} and handles it.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{record} - an array of fields used}] \textbf{to populate a \texttt{BlastRecord}}\end{description}
+\subsection*{Method \texttt{isSelfHit}\label{Method_isSelfHit}\index{Method isSelfHit}}
+
+
+Handles \textit{self hit} blast records
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{record} - \texttt{BlastRecord} instance}] \mbox{}\end{description}
+\subsection*{Getter/Setter \texttt{graph}\label{Getter_Setter_graph}\index{Getter/Setter graph}}
+
+
+Getter/Setter for the cluster graph.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{graph} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{graph}. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{current}\label{Getter_Setter_current}\index{Getter/Setter current}}
+
+
+Getter/Setter for the current cluster.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{current} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{current}. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{alignments}\label{Getter_Setter_alignments}\index{Getter/Setter alignments}}
+
+
+Getter/Setter for the alignment length requirements hash. Each alignment length 
+is stored with the query id as the key.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{alignments} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{alignments}. Only returns something if there is no parameter present.
+
+\subsection*{Method \texttt{validate}\label{Method_validate}\index{Method validate}}
+
+
+Validates a \texttt{BlastRecord} or \texttt{Gene} using the self hit alignment information. If this record is valid,
+we can use that information to determine if it is an gene or not.
+
+
+
+A valid \texttt{BlastRecord} has a \% \texttt{identity} larger than that of the requirement. The \% \texttt{identity}
+requirement is determined at the point when the \texttt{ClusterGraph} instance is created. That is, 
+the \texttt{ClusterGraph} knows what the requirement is. The same goes for the \texttt{alignment} ratio
+requirement. The \texttt{ClusterGraph} also knows what that is. The \texttt{alignment} ratio is determined by
+the record alignment/self hit alignment. In order to obtain the self hit for a given record,
+it is regarded that the \texttt{Cluster} the \texttt{BlastRecord} belongs in has an \texttt{Gene} somewhere with
+a subject that is the same as the \texttt{BlastRecord}'s query which would make its query and subject
+the same (a self hit.)
+
+
+
+Take note that this only works if the \texttt{Cluster} that the \texttt{BlastRecord} belongs to has
+a self hit. If there isn't one, then we just say it's valid. When the self hit is discovered,
+this \texttt{BlastRecord} will be re-evaluated.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{record} - The \texttt{BlastRecord}}] \textbf{or \texttt{Gene} to validate}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+\texttt{1} if the record is valid, \texttt{0} otherwise.
+
+\subsection*{Method \texttt{clusterForRecord}\label{Method_clusterForRecord}\index{Method clusterForRecord}}
+
+
+Lookup the \texttt{Cluster} belonging to a \texttt{BlastRecord}. Uses both \texttt{query} and \texttt{subject}
+properties of the \texttt{BlastRecord}
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{record} - The \texttt{BlastRecord}}] \textbf{or \texttt{Gene} to lookup a \texttt{Cluster} for}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+A \texttt{Cluster}

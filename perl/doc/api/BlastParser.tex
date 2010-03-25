@@ -1,0 +1,87 @@
+
+%% \tableofcontents
+
+\section{Class \texttt{BlastParser}\label{Class_BlastParser}\index{Class BlastParser}}
+\subsection*{Description\label{Description}\index{Description}}
+
+
+Class mainly responsible for parsing blast input into \texttt{BlastRecord} instances.
+
+\subsubsection*{Author: \textit{Leo Przybylski (przybyls@arizona.edu)}\label{Author:_Leo_Przybylski_przybyls_arizona_edu_}\index{Author: Leo Przybylski (przybyls@arizona.edu)}}
+\subsection*{Default Constructor\label{Default_Constructor}\index{Default Constructor}}
+
+
+Constructs the \texttt{BlastParser} from its attributes. A \texttt{RecordHandler} is
+required. If the \texttt{CommentHandler} is not provided, a default is used.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{rh} - a \texttt{RecordHandler} instance}] \mbox{}
+\item[{\texttt{ch} - a \texttt{CommentHandler}}] \textbf{instance}\end{description}
+\subsection*{Method \texttt{parse}\label{Method_parse}\index{Method parse}}
+
+
+Opens the file directed by the provided filename and parses it into \texttt{BlastRecord} instances.
+It then passes the \texttt{BlastRecord} instances to the \texttt{RecordHandler}
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{input} - path of the file to parse}] \mbox{}\end{description}
+\subsection*{Method \texttt{parseRecord}\label{Method_parseRecord}\index{Method parseRecord}}
+
+
+Takes a line from the blast output file and parses it into an array of fields
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{a record from the blast output file}] \mbox{}\end{description}
+\subsection*{Method \texttt{isRecord}\label{Method_isRecord}\index{Method isRecord}}
+
+
+Determines if the given line is indeed a record. If it's not a record, it's probably
+a comment
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{a record from the blast output file}] \mbox{}\end{description}
+\subsection*{Method \texttt{isComment}\label{Method_isComment}\index{Method isComment}}
+
+
+Determines if the given line is indeed a comment. If it's not a comment, it's probably
+a record
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{a record from the blast output file}] \mbox{}\end{description}
+\subsection*{Getter/Setter \texttt{commentHandler}\label{Getter_Setter_commentHandler}\index{Getter/Setter commentHandler}}
+
+
+Getter/Setter for the commentHandler
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{commentHandler} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{commentHandler}. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{recordHandler}\label{Getter_Setter_recordHandler}\index{Getter/Setter recordHandler}}
+
+
+Getter/Setter for the recordHandler
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{recordHandler} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{recordHandler}. Only returns something if there is no parameter present.

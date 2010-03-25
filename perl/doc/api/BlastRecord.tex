@@ -1,0 +1,185 @@
+
+%% \tableofcontents
+
+\section{Class \texttt{BlastRecord}\label{Class_BlastRecord}\index{Class BlastRecord}}
+\subsection*{Description\label{Description}\index{Description}}
+
+
+Class representation of line items from blast output. \texttt{BlastRecord} instances 
+have
+
+\begin{description}
+
+\item[{query id}] \mbox{}
+\item[{subject id}] \mbox{}
+\item[{identity}] \mbox{}
+\item[{alignment length}] \mbox{}\end{description}
+\subsubsection*{Author: \textit{Leo Przybylski (przybyls@arizona.edu)}\label{Author:_Leo_Przybylski_przybyls_arizona_edu_}\index{Author: Leo Przybylski (przybyls@arizona.edu)}}
+\subsection*{Default Constructor\label{Default_Constructor}\index{Default Constructor}}
+
+
+Constructs the \texttt{BlastRecord} from its attributes. None are required though.
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{query} id}] \mbox{}
+\item[{\texttt{subject} id}] \mbox{}
+\item[{\texttt{identity}}] \mbox{}
+\item[{\texttt{alignment} length}] \mbox{}
+\item[{\texttt{mismatches} - undetermined}] \mbox{}
+\item[{\texttt{qstart} - undetermined}] \mbox{}
+\item[{\texttt{qend} - undetermined}] \mbox{}
+\item[{\texttt{sstart} - undetermined}] \mbox{}
+\item[{\texttt{send} - undetermined}] \mbox{}
+\item[{\texttt{evalue} - undetermined}] \mbox{}\end{description}
+\subsection*{Method \texttt{isSelfHit}\label{Method_isSelfHit}\index{Method isSelfHit}}
+
+
+A Record is considered a \textit{self hit} if its query and subject are the same. This
+method compares them and returns the results. It's case-sensitive.
+
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+\texttt{1} if is \textit{self hit}; otherwise, returns \texttt{0}
+
+\subsection*{Getter/Setter \texttt{query}\label{Getter_Setter_query}\index{Getter/Setter query}}
+
+
+Getter/Setter for the query
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{query\_id} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{query\_id}. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{subject}\label{Getter_Setter_subject}\index{Getter/Setter subject}}
+
+
+Getter/Setter for the subject
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{subject\_id} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{subject\_id}. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{identity}\label{Getter_Setter_identity}\index{Getter/Setter identity}}
+
+
+Getter/Setter for the identity
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{identity} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the \texttt{identity}. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{alignment}\label{Getter_Setter_alignment}\index{Getter/Setter alignment}}
+
+
+Getter/Setter for the alignment
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{alignment} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the alignment. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{mismatches}\label{Getter_Setter_mismatches}\index{Getter/Setter mismatches}}
+
+
+Getter/Setter for the mismatches
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{mismatches} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the mismatches. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{qstart}\label{Getter_Setter_qstart}\index{Getter/Setter qstart}}
+
+
+Getter/Setter for the qstart
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{qstart} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the qstart. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{qend}\label{Getter_Setter_qend}\index{Getter/Setter qend}}
+
+
+Getter/Setter for the qend
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{qend} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the qend. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{sstart}\label{Getter_Setter_sstart}\index{Getter/Setter sstart}}
+
+
+Getter/Setter for the sstart
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{sstart} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the sstart. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{send}\label{Getter_Setter_send}\index{Getter/Setter send}}
+
+
+Getter/Setter for the send
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{send} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the send. Only returns something if there is no parameter present.
+
+\subsection*{Getter/Setter \texttt{evalue}\label{Getter_Setter_evalue}\index{Getter/Setter evalue}}
+
+
+Getter/Setter for the evalue
+
+\subsubsection*{Parameters\label{Parameters}\index{Parameters}}
+\begin{description}
+
+\item[{\texttt{evalue} to set (optional)}] \mbox{}\end{description}
+\subsubsection*{Returns\label{Returns}\index{Returns}}
+
+
+Gets the evalue. Only returns something if there is no parameter present.

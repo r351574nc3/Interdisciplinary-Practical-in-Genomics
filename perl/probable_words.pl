@@ -124,10 +124,10 @@ sub readProteinSequence {
     my $header;
     while(<>) {
         chop;
-
-        if ($_ =~ /^\>/) {
+        if ($seq =~ /^\>/) {
 #            if ($seq && validateDus(protein => $seq, dus => $dus)) {
                 $seq =~ s/\s//g; # Remove all spaces
+                $seq =~ s/[^ACGTNX]//g;
                 $retval{$header} = $seq;
                 $seq = '';
 #           }
@@ -421,6 +421,39 @@ sub expectedCountForOrf {
    return;
 }
 
+sub calculate {
+    my $dus      = shift;
+    my $proteins = shift;
+
+    get_logger()->info("Checking DUS $dus");
+
+    while (my ($header, $protein) = each %{$proteins}) {
+        get_logger()->info($header . "\n");
+        my $expected = 0;
+        my $k_mers = getWords(  start => 1,
+                              wordlen => $order, 
+                                  dus => $dus);
+        my $k_plus_one_mers = getWords(wordlen => $order + 1,
+                                       dus => $dus);
+        
+        for my $orf (1 .. 3) {    # Use reading frames 1-3
+            my $expectedOrf = expectedCountForOrf(protein => $protein, 
+                                                    frame => $orf, 
+                                                    words => [$k_mers, $k_plus_one_mers]);
+            if ($expectedOrf) {
+                $expected += $expectedOrf;
+            }
+            else {
+                $expectedOrf = "undefined";
+            }
+            get_logger()->info("Expected Number for ORF $orf: " . $expectedOrf . "\n");
+        }
+        
+        get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
+        
+    }
+}
+
 my $dus     = 'GCCGTCTGAA';
 my $order   = 2;
 my $ncds    = 0; # Non Coding Sequence
@@ -442,66 +475,16 @@ $debug = 10000 * $debug;
 Log::Log4perl->easy_init($debug);
 
 my $proteins = readProteinSequence($dus);
-get_logger()->info("Checking DUS $dus");
-while (my ($header, $protein) = each %{$proteins}) {
-    get_logger()->info($header . "\n");
-    my $expected = 0;
-    my $k_mers = getWords(  start => 1,
-                          wordlen => $order, 
-                              dus => $dus);
-    my $k_plus_one_mers = getWords(wordlen => $order + 1,
-                                       dus => $dus);
-    
-    for my $orf (1 .. 3) {    # Use reading frames 1-3
-        my $expectedOrf = expectedCountForOrf(protein => $protein, 
-                                                frame => $orf, 
-                                                words => [$k_mers, $k_plus_one_mers]);
-        if ($expectedOrf) {
-            $expected += $expectedOrf;
-        }
-        else {
-            $expectedOrf = "undefined";
-        }
-        get_logger()->info("Expected Number for ORF $orf: " . $expectedOrf . "\n");
-    }
-    
-    get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
-    
-}
+calculate($dus, $proteins);
 
 if ($reverse) {
-    $dus = reverseDus($dus,   # Reversed DUS
-                      sub { # Anonymous function for reversing characters
-                          my $retval = shift;
-                          $retval =~ tr/ACGT/TGCA/;
-                          return $retval;
-                      });
-    get_logger()->info("Checking DUS $dus");
-    while (my ($header, $protein) = each %{$proteins}) {
-        get_logger()->info($header, "\n");
-        my $expected = 0;
-        my $k_mers = getWords(  start => 1,
-                                wordlen => $order, 
-                                dus => $dus);
-        my $k_plus_one_mers = getWords(wordlen => $order + 1,
-                                       dus => $dus);
-        
-        for my $orf (1 .. 3) {    # Use reading frames 1-3
-            my $expectedOrf = expectedCountForOrf(protein => $protein, 
-                                                  frame => $orf, 
-                                                words => [$k_mers, $k_plus_one_mers]);
-            if ($expectedOrf) {
-                $expected += $expectedOrf;
-            }
-            else {
-                $expectedOrf = "undefined";
-            }
-            get_logger()->info("Expected Number for ORF $orf: " . $expectedOrf . "\n");
-        }
-        
-        get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
-        
-    }
+    calculate(reverseDus($dus,   # Reversed DUS
+                         sub { # Anonymous function for reversing characters
+                             my $retval = shift;
+                             $retval =~ tr/ACGT/TGCA/;
+                             return $retval;
+                         }),
+              $proteins);
 }
 exit 0;
 __END__

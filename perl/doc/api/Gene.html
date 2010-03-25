@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>Gene Class</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub" />
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub" />
+
+    <link href="api.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="https://assets2.github.com/stylesheets/bundle_common.css?b4e92e82b2459127776a4e8b69efc76d30684890" media="screen" rel="stylesheet" type="text/css" />
+    <link href="https://assets1.github.com/stylesheets/bundle_github.css?b4e92e82b2459127776a4e8b69efc76d30684890" media="screen" rel="stylesheet" type="text/css" />
+
+  </head>
+
+  
+
+  <body class="page-dashboard">
+
+    <div class="" id="main">
+      <div id="header" class="pageheaded">
+        <div class="site">
+          <div class="logo"><table>
+              <tr><td><img src="http://a1.twimg.com/profile_images/595969456/lion-silhouette-small_bigger.png" alt="r351574nc3" />
+                </td><td><h1>class <tt>Gene</tt></h1></td></tr></table></div>
+            
+
+        </div>
+      </div>
+
+      
+      
+        <div class="site">
+          
+
+
+
+<div class="pagehead shrunken dashboard">
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Description"
+>Description</a></h2>
+
+<p><code>Gene</code> instances can be grouped together to form clusters (graphs of genes).
+A <code>Cluster</code> is basically like a digraph of genes where adjacent <code>Gene</code> instancess are grouped together.
+One <code>Gene</code> is known to be adjacent to another <code>Gene</code> if they belong to the same cluster (ie.,
+have the same query id.) It is possible to union one <code>Cluster</code> with another.
+This would produce <code>Gene</code> instances that were adjacent because of common <i>subject id</i></p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Author:_Leo_Przybylski_(przybyls@arizona.edu)"
+>Author: <i>Leo Przybylski (przybyls@arizona.edu)</i></a></h3>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Default_Constructor"
+>Default Constructor</a></h2>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="record_-_a_blast_output_record_instance"
+><code>record</code> - a blast output record instance</a></dt>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_equals"
+>Method <code>equals</code></a></h2>
+
+<p>If the <code>query</code> and the <code>subject</code> of <code>tocompare</code> match the <code>query</code> and <code>subject</code> of <code>this</code> match,
+then we consider the <code>Gene</code> instances to be equal.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_Gene_instance_to_compare_against"
+><code>tocompare</code> - <code>Gene</code> instance to compare against</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p><code>1</code> if they are equal; otherwise,
+returns <code>0</code></p>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Method_isAdjacentTo"
+>Method <code>isAdjacentTo</code></a></h2>
+
+<p>An <code>Gene</code> is adjacent to another <code>Gene</code> if their subjects match.</p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="tocompare_-_an_Gene_instance_to_compare_against"
+><code>tocompare</code> - an <code>Gene</code> instance to compare against</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<dl>
+<dt><a name="1_if_this_is_adjacent_to_tocompare;_otherwise,_0"
+><code>1</code> if <code>this</code> is adjacent to <code>tocompare</code>; otherwise,
+<code>0</code></a></dt>
+</dl>
+
+<h2><a class='u' href='#___top' title='click to go to top of document'
+name="Getter/Setter_record"
+>Getter/Setter <code>record</code></a></h2>
+
+<p>Getter/Setter for the <code>BlastRecord</code> of an <code>Gene</code></p>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Parameters"
+>Parameters</a></h3>
+
+<dl>
+<dt><a name="the_record_to_set._If_this_parameter_is_ommitted,_the_method_acts_as_a_getter"
+>the record to set.
+If this parameter is ommitted,
+the method acts as a getter</a></dt>
+</dl>
+
+<h3><a class='u' href='#___top' title='click to go to top of document'
+name="Returns"
+>Returns</a></h3>
+
+<p>Gets the <code>BlastRecord</code>.
+Only returns something if there is no parameter present.</p>
+
+<!-- end doc -->
+</div><!-- /.pagehead -->
+
+    </div>
+
+  </body>
+</html>
