@@ -22,6 +22,7 @@
       \item Generating Words
       \item Calculating Occurrences
       \item Testing
+      \item Future Changes
       \item References
       \end{itemize}
     \end{s5slide}
@@ -61,6 +62,7 @@
 
     \begin{s5slide}
       \section{Generating Words}
+      \xml{img src="Diagrams/generate_words_Sequence.png" id="external" border="0" /}
     \end{s5slide}
 
     \begin{s5slide}
@@ -73,7 +75,7 @@
       \subsection{Scenarios}
       \begin{itemize}
       \item Line-separated 2-mers
-      \item Line-separated 4-mers
+      \item Line-separated 4-mers at ORF 1
       \item Line-separated 5-mers
       \item Invalid Characters
       \item Masked Sequences
@@ -85,11 +87,33 @@
     \end{s5slide}
 
     \begin{s5slide}
-      \section{Line-separated 4-mers}
+      \section{Line-separated 4-mers at ORF 1}
+      \xml{pre}TACA
+ATTT
+TGCT
+TTCT
+TGAC
+CACA
+AACT
+TGTG
+GTTC
+CACT
+TAGC\xml{/pre}
     \end{s5slide}
 
     \begin{s5slide}
       \section{Line-separated 5-mers}
+      \xml{pre}TACAT
+ATTTG
+TGCTT
+TTCTG
+TGACA
+CACAA
+AACTG
+TGTGT
+GTTCA
+CACTA
+TAGCA\xml{/pre}
     \end{s5slide}
 
     \begin{s5slide}
@@ -98,6 +122,15 @@
 
     \begin{s5slide}
       \section{Masked Sequences}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Future Changes}
+      \begin{itemize}
+        \item See GitHub page for more details
+        \item Logging/Debugging information output to file
+        \item Produce CSV of output
+      \end{itemize}
     \end{s5slide}
 
     \begin{s5slide}
