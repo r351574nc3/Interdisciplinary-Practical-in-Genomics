@@ -2,8 +2,8 @@
 \author{Leo Przybylski}
 \usepackage{graphicx}
 \input{S5.tex}
-\fulltitle{DNA, Words and Models}
-\W \subtitle{Discussion}
+\fulltitle{iPIG Markov Model Implementation}
+\W \subtitle{Analysis of Probability of Words in Nucleutide Sequences}
 
 \W \affiliation{University of Arizona}
 
@@ -15,51 +15,72 @@
 \begin{ifhtml}
     \begin{s5slide}
       \section{Overview}
-      \begin{enumerate}
-        \item Mathematic notation
-        \item Markov Model
-        \item Permutation Model
-        \item Multi-order models
-        \item Changing frequency
-        \item Changing location
-      \end{enumerate}
-    \end{s5slide}
-
-    \begin{s5slide}
-      \section{Mathematic Notation}
-      \begin{enumerate}
-        \item page xix
-      \end{enumerate}
-    \end{s5slide}
-
-    \begin{s5slide}
-      \section{Problem}
       \begin{itemize}
-        \item Not certain to locate desired 4-mer in orf
-        \item Frequent encounters of 0 results with a given 4-mer (divide by zero)
+      \item High-level view of entire program
+      \item Execution and Input Parameters
+      \item Reading Sequences
+      \item Generating Words
+      \item Testing
+      \item References
       \end{itemize}
     \end{s5slide}
 
     \begin{s5slide}
-      \section{Permutation Model}
+      \section{High-level View}
+      \xml{img src="Diagrams/probable_words_Activity_sized.png" id="external" border="0" /}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Execution and Input Parameters}
+      \subsection{Check for probability in NM-MC58 nucleutide as a non-coding sequence with debug level DEBUG}
+      \xml{tt}cat ../NM-MC58.gbk | perl probable_words.pl -n --debug=1\xml{/tt}
+      \subsection{Check for probability in NM-MC58 nucleutide with debug level WARN. Check both the DUS and the reverse DUS.}
+      \xml{tt}cat ../NM-MC58.gbk | perl probable_words.pl -r --debug=3\xml{/tt}
+      \subsection{View the perldoc}
+      \xml{tt}perl probable_words.pl --man\xml{/tt}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Execution and Input Parameters}
+     
+      \begin{description}
+        \item[dus] the DNA Uptake Sequence to use
+        \item[debug] the debugging level to use
+        \item[non-coding] use a non-coding or standard sequence?
+        \item[order] order to use from 2-5
+        \item[help] display command line help
+        \item[man] show the man page
+      \end{description}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Reading Sequences}
+      \xml{img src="Diagrams/read_sequences_Sequence_sized.png" id="external" border="0" /}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Generating Words}
+    \end{s5slide}
+
+    \begin{s5slide}
+      \section{Testing}
+      \subsection{Scenarios}
       \begin{itemize}
-        \item page 12
-        \item Factorial leads to never 0 denominator
+      \item Line-separated 2-mers
+      \item Line-separated 4-mers
+      \item Line-separated 5-mers
       \end{itemize}
     \end{s5slide}
 
     \begin{s5slide}
-      \section{Markov Model}
+      \section{References}
       \begin{itemize}
-        \item page 32
-        \item Frequent encounters of 0 results with a given 4-mer (divide by zero)
-        \item Gaussian approximation
-          \begin{itemize}
-          \item page 64
-          \item What we're trying to do
-          \end{itemize}
+      \item \href{http://github.com/r351574nc3/Interdisciplinary-Practical-in-Genomics}{iPIG GitHub Source Code Repository}
+      \item \href{http://www.u.arizona.edu/~przybyls/probable_words.html}{probable_words.pl API}
+      \item Thanks to Lauren Meyers for test data and content.
       \end{itemize}
     \end{s5slide}
+
 \end{ifhtml}  
 
   \W \end{s5presentation}
