@@ -37,7 +37,7 @@ Automatically, determines nucleutide or protein sequences read from STDIN
     cat your_protein_sequence_file | perl probable_words.pl [options]
 
   Options:
-    --dus               DNA Uptake Sequence [default=GCCGTCTGAA]
+    --(w)ord            Word to check subsequence occurences for. [required]
     --debug             The debug level. Debug levels are:
                         1 - DEBUG
                         2 - INFO
@@ -46,7 +46,7 @@ Automatically, determines nucleutide or protein sequences read from STDIN
                         5 - FATAL
                         [default=ERROR]
     -(-n)on-coding      Sequence provided is a Non-Coding Sequence [default=no]
-    -(-r)everse         Reverse the DUS [default=no]
+    -(-r)everse         Reverse the WORD [default=no]
     -(-o)rder           Order of the Markov Model to use. [default=2]
     -(-h)elp/?          brief help message
     -(-m)an             full documentation
@@ -87,7 +87,7 @@ String and finally removes all spaces from it.
 
 =over
 
-=item dus - DUS to check for
+=item word - WORD to check for
 
 =back
 
@@ -105,7 +105,7 @@ String representing the protein sequence to check probability against
 
 C<cat ../NM-MC58.gbk | perl probable_words.pl -n --debug=1>
 
-=item Check for probability in NM-MC58 nucleutide with debug level WARN. Check both the DUS and the reverse DUS.
+=item Check for probability in NM-MC58 nucleutide with debug level WARN. Check both the WORD and the reverse WORD.
 
 C<cat ../NM-MC58.gbk | perl probable_words.pl -r --debug=3>
 
@@ -115,7 +115,7 @@ C<perl probable_words.pl --man>
 
 =cut
 sub readProteinSequence {
-    my $dus    = shift;
+    my $word    = shift;
     my %retval;
 
     get_logger()->info("Reading proteins\n");
@@ -125,7 +125,7 @@ sub readProteinSequence {
     while(<>) {
         chop;
         if ($seq =~ /^\>/) {
-#            if ($seq && validateDus(protein => $seq, dus => $dus)) {
+#            if ($seq && validateWord(protein => $seq, word => $word)) {
                 $seq =~ s/\s//g; # Remove all spaces
                 $seq =~ s/[^ACGTNX]//g;
                 $retval{$header} = $seq;
@@ -141,13 +141,13 @@ sub readProteinSequence {
 
     # Finish last sequence
     if ($seq && $header) {
-        if ($seq && validateDus(protein => $seq, dus => $dus)) {
+        if ($seq && validateWord(protein => $seq, word => $word)) {
             $seq =~ s/\s//g; # Remove all spaces
             $retval{$header} = $seq;
             undef $seq
         }
         else {
-            get_logger()->info("Can't find $dus in $seq\n");
+            get_logger()->info("Can't find $word in $seq\n");
         }
         
     }
@@ -155,21 +155,21 @@ sub readProteinSequence {
     return \%retval;
 }
 
-sub validateDus {
+sub validateWord {
     my %params  = @_;
     my $protein = $params{protein};
-    my $dus     = $params{dus};
+    my $word     = $params{word};
 
-    return unless ($protein && $dus);
+    return unless ($protein && $word);
     
-    return index($protein, $dus) > -1
+    return index($protein, $word) > -1
 }
 
 =head2 C<getWords>
 
 =pod
 
-chooses words from a DUS in order of the given length. Determines all possible words for length.
+chooses words from a WORD in order of the given length. Determines all possible words for length.
 
 =head3 Parameters
 
@@ -177,7 +177,7 @@ chooses words from a DUS in order of the given length. Determines all possible w
 
 =item C<start>   - Presents the starting point. (optional)
 =item C<wordlen> - length for each word
-=item C<dus>     - DNA uptake sequence to build each word from
+=item C<word>     - DNA uptake sequence to build each word from
 
 =back
 
@@ -192,13 +192,13 @@ sub getWords {
     my %params  = @_;
     my $start   = $params{start};
     my $wordlen = $params{wordlen};
-    my $dus     = $params{dus};
+    my $word     = $params{word};
 
     my $retval = [];
     $start = 0 unless($start);
 
     for ($start .. $wordlen) {
-        push(@{$retval}, substr($dus, $_, $wordlen));
+        push(@{$retval}, substr($word, $_, $wordlen));
     }
 
     return $retval;
@@ -208,7 +208,7 @@ sub getWords {
 
 =pod
 
-chooses words from a DUS in order of the given length. Determines all possible words for length.
+chooses words from a WORD in order of the given length. Determines all possible words for length.
 ONLY IN REVERSE!!!
 
 =head3 Parameters
@@ -217,7 +217,7 @@ ONLY IN REVERSE!!!
 
 =item C<start>   - Presents the starting point. (optional)
 =item C<wordlen> - length for each word
-=item C<dus>     - DNA uptake sequence to build each word from
+=item C<word>     - DNA uptake sequence to build each word from
 
 =back
 
@@ -232,12 +232,12 @@ sub getReversedWords {
     my %params  = @_;
     my $start   = $params{start};
     my $wordlen = $params{wordlen};
-    my $dus     = $params{dus};
+    my $word     = $params{word};
 
 
     return getWords(  start => $start,
                     wordlen => $wordlen, 
-                        dus => reverseDus($dus,   # Reversed DUS
+                        word => reverseWord($word,   # Reversed WORD
             sub { # Anonymous function for reversing characters
                 my $retval = shift;
                 $retval =~ tr/ACGT/TGCA/;
@@ -246,18 +246,18 @@ sub getReversedWords {
         );
 }
 
-=head2 reverseDus
+=head2 reverseWord
 
 =pod 
 
 Reverses the given string. While iterating, applies a function to the each
-character to reverse it as a DUS character.
+character to reverse it as a WORD character.
 
 =head3 Parameters
 
 =over
 
-=item C<dus>  - DNA Uptake Sequence to reverse
+=item C<word>  - DNA Uptake Sequence to reverse
 
 =item C<sub>  - Function used to reverse each character
 
@@ -267,15 +267,15 @@ character to reverse it as a DUS character.
 
 =pod
 
-A fully reversed DUS String
+A fully reversed WORD String
 
 =cut
-sub reverseDus {
-    my $dus = reverse shift;
+sub reverseWord {
+    my $word = reverse shift;
     my $sub    = shift;
 
     
-    return &$sub($dus);
+    return &$sub($word);
 }
 
 =head2 occurrences
@@ -326,8 +326,8 @@ sub occurrences {
 
 Permuted using the multiplication rule on the number of occurrences for each 
 word with the given word length. Has to dig up different word permutations
-by creating words with the given length, reading frame, and dus from 
-C<getWordsByOrf>. It then does the same for the reversed dus.
+by creating words with the given length, reading frame, and word from 
+C<getWordsByOrf>. It then does the same for the reversed word.
 
 Once the words are retrieved into a single array, it is iterated to search
 the C<protein> the number of occurrences of each word. The result for each 
@@ -343,7 +343,7 @@ This is our final result.
 
 =item C<frame>   - one of the open reading frame iterations from 1-3
 
-=item C<dus>     - DNA Uptake Sequence to derive words from (words that will
+=item C<word>     - DNA Uptake Sequence to derive words from (words that will
                    be checked for occurrences of in the C<protein>)
 
 =item C<wordlen> - the word length. Determines the k-mer to use when creating a word
@@ -392,7 +392,7 @@ Finally, it returns the ratio of these two numbers as the expected count.
 
 =item C<frame>   - one of the open reading frame iterations from 1-3
 
-=item C<words>   - upper and lower ratio words generated for the DUS we chose to use
+=item C<words>   - upper and lower ratio words generated for the WORD we chose to use
                    
 
 =back
@@ -422,19 +422,20 @@ sub expectedCountForOrf {
 }
 
 sub calculate {
-    my $dus      = shift;
+    my $word     = shift;
+    my $order    = shift;
     my $proteins = shift;
 
-    get_logger()->info("Checking DUS $dus");
+    get_logger()->info("Checking WORD $word");
 
     while (my ($header, $protein) = each %{$proteins}) {
         get_logger()->info($header . "\n");
         my $expected = 0;
         my $k_mers = getWords(  start => 1,
                               wordlen => $order, 
-                                  dus => $dus);
+                                 word => $word);
         my $k_plus_one_mers = getWords(wordlen => $order + 1,
-                                       dus => $dus);
+                                       word => $word);
         
         for my $orf (1 .. 3) {    # Use reading frames 1-3
             my $expectedOrf = expectedCountForOrf(protein => $protein, 
@@ -454,7 +455,7 @@ sub calculate {
     }
 }
 
-my $dus     = 'GCCGTCTGAA';
+my $word; 
 my $order   = 2;
 my $ncds    = 0; # Non Coding Sequence
 my $reverse = 0;
@@ -464,26 +465,28 @@ GetOptions( 'help|?' => \$help,
                  man => \$man, 
            'reverse' => \$reverse,
         'non-coding' => \$ncds,
-             "dus=s" => \$dus, 
+            'word=s' => \$word, 
            'debug=s' => \$debug,
            "order=i" => \$order) or pod2usage(2);
 
 pod2usage(1) if $help;
+pod2usage(-exitstatus => 1) if (!$word);
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
 $debug = 10000 * $debug;
 Log::Log4perl->easy_init($debug);
 
-my $proteins = readProteinSequence($dus);
-calculate($dus, $proteins);
+my $proteins = readProteinSequence($word);
+calculate($word, $order, $proteins);
 
 if ($reverse) {
-    calculate(reverseDus($dus,   # Reversed DUS
+    calculate(reverseWord($word,   # Reversed WORD
                          sub { # Anonymous function for reversing characters
                              my $retval = shift;
                              $retval =~ tr/ACGT/TGCA/;
                              return $retval;
                          }),
+              $order,
               $proteins);
 }
 exit 0;
