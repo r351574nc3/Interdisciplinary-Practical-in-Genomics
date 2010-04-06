@@ -22,6 +22,15 @@ use Getopt::Long;
 use Pod::Usage;
 use Log::Log4perl qw(:easy);
 
+use Exception::Class (
+    'InvalidInputException',
+    
+    'MaskedSequenceException' => { 
+        isa         => 'InvalidInputException',
+        description => 'If the sequence given has masked (X) characters'
+    }
+    );
+
 my $man = 0;
 my $help = 0;
 
@@ -124,19 +133,23 @@ sub readProteinSequence {
     my $header;
     while(<>) {
         chop;
-        if ($seq =~ /^\>/) {
+        if ($_ =~ /^\>/) {
 #            if ($seq && validateWord(protein => $seq, word => $word)) {
+            if ($header) {
                 $seq =~ s/\s//g; # Remove all spaces
-                $seq =~ s/[^ACGTNX]//g;
+                if ($seq =~ /[^ACGTNX]/) {
+                    eval { InvalidInputException->throw(error => "Invalid characters in $seq") };
+                }
                 $retval{$header} = $seq;
                 $seq = '';
-#           }
+           }
 
             $header = $_;
             next;
         }
-
-        $seq .= uc($_);  # Concatenate STDIN
+        else {
+            $seq .= uc($_);  # Concatenate STDIN
+        }
     }
 
     # Finish last sequence
@@ -421,6 +434,25 @@ sub expectedCountForOrf {
    return;
 }
 
+=head2 C<calculate>
+
+=pod 
+
+The main loop of execution
+
+=head3 Parameters
+
+=over
+
+=item C<proteins> - The protein sequence provided by the user to the program
+
+=item C<order>    - one of the open reading frame iterations from 1-3
+
+=item C<word>    - upper and lower ratio words generated for the WORD we chose to use   
+
+=back
+
+=cut
 sub calculate {
     my $word     = shift;
     my $order    = shift;
@@ -455,6 +487,7 @@ sub calculate {
     }
 }
 
+# my $word = 'GCCGTCTGAA';
 my $word; 
 my $order   = 2;
 my $ncds    = 0; # Non Coding Sequence
@@ -477,6 +510,15 @@ $debug = 10000 * $debug;
 Log::Log4perl->easy_init($debug);
 
 my $proteins = readProteinSequence($word);
+my $e;
+if ($e = Exception::Class->caught('InvalidInputException')) {
+    warn $e->error, "\n", $e->trace->as_string, "\n";
+    warn join ' ', $e->euid, $e->egid, $e->uid, $e->gid, $e->pid, $e->time;
+    
+    exit;
+}
+print "Got here!\n";
+
 calculate($word, $order, $proteins);
 
 if ($reverse) {
