@@ -46,7 +46,7 @@ Automatically, determines nucleutide or protein sequences read from STDIN
     cat your_protein_sequence_file | perl probable_words.pl [options]
 
   Options:
-    --(w)ord            Word to check subsequence occurences for. [required]
+    -(-w)ord            Word to check subsequence occurences for. [required]
     --debug             The debug level. Debug levels are:
                         1 - DEBUG
                         2 - INFO
@@ -79,9 +79,25 @@ Prints the manual page and exits.
 Determines expected numeric probability of reading frames 1 - 3 for DNA
 Uptake Sequences on a given Protein Sequence
 
-=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+=head3 Examples
 
-=cut
+=over 8
+
+=item Check for probability in NM-MC58 nucleutide as a non-coding sequence with debug level DEBUG
+
+C<cat ../NM-MC58.gbk | perl probable_words.pl -n --debug=1>
+
+=item Check for probability in NM-MC58 nucleutide with debug level WARN. Check both the WORD and the reverse WORD.
+
+C<cat ../NM-MC58.gbk | perl probable_words.pl -r --debug=3>
+
+=item View the perldoc
+
+C<perl probable_words.pl --man>
+
+=back
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
 
 =head1 Functions
 
@@ -105,22 +121,6 @@ String and finally removes all spaces from it.
 =pod
 
 String representing the protein sequence to check probability against
-
-=head3 Examples
-
-=over 8
-
-=item Check for probability in NM-MC58 nucleutide as a non-coding sequence with debug level DEBUG
-
-C<cat ../NM-MC58.gbk | perl probable_words.pl -n --debug=1>
-
-=item Check for probability in NM-MC58 nucleutide with debug level WARN. Check both the WORD and the reverse WORD.
-
-C<cat ../NM-MC58.gbk | perl probable_words.pl -r --debug=3>
-
-=item View the perldoc
-
-C<perl probable_words.pl --man>
 
 =cut
 sub readProteinSequence {
@@ -171,7 +171,7 @@ sub readProteinSequence {
 sub validateWord {
     my %params  = @_;
     my $protein = $params{protein};
-    my $word     = $params{word};
+    my $word    = $params{word};
 
     return unless ($protein && $word);
     
