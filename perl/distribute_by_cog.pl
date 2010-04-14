@@ -41,6 +41,9 @@ my $help = 0;
     by the type name of that COG group. Also, produces a LaTeX table of COG
     distribution info.
 
+    First, the COG groups are distributed into separate files. Then, the files
+    are examined.
+
 =head1 SYNOPSIS
 
     cat your_protein_sequence_file | perl distribute_by_cog.pl [OPTIONS] -i <input file> -w <word> -o <file to output to>
@@ -92,7 +95,7 @@ Uptake Sequences on a given Protein Sequence
 
 =head1 Functions
 
-=head2 C<iterateProteinsIn>
+=head2 C<iterateCogsIn>
 
 =pod 
 
@@ -114,8 +117,9 @@ String and finally removes all spaces from it.
 Hash of protein sequences
 
 =cut
-sub iterateProteinsIn {
+sub iterateCogsIn {
     my $input = shift;
+    my $types = shift;
     my $each  = shift;
 
     get_logger()->info("Iterating proteins from ptt.\n");
@@ -140,12 +144,23 @@ sub iterateProteinsIn {
         my $sequence = getSequenceByGeneLocation(input    => $input, 
                                                  location => $location,
                                                  gene     => $gene);
+        
+        my $groups = parseTypesFromCog($product);        
+        if (scalar @{$groups} < 1) {
+            push (@{$groups}, 'NA');
+        }
 
-        foreach my $type (@{parseTypesFromCog($product)}) {
-            my $seqout = new FileHandle(">>$type.txt");
+        foreach my $group (@{$groups}) {
+            my $seqout = new FileHandle(">>$group.ffn");
             print $seqout $sequence;
             $seqout->close();
+
+            # Fast array existence check
+            unless (exists {map { $_ => 1 } @{$types}}->{$group}) {
+                push(@{$types}, $group);
+            }
         }
+
         
         #&$each($input, split (/\s/, $_));
     }
@@ -300,30 +315,33 @@ The main loop of execution
 
 =back
 
+=head3 Returns
+
+COG group types that can be examined separately
+
 =cut
 sub distribute {
     my $input    = shift;
     my $proteins = shift;
 
+    my $types = [];
 
-    iterateProteinsIn($input);
+    iterateCogsIn($input, $types);
+
+    return $types;
 }
 
-=head2 C<distribute>
+=head2 C<printTemplate>
 
 =pod 
 
-The main loop of execution
+Given hash of data, prints out values in a template
 
 =head3 Parameters
 
 =over
 
-=item C<proteins> - The protein sequence provided by the user to the program
-
-=item C<order>    - one of the open reading frame iterations from 1-3
-
-=item C<word>    - upper and lower ratio words generated for the WORD we chose to use   
+=item params 
 
 =back
 
@@ -415,9 +433,12 @@ else {
     }
 }
 
-
 #my $proteins = readProteinSequence($input);
-distribute($input);
+foreach my $type (@{distribute($input)}) {
+    my $fh = new FileHandle("<$type.ffn");
+    
+}
+
 printTemplate(file => $output);
 
 exit 0;

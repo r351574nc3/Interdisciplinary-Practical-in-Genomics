@@ -112,9 +112,9 @@ my $debug   = 4;
 GetOptions( 'help|?' => \$help,
                  man => \$man, 
            'reverse' => \$reverse,
-        'non-coding' => \$ncds,
             'word=s' => \$word, 
            'debug=s' => \$debug,
+         'i|input=s' => \$input,
            "order=i" => \$order) or pod2usage(2);
 
 pod2usage(1) if $help;
