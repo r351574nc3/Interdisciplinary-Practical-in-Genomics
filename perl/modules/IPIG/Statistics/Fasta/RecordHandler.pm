@@ -213,19 +213,103 @@ sub record {
 }
 
 
+=head2 Getter C<dus_size>
+
+Getter for the dus_size. This is the number of occurrences found for the 
+DUS.
+
+=head3 Parameters
+
+=over
+
+=item C<dus_size> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the C<dus_size>. Only returns something if there is no parameter present.
+
+=cut
 sub dus_size {
     my $this = shift;
     return $this->{_dus_count};
 }
 
+=head2 Getter C<cds_size>
+
+Getter for the cds_size. This is the total number of coding sequences.
+
+
+=head3 Parameters
+
+=over
+
+=item C<cds_size> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the C<cds_size>. Only returns something if there is no parameter present.
+
+=cut
 sub cds_size {
     my $this = shift;
     return $this->{_cds_count};
 }
 
+=head2 Getter C<cds_avg_length>
+
+Getter for the cds_avg_length. This is the average size for a CDS.
+
+
+=head3 Parameters
+
+=over
+
+=item C<cds_avg_length> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the C<cds_avg_length>. Only returns something if there is no parameter present.
+
+=cut
 sub cds_avg_length {
     my $this = shift;
     return $this->{_cds_length} / $this->{_cds_count};
+}
+
+=head2 Getter C<expected>
+
+Getter for the expected. This is the expected number of next value permutations.
+
+=head3 Parameters
+
+=over
+
+=item C<expected> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the C<expected>. Only returns something if there is no parameter present.
+
+=cut
+sub expected {
+    my $this = shift;
+    return $this->{_expected};
 }
 
 =head2 Method C<import>
@@ -245,7 +329,7 @@ sub endDocument {
     my $this = shift;
     
     Log::Log4perl::get_logger()->debug("Ending the document");
-    ProbableWords::calculate($this->{_word}, 4, $this->{_document});
+    $this->{_expected} = ProbableWords::calculate($this->{_word}, 4, $this->{_document});
 }
 
 =head2 Method C<import>

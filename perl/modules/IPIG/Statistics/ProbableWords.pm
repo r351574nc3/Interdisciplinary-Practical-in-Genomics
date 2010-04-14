@@ -140,27 +140,7 @@ sub getWords {
     my $retval = [];
     $start = 0 unless($start);
 
-    for ($start .. $wordlen) {
-        my $neword = substr($word, $_, $wordlen);
-
-        my $mask_size = 3;
-        if ($neword < 3) {
-            $mask_size = length($neword);
-        }
-
-        for (0 .. $mask_size) {
-            my $masked_word;
-            
-            'XXX' =~ m/(X{0,$_})/g;
-            $masked_word = $1;
-            
-            if ($_ < length($neword)) {
-                $masked_word .= substr($neword, $_);
-                push(@{$retval}, substr($neword, 0, length($neword) - $_ - 1) . $1);
-            }
-            push(@{$retval}, $masked_word);            
-        }
-        
+    for ($start .. $wordlen) {        
         push(@{$retval}, substr($word, $_, $wordlen));
     }
 
@@ -240,8 +220,13 @@ sub occurrences {
 
     my $retval = 0;
 
-    eval { $retval = () = $str =~ /$substr/g; };
+    my $pattern = '';
+    foreach my $char (split(//, $substr)) {
+        $pattern .= '[' . $char . 'X]';
+    }
 
+    $retval = () = $str =~ m/$pattern/g;
+        
     return $retval;
 }
 
