@@ -16,12 +16,14 @@
 
 use strict;
 use warnings;
+use FileHandle;
 use Getopt::Std;
 use Getopt::Long;
 use Pod::Usage;
 use Log::Log4perl qw(:easy);
 use lib 'modules';
-use IPIG::ProbableWords;
+use IPIG;
+use IPIG::Statistics::ProbableWords;
 
 use Exception::Class (
     'InvalidInputException',
@@ -108,6 +110,7 @@ my $order   = 2;
 my $ncds    = 0; # Non Coding Sequence
 my $reverse = 0;
 my $debug   = 4;
+my $input;
 
 GetOptions( 'help|?' => \$help,
                  man => \$man, 
@@ -121,12 +124,24 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 1) if (!$word);
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
+unless ($word) {
+    get_logger()->fatal("A word or DUS is required.");
+    pod2usage(2);
+}
+
+unless ($input) {
+    get_logger()->fatal("An input file is required.");
+    pod2usage(2);
+}
+
 $debug = 10000 * $debug;
 Log::Log4perl->easy_init($debug);
 
-my $proteins = IPIG::ProbableWords::readProteinSequence($word);
+my $fh = new FileHandle("<$input");
+my $protein = ProbableWords::readProteinSequence($fh, $word);
 my $e;
 
+my $expected = 0;
 foreach my $frame (1 .. 3) {
     if ($e = Exception::Class->caught('InvalidInputException')) {
         warn $e->error, "\n", $e->trace->as_string, "\n";
@@ -135,19 +150,21 @@ foreach my $frame (1 .. 3) {
         exit;
     }
     
-    IPIG::ProbableWords::calculate($word, $order, $proteins, $frame);
+    $expected += ProbableWords::calculate($word, $order, $protein, $frame);
     
     if ($reverse) {
-        IPIG::ProbableWords::calculate(IPIG::ProbableWords::reverseWord($word,   # Reversed WORD
-                                                                        sub { # Anonymous function for reversing characters
-                                                                            my $retval = shift;
-                                                                            $retval =~ tr/ACGT/TGCA/;
-                                                                            return $retval;
-                                                                        }),
-                                       $order,
-                                       $protein,
-                                       $frame);
+        my $reversed = IPIG::complementWord($word,   # Reversed WORD
+                                            sub { # Anonymous function for reversing characters
+                                                my $retval = shift;
+                                                $retval =~ tr/ACGT/TGCA/;
+                                                return $retval;
+                                            });
+        $expected += ProbableWords::calculate($reversed,
+                                     $order,
+                                     $protein,
+                                     $frame);
     }
 }
+Log::Log4perl::get_logger()->info("Expected DUS Count is $expected");
 exit 0;
 __END__

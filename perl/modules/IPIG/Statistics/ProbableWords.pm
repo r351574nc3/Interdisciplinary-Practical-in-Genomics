@@ -13,6 +13,7 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
+use IPIG;
 use Log::Log4perl qw(:easy);
 use Exception::Class (
     'InvalidInputException',
@@ -61,48 +62,25 @@ sub readProteinSequence {
     
     get_logger()->info("Reading proteins\n");
 
-    my $seq = '';
-    my $header;
     while(<$fh>) {
         chop;
         if ($_ =~ /^\>/) {
-#            if ($seq && validateWord(protein => $seq, word => $word)) {
-            if ($header) {
-                if ($seq && validateWord(protein => $seq, word => $word)) {
-                    $seq =~ s/\s//g; # Remove all spaces
-                    if ($seq =~ /[^ACGTNX]/) {
-                        eval { InvalidInputException->throw(error => "Invalid characters in $seq") };
-                    }
-                    $retval{$header} = $seq;
-                    $seq = '';
-                }
-            }
-
-            $header = $_;
-            next;
+            $retval .= 'XXX';
         }
         else {
-            $seq .= uc($_);  # Concatenate STDIN
+            $_ =~ s/\s//g;   # No spaces
+            $retval .= uc($_);  # Concatenate STDIN
         }
     }
 
-    # Finish last sequence
-    if ($seq && $header) {
-        if ($seq && validateWord(protein => $seq, word => $word)) {
-            $seq =~ s/\s//g; # Remove all spaces
-            if ($seq =~ /[^ACGTNX]/) {
-                eval { InvalidInputException->throw(error => "Invalid characters in $seq") };
-            }
-            $retval{$header} = $seq;
-            $seq = '';
-            undef $seq
+    if ($retval && validateWord(protein => $retval, word => $word)) {
+        if ($retval =~ /[^ACGTNX]/) {
+            eval { InvalidInputException->throw(error => "Invalid characters in $retval") };
         }
-        else {
-            get_logger()->info("Can't find $word in $seq\n");
-        }        
     }
     
-    return \%retval;
+    
+    return $retval;
 }
 
 sub validateWord {
@@ -380,11 +358,10 @@ sub calculate {
     my $k_plus_one_mers = getWords(wordlen => $order + 1,
                                    word    => $word);
     
-    Log::Log4perl::get_logger()->debug("Calculating reading frame $frame");
+    get_logger()->debug("Calculating reading frame $frame");
     my $expected = expectedCount(protein => IPIG::readingFrame($protein, $frame),
-                                    words   => [$k_mers, $k_plus_one_mers]);
-    
-    Log::Log4perl::get_logger()->debug("Got expected value " . $expected);
+                                 words   => [$k_mers, $k_plus_one_mers]);    
+    get_logger()->debug("Got expected value " . $expected);
     #get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
     return $expected;
 }
@@ -413,6 +390,7 @@ sub import {
     return 1 if $IMPORT_CALLED{$caller_pkg}++;
 
     *{"ProbableWords::calculate"} = *calculate;
+    *{"ProbableWords::readProteinSequence"} = *readProteinSequence;
 }
 1;
 __END__
