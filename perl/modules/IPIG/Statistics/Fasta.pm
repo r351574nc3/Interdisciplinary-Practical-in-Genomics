@@ -28,6 +28,7 @@ package IPIG::Statistics::Fasta;
 
 use IPIG::Statistics::Fasta::Parser;
 use IPIG::Statistics::Fasta::RecordHandler;
+use IPIG::Statistics::Fasta::InvalidRecordHandler;
 
 =head2 Method C<load>
 
@@ -52,7 +53,8 @@ sub load {
     my $reverse = 1;
     
     my $handler = new Fasta::RecordHandler($word);
-    my $parser = new Fasta::Parser(record_handlers => [$handler]);
+    my $parser = new Fasta::Parser(record_handlers => [ $handler, 
+                                                        new Fasta::InvalidRecordHandler() ]);
     $parser->parse($input);
 
     $retval{cds_size} = $handler->cds_size();

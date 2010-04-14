@@ -54,25 +54,29 @@ String representing the protein sequence to check probability against
 
 =cut
 sub readProteinSequence {
-    my $word    = shift;
-    my %retval;
-
+    my $fh   = shift;
+    my $word = shift;
+    #my %retval;
+    my $retval = '';
+    
     get_logger()->info("Reading proteins\n");
 
     my $seq = '';
     my $header;
-    while(<>) {
+    while(<$fh>) {
         chop;
         if ($_ =~ /^\>/) {
 #            if ($seq && validateWord(protein => $seq, word => $word)) {
             if ($header) {
-                $seq =~ s/\s//g; # Remove all spaces
-                if ($seq =~ /[^ACGTNX]/) {
-                    eval { InvalidInputException->throw(error => "Invalid characters in $seq") };
+                if ($seq && validateWord(protein => $seq, word => $word)) {
+                    $seq =~ s/\s//g; # Remove all spaces
+                    if ($seq =~ /[^ACGTNX]/) {
+                        eval { InvalidInputException->throw(error => "Invalid characters in $seq") };
+                    }
+                    $retval{$header} = $seq;
+                    $seq = '';
                 }
-                $retval{$header} = $seq;
-                $seq = '';
-           }
+            }
 
             $header = $_;
             next;
@@ -86,13 +90,16 @@ sub readProteinSequence {
     if ($seq && $header) {
         if ($seq && validateWord(protein => $seq, word => $word)) {
             $seq =~ s/\s//g; # Remove all spaces
+            if ($seq =~ /[^ACGTNX]/) {
+                eval { InvalidInputException->throw(error => "Invalid characters in $seq") };
+            }
             $retval{$header} = $seq;
+            $seq = '';
             undef $seq
         }
         else {
             get_logger()->info("Can't find $word in $seq\n");
-        }
-        
+        }        
     }
     
     return \%retval;

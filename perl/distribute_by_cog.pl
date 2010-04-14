@@ -402,7 +402,6 @@ EOF
 ;
 
     foreach my $group (@{$params{groups}}) {
-        print $fh '\\\\';
         print $fh $group->{name} if ($group->{name});
         print $fh '&' . "\n";
         print $fh $group->{description} if ($group->{description});
@@ -415,6 +414,7 @@ EOF
         print $fh '&' . "\n";
         print $fh $group->{abundance} if ($group->{abundance});
         print $fh "\n";
+        print $fh '\\\\';
     }
 
 print $fh <<EOF

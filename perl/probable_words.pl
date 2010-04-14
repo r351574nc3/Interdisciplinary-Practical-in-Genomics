@@ -126,24 +126,28 @@ Log::Log4perl->easy_init($debug);
 
 my $proteins = IPIG::ProbableWords::readProteinSequence($word);
 my $e;
-if ($e = Exception::Class->caught('InvalidInputException')) {
-    warn $e->error, "\n", $e->trace->as_string, "\n";
-    warn join ' ', $e->euid, $e->egid, $e->uid, $e->gid, $e->pid, $e->time;
+
+foreach my $frame (1 .. 3) {
+    if ($e = Exception::Class->caught('InvalidInputException')) {
+        warn $e->error, "\n", $e->trace->as_string, "\n";
+        warn join ' ', $e->euid, $e->egid, $e->uid, $e->gid, $e->pid, $e->time;
+        
+        exit;
+    }
     
-    exit;
-}
-
-IPIG::ProbableWords::calculate($word, $order, $proteins);
-
-if ($reverse) {
-    IPIG::ProbableWords::calculate(IPIG::ProbableWords::reverseWord($word,   # Reversed WORD
-                         sub { # Anonymous function for reversing characters
-                             my $retval = shift;
-                             $retval =~ tr/ACGT/TGCA/;
-                             return $retval;
-                         }),
-              $order,
-              $proteins);
+    IPIG::ProbableWords::calculate($word, $order, $proteins, $frame);
+    
+    if ($reverse) {
+        IPIG::ProbableWords::calculate(IPIG::ProbableWords::reverseWord($word,   # Reversed WORD
+                                                                        sub { # Anonymous function for reversing characters
+                                                                            my $retval = shift;
+                                                                            $retval =~ tr/ACGT/TGCA/;
+                                                                            return $retval;
+                                                                        }),
+                                       $order,
+                                       $protein,
+                                       $frame);
+    }
 }
 exit 0;
 __END__
