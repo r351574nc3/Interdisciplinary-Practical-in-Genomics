@@ -23,6 +23,9 @@ use Getopt::Long;
 use Pod::Usage;
 use Log::Log4perl qw(:easy);
 
+use lib 'modules';
+use IPIG::Statistics::Fasta;
+
 use Exception::Class (
     'InvalidInputException',
     
@@ -34,6 +37,35 @@ use Exception::Class (
 
 my $man = 0;
 my $help = 0;
+
+my $cog_desc_map = {
+    All => "All means all.",
+    A => "RNA processing and modification",
+    B => "Chromatin structure and dynamics",
+    C => "Energy production and conversion",
+    D => "Cell cycle control, mitosis and meiosis",
+    E => "Amino acid transport and metabolism",
+    F => "Nucleotide transport and metabolism",
+    G => "Carbohydrate transport and metabolism",
+    H => "Coenzyme transport and metabolism",
+    I => "Lipid transport and metabolism",
+    J => "Translation",
+    K => "Transcription",
+    L => "Replication, recombination and repair",
+    M => "Cell wall/membrane biogenesis",
+    N => "Cell motility",
+    O => "Posttranslational modification, protein turnover, chaperones",
+    P => "Inorganic ion transport and metabolism",
+    Q => "Secondary metabolites biosynthesis, transport and catabolism",
+    R => "General function prediction only",
+    S => "Function unknown",
+    T => "Signal transduction mechanisms",
+    U => "Intracellular trafficking and secretion",
+    V => "Defense mechanisms", 
+    W => "Extracellular structures", 
+    Z => "Cytoskeleton", 
+  '-' => "Not in COGs"
+};
 
 =head1 NAME distribute_by_cog.pl
     
@@ -147,7 +179,7 @@ sub iterateCogsIn {
         
         my $groups = parseTypesFromCog($product);        
         if (scalar @{$groups} < 1) {
-            push (@{$groups}, 'NA');
+            push (@{$groups}, '-');
         }
 
         foreach my $group (@{$groups}) {
@@ -369,17 +401,23 @@ sub printTemplate {
 EOF
 ;
 
-#    foreach my $group (@{$params{groups}}) {
-#        print $fh '\\' . $group{name} . "&"
-#            . $group{description} . "&"
-#            . $group{dus_count} . "&"
-#            . $group{cds_count} . "&"
-#            . $group{avg_cds} . "&"
-#            . $group{abundance} . "\n";
-#    }
+    foreach my $group (@{$params{groups}}) {
+        print $fh '\\\\';
+        print $fh $group->{name} if ($group->{name});
+        print $fh '&' . "\n";
+        print $fh $group->{description} if ($group->{description});
+        print $fh '&' . "\n";
+        print $fh $group->{dus_count} if ($group->{dus_count});
+        print $fh '&' . "\n";
+        print $fh $group->{cds_count} if ($group->{cds_count});
+        print $fh '&' . "\n";
+        print $fh $group->{avg_cds} if ($group->{avg_cds});
+        print $fh '&' . "\n";
+        print $fh $group->{abundance} if ($group->{abundance});
+        print $fh "\n";
+    }
 
 print $fh <<EOF
-    & & & & & \\\\
     \\hline
   \\end{tabular}
 \%  \\hline 
@@ -434,12 +472,29 @@ else {
 }
 
 #my $proteins = readProteinSequence($input);
-foreach my $type (@{distribute($input)}) {
-    my $fh = new FileHandle("<$type.ffn");
+my @type_data;
+my $types = distribute($input);
+push(@{$types}, "All");
+
+foreach my $type (@{$types}) {
+    my %data;
     
+    my $file = $type . '.ffn';
+    if ($type eq 'All') {
+        $file = $input . '.ffn';
+    }
+
+    my $stats = Fasta::load($file, 'GCCGTCTGAA');
+    $data{name} = $type;
+    $data{description} = $cog_desc_map->{$type};
+    $data{dus_count} = $stats->{dus_size};
+    $data{cds_count} = $stats->{cds_size};
+    $data{avg_cds}   = $stats->{cds_avg_length};
+    $data{abundance} = $stats->{abundance};
+    push(@type_data, \%data);
 }
 
-printTemplate(file => $output);
+printTemplate(file => $output, groups => \@type_data);
 
 exit 0;
 __END__

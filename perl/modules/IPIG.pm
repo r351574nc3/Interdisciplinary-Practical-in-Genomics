@@ -13,6 +13,8 @@
 # or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 ######################################################################
+import Log::Log4perl qw(:easy);
+
 package IPIG;
 
 =head1 Class C<Fasta>
@@ -60,8 +62,6 @@ sub reverseWord {
 
 =head2 complementWord
 
-=pod 
-
 Reverses the given string. While iterating, applies a function to the each
 character to reverse it as a WORD character.
 
@@ -76,8 +76,6 @@ character to reverse it as a WORD character.
 
 =head3 Returns
 
-=pod
-
 A fully reversed WORD String
 
 =cut
@@ -90,6 +88,45 @@ sub complementWord {
                     $retval =~ tr/ACGT/TGCA/;
                     return $retval;
                        });
+}
+
+=head2 readingFrame
+
+Get the full reading frame from a protein. 
+
+=head3 Parameters
+
+=over
+
+=item C<protein>  - Protein CDS
+
+=item C<frame>    - The frame to get
+
+=back
+
+=head3 Returns
+
+The sequence of the reading frame
+
+=cut
+sub readingFrame {
+    my $protein = shift;
+    my $frame   = shift;
+    
+    my $retval = '';
+
+    if ($frame > 3 || $frame < 1) {
+        get_logger()->warn("Got a bad reading frame request $frame. Using 1.");
+        $frame = 1;
+    }
+
+    my @protein = $protein =~ m/.{0,3}/g;
+    foreach my $codon (@protein) {
+        my @codon = split(//, $codon);
+        $retval .= $codon[$frame - 1];
+    }
+
+    return $retval;
 }
 
 1;

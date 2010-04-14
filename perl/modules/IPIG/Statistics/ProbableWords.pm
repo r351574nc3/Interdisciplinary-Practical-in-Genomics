@@ -139,8 +139,10 @@ sub getWords {
 
     my $retval = [];
     $start = 0 unless($start);
+    my $wordcount = $wordlen + $start;
 
-    for ($start .. $wordlen) {        
+    for ($start .. $wordcount) {        
+        Log::Log4perl::get_logger()->info("Using word ". substr($word, $_, $wordlen));
         push(@{$retval}, substr($word, $_, $wordlen));
     }
 
@@ -175,12 +177,11 @@ sub getReversedWords {
     my %params  = @_;
     my $start   = $params{start};
     my $wordlen = $params{wordlen};
-    my $word     = $params{word};
-
+    my $word    = $params{word};
 
     return getWords(  start => $start,
                     wordlen => $wordlen, 
-                        word => reverseWord($word,   # Reversed WORD
+                       word => reverseWord($word,   # Reversed WORD
             sub { # Anonymous function for reversing characters
                 my $retval = shift;
                 $retval =~ tr/ACGT/TGCA/;
@@ -222,11 +223,13 @@ sub occurrences {
 
     my $pattern = '';
     foreach my $char (split(//, $substr)) {
+        #$pattern .= $char;
         $pattern .= '[' . $char . 'X]';
     }
 
     $retval = () = $str =~ m/$pattern/g;
-        
+
+    Log::Log4perl::get_logger()->debug("Occurrences of $substr are $retval");
     return $retval;
 }
 
@@ -286,7 +289,7 @@ sub occurCountForWords {
     return $count;
 }
 
-=head2 C<expectedCountForOrf>
+=head2 C<expectedCount>
 
 =pod 
 
@@ -313,11 +316,12 @@ Finally, it returns the ratio of these two numbers as the expected count.
 Total expected number for the reading frame
 
 =cut
-sub expectedCountForOrf {
+sub expectedCount {
    my %params  = @_;
    my $protein = $params{protein};
    #my $frame   = $params{frame};
    my $words   = $params{words};
+   my $retval;
 
    my $four_mer_result = occurCountForWords(protein => $protein, 
                                             #frame   => $frame + 1,        # r + 1
@@ -325,11 +329,16 @@ sub expectedCountForOrf {
    my $five_mer_result = occurCountForWords(protein => $protein, 
                                             #frame   => $frame,   # r
                                             words   => $words->[1]);
+
+
+   Log::Log4perl::get_logger()->debug("Got fourmer results $four_mer_result");
+   Log::Log4perl::get_logger()->debug("Got fivemer results $five_mer_result");
  
-   if ($four_mer_result > 1) {
-       return int($five_mer_result / $four_mer_result);
+   if ($four_mer_result > 0) {
+       $retval = int($five_mer_result / $four_mer_result);
+       $retval = 1 if ($retval < 1);
    }
-   return;
+   return $retval;
 }
 
 =head2 C<calculate>
@@ -355,29 +364,20 @@ sub calculate {
     my $word     = shift;
     my $order    = shift;
     my $protein  = shift;
+    my $frame    = shift;
 
     get_logger()->info("Checking WORD $word");
-    my $expected = 0;
     my $k_mers = getWords(  start => 1,
                           wordlen => $order, 
                              word => $word);
     my $k_plus_one_mers = getWords(wordlen => $order + 1,
-                                   word => $word);
+                                   word    => $word);
     
-    for my $orf (1 .. 3) {    # Use reading frames 1-3
-        Log::Log4perl::get_logger()->debug("Calculating reading frame $orf");
-        my $expectedOrf = expectedCountForOrf(protein => substr($protein, $orf - 1),
-                                              frame   => $orf, 
-                                              words   => [$k_mers, $k_plus_one_mers]);
-        if ($expectedOrf) {
-            $expected += $expectedOrf;
-        }
-        else {
-            $expectedOrf = "undefined";
-        }
-        #get_logger()->info("Expected Number for ORF $orf: " . $expectedOrf . "\n");
-    }
+    Log::Log4perl::get_logger()->debug("Calculating reading frame $frame");
+    my $expected = expectedCount(protein => IPIG::readingFrame($protein, $frame),
+                                    words   => [$k_mers, $k_plus_one_mers]);
     
+    Log::Log4perl::get_logger()->debug("Got expected value " . $expected);
     #get_logger()->info("Total Expected Number for ORF: " . $expected . "\n");
     return $expected;
 }

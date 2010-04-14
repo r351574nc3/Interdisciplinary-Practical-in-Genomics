@@ -285,6 +285,7 @@ Gets the C<cds_avg_length>. Only returns something if there is no parameter pres
 =cut
 sub cds_avg_length {
     my $this = shift;
+    return 0 if ($this->{_cds_count} == 0);
     return $this->{_cds_length} / $this->{_cds_count};
 }
 
@@ -312,6 +313,32 @@ sub expected {
     return $this->{_expected};
 }
 
+=head2 Getter C<abundance>
+
+Getter for the abundance. This is the abundance is the 
+occurrences of DUS / expected DUS.
+
+=head3 Parameters
+
+=over
+
+=item C<abundance> to set (optional)
+
+=back
+
+=head3 Returns
+
+=pod 
+
+Gets the C<abundance>. Only returns something if there is no parameter present.
+
+=cut
+sub abundance {
+    my $this = shift;
+    return 0 if ($this->expected() == 0);
+    return $this->dus_size() / $this->expected();
+}
+
 =head2 Method C<import>
 
 Handles importing of this package. Sets up Fasta::RecordHandler to be run from any package.
@@ -329,7 +356,16 @@ sub endDocument {
     my $this = shift;
     
     Log::Log4perl::get_logger()->debug("Ending the document");
-    $this->{_expected} = ProbableWords::calculate($this->{_word}, 4, $this->{_document});
+    for my $frame (1 .. 3) {
+        $this->{_expected} += ProbableWords::calculate($this->word(), 
+                                                       4, 
+                                                       $this->document(),
+                                                       $frame);
+        $this->{_expected} += ProbableWords::calculate(IPIG::complementWord($this->word()), 
+                                                       4, 
+                                                       $this->document(),
+                                                       $frame);
+    }
 }
 
 =head2 Method C<import>
@@ -358,6 +394,10 @@ sub import {
     *{"Fasta\::RecordHandler::record"} = *record;
     *{"Fasta\::RecordHandler::cds_size"} = *cds_size;
     *{"Fasta\::RecordHandler::dus_size"} = *dus_size;
+    *{"Fasta\::RecordHandler::expected"} = *expected;
+    *{"Fasta\::RecordHandler::abundance"} = *abundance;
+    *{"Fasta\::RecordHandler::document"} = *document;
+    *{"Fasta\::RecordHandler::word"} = *word;
     *{"Fasta\::RecordHandler::cds_avg_length"} = *cds_avg_length;
 }
 

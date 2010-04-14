@@ -60,6 +60,7 @@ sub load {
     #$retval{dus_size} = parse_dus_size($input, $word);
     $retval{cds_avg_length} = $handler->cds_avg_length();
     $retval{expected} = $handler->expected();
+    $retval{abundance} = $handler->abundance();
 
     return \%retval;
 }
