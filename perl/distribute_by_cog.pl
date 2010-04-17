@@ -192,9 +192,6 @@ sub iterateCogsIn {
                 push(@{$types}, $group);
             }
         }
-
-        
-        #&$each($input, split (/\s/, $_));
     }
 }
 
@@ -279,9 +276,20 @@ The main loop of execution
 sub parseTypesFromCog {
     my $cog = shift;
     my @retval;
+
+    $cog =~ s/\s//g;
+
+    if ($cog eq '-') {
+        return [ '-' ] ;
+    }
+
+    # Log::Log4perl::get_logger()->debug("Getting COG Categories for $cog");
     
-    if ($cog =~ /([a-zA-Z])+$/) {
-        @retval = split(//,$1);
+    $cog =~ s/COG[0-9]+//g;
+    @retval = split(//,$cog);
+
+    foreach (@retval) {
+        Log::Log4perl::get_logger()->debug("Found category $_");
     }
 
     return \@retval;
@@ -390,9 +398,10 @@ sub printTemplate {
 \\usepackage{graphicx}
 
 \\begin{document}
+{\tiny
 \%\\begin{tabular}{\@{} c \@{}}
 \%  \\hline \\\\
-  \\begin{tabular}{\@{} p{2cm} p{4cm} p{1.2cm} p{1.2cm} p{1.1cm} p{2.5cm} \@{}}
+  \\begin{tabular}{\@{} p{1cm} l p{1cm} p{1cm} p{1cm} p{1.5cm} \@{}}
     \\hline \\\\
      COG Groups & & No. of DUS& No. of CDS& Average CDS Length& Relative Abundance (95\\% CI)\\\\
 \%  \\end{tabular}\\\\
@@ -412,7 +421,7 @@ EOF
         print $fh '&' . "\n";
         print $fh $group->{avg_cds} if ($group->{avg_cds});
         print $fh '&' . "\n";
-        print $fh $group->{abundance} if ($group->{abundance});
+        print $fh sprintf("%.2f", $group->{abundance}) if ($group->{abundance});
         print $fh "\n";
         print $fh '\\\\';
     }
@@ -422,6 +431,7 @@ print $fh <<EOF
   \\end{tabular}
 \%  \\hline 
 \%\\end{tabular}
+}
 \\end{document}
 EOF
 }
@@ -476,7 +486,8 @@ my @type_data;
 my $types = distribute($input);
 push(@{$types}, "All");
 
-foreach my $type (@{$types}) {
+
+foreach my $type (sort { $a cmp $b } @{$types}) {
     my %data;
     
     my $file = $type . '.ffn';
@@ -492,9 +503,19 @@ foreach my $type (@{$types}) {
     $data{avg_cds}   = $stats->{cds_avg_length};
     $data{abundance} = $stats->{abundance};
     push(@type_data, \%data);
+
+    get_logger()->debug("CDS Size = " . $stats->{cds_size} . "\n");
+    get_logger()->debug("DUS Size = " . $stats->{dus_size} . "\n");
+    get_logger()->debug("CDS Avg Length = " . $stats->{cds_avg_length} . "\n");
+    get_logger()->debug("Expected number = " . $stats->{expected}, "\n");
 }
 
 printTemplate(file => $output, groups => \@type_data);
+
+foreach my $group (keys %{$cog_desc_map}) {
+    my $file = "$group.ffn";
+    unlink $file if (-e $file);
+}
 
 exit 0;
 __END__

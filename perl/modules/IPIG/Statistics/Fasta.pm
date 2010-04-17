@@ -27,7 +27,7 @@ formatted files.
 package IPIG::Statistics::Fasta;
 
 use IPIG::Statistics::Fasta::Parser;
-use IPIG::Statistics::Fasta::RecordHandler;
+use IPIG::Statistics::Fasta::DefaultRecordHandler;
 use IPIG::Statistics::Fasta::InvalidRecordHandler;
 
 =head2 Method C<load>
@@ -52,15 +52,15 @@ sub load {
     my $order   = 4;
     my $reverse = 1;
     
-    my $handler = new Fasta::RecordHandler($word);
+    my $handler = new Fasta::DefaultRecordHandler($word);
     my $parser = new Fasta::Parser(record_handlers => [ $handler, 
                                                         new Fasta::InvalidRecordHandler() ]);
     $parser->parse($input);
 
     $retval{cds_size} = $handler->cds_size();
-    $retval{dus_size} = $handler->dus_size();
-    #$retval{dus_size} = parse_dus_size($input, $word);
-    $retval{cds_avg_length} = $handler->cds_avg_length();
+    #$retval{dus_size} = $handler->dus_size();
+    $retval{dus_size} = parse_dus_size($input, $word);
+    $retval{cds_avg_length} = int($handler->cds_avg_length());
     $retval{expected} = $handler->expected();
     $retval{abundance} = $handler->abundance();
 

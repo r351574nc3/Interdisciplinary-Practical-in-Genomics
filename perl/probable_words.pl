@@ -165,6 +165,6 @@ foreach my $frame (1 .. 3) {
                                      $frame);
     }
 }
-Log::Log4perl::get_logger()->info("Expected DUS Count is $expected");
+get_logger()->info("Expected DUS Count is $expected");
 exit 0;
 __END__
