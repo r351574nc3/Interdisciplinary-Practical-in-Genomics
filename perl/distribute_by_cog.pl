@@ -398,7 +398,7 @@ sub printTemplate {
 \\usepackage{graphicx}
 
 \\begin{document}
-{\tiny
+{\\tiny
 \%\\begin{tabular}{\@{} c \@{}}
 \%  \\hline \\\\
   \\begin{tabular}{\@{} p{1cm} l p{1cm} p{1cm} p{1cm} p{1.5cm} \@{}}
