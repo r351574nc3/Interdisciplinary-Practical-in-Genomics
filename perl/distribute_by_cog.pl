@@ -29,9 +29,8 @@ use IPIG::Statistics::Fasta;
 use Exception::Class (
     'InvalidInputException',
     
-    'MaskedSequenceException' => { 
-        isa         => 'InvalidInputException',
-        description => 'If the sequence given has masked (X) characters'
+    'SequenceNotFoundException' => { 
+        description => 'A sequence in a ptt file could not be located in a component ffn file.'
     }
     );
 
@@ -161,6 +160,7 @@ sub iterateCogsIn {
         $fh = new FileHandle("<$input" . '.ptt') || die "Couldn't open $input\n";
     }
 
+    my $thrownout = 0;
     my $ready;
     while(<$fh>) {
         if ($_ =~ /^Location/) {
@@ -171,13 +171,22 @@ sub iterateCogsIn {
 
         chop;
 
-        my ($location, $strand, $length, $pid, $gene, $code, $cog, $product) = split(/\s/, $_);
+        my ($location, $direction, $strand, $length, $pid, $gene, $code, $cog, $product) = split(/\t/, $_);
+
+        # next unless($cog =~ /A$/);
 
         my $sequence = getSequenceByGeneLocation(input    => $input, 
                                                  location => $location,
-                                                 gene     => $gene);
+                                                 product  => $product);        
+        my $e;
+        if ($e = Exception::Class->caught('SequenceNotFoundException')) { 
+            warn $e->error, "\n", $e->trace->as_string, "\n";
+            Log::Log4perl::get_logger()->debug("Throwing one out");
+            $thrownout++;
+            next;
+        }
         
-        my $groups = parseTypesFromCog($product);        
+        my $groups = parseTypesFromCog($cog);        
         if (scalar @{$groups} < 1) {
             push (@{$groups}, '-');
         }
@@ -193,6 +202,8 @@ sub iterateCogsIn {
             }
         }
     }
+
+    Log::Log4perl::get_logger()->debug("Threw out $thrownout sequences.");
 }
 
 =head2 C<getSequencesByGeneLocation>
@@ -215,33 +226,31 @@ The main loop of execution
 
 =cut
 sub getSequenceByGeneLocation {
-    my %params = @_;
-    my $input  = $params{input};
-    my $gene   = $params{gene};
-    my $loc    = $params{location};
+    my %params  = @_;
+    my $input   = $params{input};
+    my $product = $params{product};
+    my $loc     = $params{location};
 
     my ($cog_start, $cog_stop) = split(/\.\./, $loc);
     
     my $new_location  = min($cog_start, $cog_stop) . '-' . max($cog_start, $cog_stop);
     my $comp_location = 'c' . max($cog_start, $cog_stop) . '-' . min($cog_start, $cog_stop);
         
-    my $fh = new FileHandle("<$input" . '.ffn');
-
+    open(FFN, "<$input" . '.ffn') || die "Cannot open " . "<$input" . '.ffn';
+    
     my $seq;
-    while (defined <$fh>) {
-        my $line = <$fh>;
+    while (<FFN>) {
+        my $line = $_;
         
-        next unless ($line);
-
         if (($line =~ /^\>/)
             && (index($line, $new_location) > -1
                 || index($line, $comp_location) > -1)
-            && index($_, $gene) > -1) { # Header
+            && index($line, $product) > -1) { # Header
 
             $seq = $line;
 
-            while (defined <$fh>) {
-                $line = <$fh>;
+            while (defined <FFN>) {
+                $line = <FFN>;
                 if (defined $line) {
                     if ($line =~ /^\>/) {
                         return $seq;
@@ -252,6 +261,10 @@ sub getSequenceByGeneLocation {
             return $seq;
         }
     }
+
+    close(FFN);
+
+    eval { SequenceNotFoundException->throw(error => "No sequence found for $product at location $new_location or $comp_location") } ;
 }
 
 =head2 C<parseTypesFromCog>
@@ -279,18 +292,10 @@ sub parseTypesFromCog {
 
     $cog =~ s/\s//g;
 
-    if ($cog eq '-') {
-        return [ '-' ] ;
-    }
-
     # Log::Log4perl::get_logger()->debug("Getting COG Categories for $cog");
     
     $cog =~ s/COG[0-9]+//g;
     @retval = split(//,$cog);
-
-    foreach (@retval) {
-        Log::Log4perl::get_logger()->debug("Found category $_");
-    }
 
     return \@retval;
 }
