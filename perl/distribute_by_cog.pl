@@ -117,6 +117,8 @@ Uptake Sequences on a given Protein Sequence
 
 =head3 Examples
 
+C<perl distribute_by_cog.pl -i ../data/Mock\ Gene\ 1.txt -w GCCGTCTGAA -o table3.csv>
+
 =head3 REQUIRED LIBRARIES
 
 =over
