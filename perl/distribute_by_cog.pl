@@ -24,7 +24,110 @@ use Pod::Usage;
 use Log::Log4perl qw(:easy);
 
 use lib 'modules';
-use IPIG::Statistics::Fasta;
+
+
+=head1 Class C<Fasta>
+
+=head2 Description 
+
+Module for function programming style api to statistical information on FASTA 
+formatted files.
+
+=head3 Author: I<Leo Przybylski (przybyls@arizona.edu)>
+
+=cut
+package IPIG::Statistics::Fasta;
+
+use IPIG::Statistics::Fasta::Parser;
+use IPIG::Statistics::Fasta::DefaultRecordHandler;
+use IPIG::Statistics::Fasta::InvalidRecordHandler;
+
+=head2 Method C<load>
+
+Loads the given FastA file and runs statistics on its contents
+
+=head3 Parameters
+
+=over
+
+=item C<input> - FastA formatted file
+
+=back
+
+=cut
+sub load {
+    my $input = shift;
+    my $word  = shift;
+
+    my %retval;
+
+    my $order   = 4;
+    my $reverse = 1;
+    
+    my $handler = new Fasta::DefaultRecordHandler($word);
+    my $parser = new Fasta::Parser(record_handlers => [ $handler, 
+                                                        new Fasta::InvalidRecordHandler() ]);
+    $parser->parse($input);
+
+    $retval{cds_size} = $handler->cds_size();
+    #$retval{dus_size} = $handler->dus_size();
+    $retval{dus_size} = parse_dus_size($input, $word);
+    $retval{cds_avg_length} = int($handler->cds_avg_length());
+    $retval{expected} = $handler->expected();
+    $retval{abundance} = $handler->abundance();
+
+    return \%retval;
+}
+
+=head2 Method C<load>
+
+Loads the given FastA file and runs statistics on its contents
+
+=head3 Parameters
+
+=over
+
+=item C<input> - FastA formatted file
+
+=back
+
+=cut
+sub parse_dus_size {
+    my $input = shift;
+    my $word = shift;
+
+    open(FUZZNUC, "fuzznuc -sequence $input -pattern $word -complement Y -outfile /dev/stdout |tail -4 |");
+    my $retval = 0;
+    while (<FUZZNUC>) {
+        if ($_ =~ /hitcount\:\s([0-9]+)/) {
+            $retval = $1;
+        }
+    }
+    close(FUZZNUC);
+    return $retval;
+}
+
+=head2 Method C<import>
+
+Handles importing of this package. Sets up Fasta::load to be run from any package.
+
+=head3 Parameters
+
+=over
+
+=item C<tags> - tags passed in by import 
+
+=back
+
+=cut
+sub import {
+    my $caller_pkg = caller();
+
+    return 1 if $IMPORT_CALLED{$caller_pkg}++;
+
+    *{"$caller_pkg\::Fasta::load"} = *load;
+    *{"$caller_pkg\::Fasta::parse_dus_size"} = *parse_dus_size;
+}
 
 use Exception::Class (
     'InvalidInputException',
@@ -89,6 +192,7 @@ my $cog_desc_map = {
                         4 - ERROR
                         5 - FATAL
                         [default=ERROR]
+    -l                  Output file format is LaTeX [default=CSV]
     -o                  file to output to [required]
     -(-h)elp/?          brief help message
     -(-m)an             full documentation
@@ -203,7 +307,7 @@ sub iterateCogsIn {
         }
     }
 
-    Log::Log4perl::get_logger()->debug("Threw out $thrownout sequences.");
+    Log::Log4perl::get_logger()->debug("Threw out $thrownout sequences that couldn't be found.");
 }
 
 =head2 C<getSequencesByGeneLocation>
@@ -393,7 +497,33 @@ Given hash of data, prints out values in a template
 =cut
 sub printTemplate {
     my %params = @_;
-    
+
+    if ($params{format}) {
+        printLatex(%params);
+    }
+    else {
+        printCsv(%params);
+    }
+}
+
+=head2 C<printLatex>
+
+=pod 
+
+Given hash of data, prints out values in a latex template
+
+=head3 Parameters
+
+=over
+
+=item params 
+
+=back
+
+=cut
+sub printLatex {
+    my %params = @_;
+
     get_logger()->debug("Writing LaTeX to " . $params{file});
     my $fh = new FileHandle(">" . $params{file});
 
@@ -441,16 +571,50 @@ print $fh <<EOF
 EOF
 }
 
+=head2 C<printCsv>
+
+=pod 
+
+Given hash of data, prints out values in a CSV template
+
+=head3 Parameters
+
+=over
+
+=item params 
+
+=back
+
+=cut
+sub printCsv {
+    my %params = @_;
+
+    get_logger()->debug("Writing CSV to " . $params{file});
+    my $fh = new FileHandle(">" . $params{file});
+
+    foreach my $group (@{$params{groups}}) {
+        print $fh $group->{name} . "\t" if ($group->{name});
+        print $fh $group->{description} . "\t" if ($group->{description});
+        print $fh $group->{dus_count} . "\t" if ($group->{dus_count});
+        print $fh $group->{cds_count} . "\t" if ($group->{cds_count});
+        print $fh $group->{avg_cds} . "\t" if ($group->{avg_cds});
+        print $fh sprintf("%.2f", $group->{abundance}) if ($group->{abundance});
+        print $fh "\n";
+    }
+}
+
 my $debug = 4;
 my $input; 
 my $output;
 my $word;
+my $latex;
 
 GetOptions( 'help|?' => \$help,
                  man => \$man, 
            'debug=s' => \$debug,
         'o|output=s' => \$output,
           'w|word=s' => \$word,
+                 'l' => \$latex,
          'i|input=s' => \$input) or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -515,7 +679,7 @@ foreach my $type (sort { $a cmp $b } @{$types}) {
     get_logger()->debug("Expected number = " . $stats->{expected}, "\n");
 }
 
-printTemplate(file => $output, groups => \@type_data);
+printTemplate(file => $output, groups => \@type_data, format => defined $latex);
 
 foreach my $group (keys %{$cog_desc_map}) {
     my $file = "$group.ffn";
